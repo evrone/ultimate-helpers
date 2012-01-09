@@ -1,0 +1,22 @@
+PATH
+  remote: .
+  specs:
+    ultimate-base (0.1.3.alpha)
+      coffee-script (~> 2.2.0)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    coffee-script (2.2.0)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.1.3)
+    execjs (1.2.9)
+      multi_json (~> 1.0)
+    multi_json (1.0.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ultimate-base!
