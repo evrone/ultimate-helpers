@@ -1,0 +1,128 @@
+$pie-url: "PIE.htc";
+
+@mixin pie {
+  @if $pie-url {
+    behavior: assets-url("#{$pie-url}", '');
+  }
+}
+
+@mixin border-radius($params) {
+  -webkit-border-radius: $params;
+  -moz-border-radius: $params;
+  border-radius: $params;
+}
+
+@mixin box-shadow($params0, $params1: false) {
+  @if $params1 {
+    box-shadow: $params0, $params1;
+    -webkit-box-shadow: $params0, $params1;
+  } @else {
+    box-shadow: $params0;
+    -webkit-box-shadow: $params0;
+  }
+}
+
+// !!! IE6-7 NOT SUPPORTED !!!
+@mixin box-sizing($params: border-box) {
+  -webkit-box-sizing: $params;
+  -moz-box-sizing: $params;
+  box-sizing: $params;
+}
+
+// !!! EXPERIMENTAL !!!
+// @include linear-gradient(white, $c-black, left)
+@mixin linear-gradient($color_start, $color_stop, $start: top, $color_middle: none) {
+  $wk_start: left top;
+  $wk_stop: left bottom;
+  @if $start == top {
+    $wk_start: left top;
+    $wk_stop: left bottom;
+  } @else if $start == bottom {
+    $wk_start: left bottom;
+    $wk_stop: left top;
+  } @else if $start == left {
+    $wk_start: left top;
+    $wk_stop: right top;
+  } @else if $start == right {
+    $wk_start: right top;
+    $wk_stop: left top;
+  }
+  $bg-color: $color_middle;
+  $wk-colors: "from(#{$color_start})";
+  $colors: "#{$color_start}";
+  @if $color_middle != none {
+    $wk-colors: "#{$wk-colors}, color-stop(50%, #{$color_middle})";
+    $colors: "#{$colors}, #{$color_middle}";
+  } @else {
+    $bg-color: mix($color_start, $color_stop);
+  }
+  $wk-colors: "#{$wk-colors}, to(#{$color_stop})";
+  $colors: "#{$colors}, #{$color_stop}";
+  background-color: $bg-color;
+  background-image: -webkit-gradient(linear, $wk_start, $wk_stop, unquote($wk-colors));
+  background-image:       -moz-linear-gradient($start, unquote($colors));
+  background-image:         -o-linear-gradient($start, unquote($colors));
+  background-image:            linear-gradient($start, unquote($colors));
+  @if $pie-url {
+    -pie-background: $bg-color linear-gradient($start, unquote($colors));
+  }
+}
+
+@mixin border-gradient($color_start, $color_stop, $is_horizontal: false) {
+  $start: top;
+  $wk_start: left top;
+  $wk_stop: left bottom;
+  @if $is_horizontal {
+    $start: left;
+    $wk_stop: right top;
+  } @else {
+    $start: top;
+    $wk_stop: left bottom;
+  }
+  border-color: $color_start mix($color_start, $color_stop) $color_stop;
+  -webkit-border-image: -webkit-gradient(linear, $wk_start, $wk_stop, from($color_start), to($color_stop));
+  -moz-border-image: -moz-linear-gradient($start, $color_start, $color_stop);
+  -o-border-image: -o-linear-gradient($start, $color_start, $color_stop);
+  border-image: linear-gradient($start, $color_start, $color_stop);
+}
+
+@mixin opacity($value: 0.5) {
+  opacity: $value;
+  $value: $value * 100;
+  @if $value < 100 {
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=#{$value});
+  } @else {
+    filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  }
+}
+
+@mixin pie-bg($bg) {
+  background: $bg;
+  @if $pie-url {
+    -pie-background: $bg;
+  }
+}
+
+@mixin text-shadow($color, $params: none, $direction: 180, $strength: 1) {
+  @if $color == none {
+    text-shadow: none;
+    //filter: progid:DXImageTransform.Microsoft.Shadow(enabled=false);
+  } @else {
+    text-shadow: $color $params;
+    //filter: progid:DXImageTransform.Microsoft.Shadow(Color=#{$color}, Direction=#{$direction}, strength=#{$strength});
+  }
+}
+
+@mixin transition($what, $time, $method: ease) {
+  -webkit-transition: $what $time $method;
+  -moz-transition: $what $time $method;
+  -o-transition: $what $time $method;
+  transition: $what $time $method;
+}
+
+@mixin transform($params) {
+  -webkit-transition: $params;
+  -moz-transition: $params;
+  -o-transition: $params;
+  transition: $params;
+}

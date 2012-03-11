@@ -9,22 +9,29 @@
 @TEST_MODE ?= false
 
 @cout = =>
-  console.log arguments if @DEBUG_MODE and console
-  arguments[0]
+  args = @args arguments
+  method = if args[0] in ['log', 'info', 'warn', 'error', 'assert', 'clear'] then args.shift() else 'log'
+  if @DEBUG_MODE and console?
+    method = console[method]
+    if method.apply?
+      method.apply console, args
+    else
+      method args
+  return args[0]
 
 @_cout = =>
-  console.log arguments if console
+  console.log arguments  if console?
   arguments[0]
 
 @deprecate = (subject, instead = null) =>
-  @cout "\"#{subject}\" DEPRECATED!" + if instead then " Use instead: \"#{instead}\"" else ''
+  @cout 'warn', "\"#{subject}\" DEPRECATED!" + if instead then " Use instead: \"#{instead}\"" else ''
 
 @warning = (subject, instead = null) =>
-  @cout "\"#{subject}\" WARNING!" + if instead then " Use instead: \"#{instead}\"" else ''
+  @cout 'warn', "\"#{subject}\" WARNING!" + if instead then " Use instead: \"#{instead}\"" else ''
 
 @args = (a) ->
   r = []
-  Array::push.apply r, a if a.length > 0
+  Array::push.apply r, a  if a.length > 0
   r
 
 @isset = (obj) =>
@@ -51,14 +58,15 @@
   _.isObject(obj) and _.isString obj.jquery
 
 @uniq = (arrOrString) ->
+  @deprecate 'uniq(a)', '_.uniq a'
   isStr = _.isString arrOrString
-  return arrOrString unless isStr or _.isArray arrOrString
+  return arrOrString  unless isStr or _.isArray arrOrString
   r = []
-  for e in arrOrString
-    r.push e unless _.include r, e
+  r.push e  for e in arrOrString  when not _.include r, e
   if isStr then r.join '' else r
 
 @compact = (arr) ->
+  @deprecate 'compact(arr)', '_.compact arr'
   r = []
   for e in arr
     r.push e if e?
@@ -84,6 +92,7 @@
 @regexpTrim = new RegExp '^\\s*(.*?)\\s*$'
 
 @strTrim = (s) =>
+  @deprecate "strTrim(s)", "$.trim(s)"
   s.match(@regexpTrim)[1]
 
 # !!!!!!!!!!! tags !!!!!!!!!!!!
@@ -99,10 +108,15 @@
     b = a
   "#{r.substring(1)} #{units}"
 
-@respondFormat = (url, format) ->
+@respondFormat = (url, format = null) ->
   aq = url.split '?'
   ah = aq[0].split '#'
-  ah[0] = ah[0].replace /(\w+)(\/?)$/, "$1.#{format}$2"
+  ad = ah[0].split '.'
+  currentFormat = if ad.length > 1 then ad.pop() else ''
+  return currentFormat  unless format?
+  return url  if format is currentFormat
+  ad.push format  if format
+  ah[0] = ad.join '.'
   aq[0] = ah.join '#'
   aq.join '?'
 

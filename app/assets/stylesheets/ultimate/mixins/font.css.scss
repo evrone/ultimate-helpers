@@ -1,0 +1,94 @@
+// === overloadable in base.scss settings =========
+
+$font-family_base: Tahoma, Verdana, sans-serif;
+$font-size_base: 11px;
+$line-height-addition_base: 3px;
+$font-family_accident: "PFDinTextCondProThin", Tahoma, Arial, Verdana, sans-serif;
+$font-family_accident_bold: "PFDinTextCondProRegular";
+
+
+@mixin font-face($family, $url-without-ext, $font-weight: normal) {
+  @font-face {
+    font-family: "#{$family}";
+    src: font-url("#{$url-without-ext}.eot");
+    src: font-url("#{$url-without-ext}.eot?#iefix") format("embedded-opentype"),
+         font-url("#{$url-without-ext}.woff") format("woff"),
+         font-url("#{$url-without-ext}.ttf") format("truetype"),
+         font-url("#{$url-without-ext}.svg##{$family}") format("svg");
+    font-weight: $font-weight;
+    font-style: normal;
+  }
+}
+
+@mixin g-font_base($font-size: $font-size_base, $line-height: false) {
+  font-family: $font-family_base;
+  @if $font-size {
+    font-size: $font-size;
+  }
+  @if $line-height {
+    line-height: $line-height;
+  } @else {
+    @if $font-size {
+      line-height: $font-size + $line-height-addition_base;
+    }
+  }
+}
+
+@mixin g-font_accident_bold($font-size: false, $line-height: false) {
+  font-family: $font-family_accident_bold;
+  font-weight: normal;
+  font-style: normal;
+  @if $font-size {
+    font-size: $font-size;
+  }
+  @if $line-height {
+    line-height: $line-height;
+  } @else {
+    @if $font-size {
+      line-height: $font-size + $line-height-addition_base;
+    }
+  }
+}
+
+@mixin g-font_accident($font-size: false, $line-height: false) {
+  font-family: $font-family_accident;
+  font-weight: normal;
+  font-style: normal;
+  @if $font-size {
+    font-size: $font-size;
+  }
+  @if $line-height {
+    line-height: $line-height;
+  } @else {
+    @if $font-size {
+      line-height: $font-size + $line-height-addition_base;
+    }
+  }
+  @if $font-family_accident_bold {
+    .bold {
+      @include g-font_accident_bold;
+    }
+  }
+}
+
+
+@mixin sticky-footer($layout-padding-bottom, $footer-selector: ".l-page__footer", $layout-selector: ".l-page") {
+  html {
+    height: 100%;
+  }
+  body {
+    position: relative;
+    min-height: 100%;
+  }
+  #{$layout-selector} {
+    position: static;
+    padding-bottom: $layout-padding-bottom;
+    #{$footer-selector} {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  }
+}
+
+

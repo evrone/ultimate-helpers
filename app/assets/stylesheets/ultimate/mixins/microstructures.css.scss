@@ -1,0 +1,74 @@
+
+@mixin g-line {
+  *zoom: 1;
+  _height: 0;
+  &:after {
+    content: " ";
+    display: block;
+    clear: both;
+    height: 0;
+  }
+}
+
+@mixin inline-block {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+}
+
+@mixin g-justify($item: unquote(".item")) {
+  text-align: justify;
+  *text-justify: newspaper;
+  text-align-last: justify;
+  font-size: 0;
+  line-height: 0;
+  > #{$item}, &:after {
+    @include inline-block;
+  }
+  &:after {
+    content: "";
+    height: 0;
+    width: 99%;
+  }
+}
+
+@mixin inline-block-list($item: "li") {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  #{$item} {
+    @include inline-block;
+  }
+}
+
+@mixin block-list($item: "li") {
+  @include g-line;
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  #{$item} {
+    display: block;
+    position: relative;
+    float: left;
+  }
+}
+
+@mixin simple-block-list($item: "li") {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  #{$item} {
+    display: block;
+    position: relative;
+  }
+}
+
+// назначается блокам, которые пропадают после анимации в ИЕ6-7
+// DEPRICATED
+@mixin fix-disapp {
+  *overflow: hidden;
+  _zoom: 1;
+}

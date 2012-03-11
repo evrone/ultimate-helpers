@@ -10,6 +10,13 @@
  *
 ###
 
+@Ultimate = {}
+
+@_delete = (object, key) ->
+  value = object[key]
+  delete object[key]
+  value
+
 ( ($) =>
 
   $.regexp ||= {}
@@ -18,13 +25,13 @@
 
   @ror_id = (jObjOrString) ->
     if isJQ jObjOrString
-      id = jObjOrString.data 'ror_id'
+      id = jObjOrString.data 'rorId'
       unless id
         id = jObjOrString.attr 'id'
         if id
           matchResult = id.match $.regexp.rorId
           id = if matchResult then matchResult[2] else ''
-          jObjOrString.data 'ror_id', id
+          jObjOrString.data 'rorId', id
         else 
           id = ''
     else
@@ -38,11 +45,16 @@
       word = 'ror_id'
       thisId = @attr 'id'
       if thisId
-        word = matchResult[1] if matchResult = thisId.match $.regexp.rorId
-      @data('ror_id', id).attr 'id', word + '_' + id
+        word = matchResult[1]  if matchResult = thisId.match $.regexp.rorId
+      @data('rorId', id).attr 'id', word + '_' + id
       @
     else
       ror_id @
+
+  $.fn.getClasses = ->
+    return []  unless @length
+    classAttr = $.trim @attr 'class'
+    if classAttr then classAttr.split(/\s+/) else []
 
   # Get hash of html-dom attributes from first matched element or false, if no elements
   $.fn.getAttributes = ->
@@ -68,17 +80,20 @@
         @slideToggle()
     @
 
-  # TODO replace usages tounderscore methods and using distribution
+  # TODO replace usages to underscore methods and using distribution
   unless $.isRegExp
     $.isRegExp = (candidate) ->
+      deprecate '$.isRegExp', '_.isRegExp'
       typeof candidate is "object" and typeof candidate.test is "function"
 
   unless $.isBoolean
     $.isBoolean = (v) ->
+      deprecate '$.isBoolean', '_.isBoolean'
       typeof v is "boolean"
 
   unless $.isString
     $.isString = (v) ->
+      deprecate '$.isString', '_.isString'
       typeof v is "string"
 
   unless $.isHTML
@@ -92,43 +107,3 @@
       regexpSpace.test v
 
 )( jQuery )
-
-
-
-###
- * Обновляет состояния checked, readonly и disabled элементов.
- *
- * @param {jQuery} jRoot корневые jQuery объекты, в которых будет осуществляться поиск по selector
- * @param {String} [selector=".g-text-field,.g-text-area,.g-select,.g-checkbox,.g-radio"] селектор для поиска декорированных элементов
- * @returns {void}
- *
-###
-@refresh_states = (jRoot, selector = '.g-text-field, .g-text-area, .g-select, .g-checkbox, .g-radio') ->
-  # TODO проверить все места использования refresh_states на предмет возможной оптимизации за счёт введения параметра selector
-  # TODO сделать рефреш регистрируемых компонентов
-  jComponents = jRoot.find(selector)
-  jDisabled = jComponents.filter(':not(.disabled):has(:input:disabled)').addClass 'disabled'
-  jEnabled = jComponents.filter('.disabled:not(:has(:input:disabled))').removeClass 'disabled'
-  jDisabled.find('input.datepicker.hasDatepicker').datepicker 'disable' if $.fn.datepicker
-  jDisabled.closestLabel().addClass 'disabled'
-# commented while testing previous string
-#  jDisabled.find(':input[id]').each( function () {
-#    $(this).closest('form').find('label[for="' + this.id + '"]').addClass('disabled'); // May be use closestLabel()
-#  } );
-  jEnabled.find('input.datepicker.hasDatepicker').datepicker 'enable' if $.fn.datepicker
-  jEnabled.closestLabel().removeClass 'disabled'
-# commented while testing previous string
-#  jEnabled.find(':input[id]').each( function () {
-#    $(this).closest('form').find('label[for="' + this.id + '"]').removeClass('disabled'); // May be use closestLabel()
-#  } );
-  jRoot.find('.g-text-field, .g-text-area')
-  .filter(':not(.readonly):has(input[type="text"][readonly], textarea[readonly])').addClass('readonly')
-  .end().filter('.readonly:not(:has(input[type="text"][readonly], textarea[readonly]))').removeClass('readonly')
-  jRoot.find('.g-checkbox, .g-radio')
-  .filter(':not(.checked):has(input:checked)').addClass('checked')
-  .end().filter('.checked:not(:has(input:checked))').removeClass('checked')
-
-
-
-$ =>
-  @refresh_states $ 'body'
