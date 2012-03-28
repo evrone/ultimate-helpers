@@ -123,14 +123,13 @@
     ( if @is(':input') then @filter('[name]') else @find(':input[name]') ).map ->
       jInput = $ @
       for replacerAttr, replacerPairs of replacers
-        attr = jInput.attr replacerAttr
-        newAttr = attr
-        if attr
+        if attr = jInput.attr replacerAttr
+          newAttr = attr
           for pair in replacerPairs
             newAttr = newAttr.replace pair[0], pair[1]
-        if newAttr isnt attr
-          jInput.attr replacerAttr, newAttr
-          jInput.closestLabel(true).attr('for', newAttr)  if replacerAttr is 'id'
+          if newAttr isnt attr
+            jInput.attr replacerAttr, newAttr
+            jInput.closestLabel(true).attr('for', newAttr)  if replacerAttr is 'id'
     @
 
 

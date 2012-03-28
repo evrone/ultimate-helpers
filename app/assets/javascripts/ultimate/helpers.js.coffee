@@ -120,6 +120,20 @@
   aq[0] = ah.join '#'
   aq.join '?'
 
+# TODO
+#function respondFormat(url, format) {
+#  if (format == null) format = null;
+#  var aq = url.split('?'),
+#      ah = aq[0].split('#'),
+#      ad = ah[0].split('.'),
+#      currentFormat = ad.length > 1 && !/\//.test(ad[ad.length - 1]) ? ad.pop() : '';
+#  if (format == null) return currentFormat;
+#  if (format === currentFormat) return url;
+#  if (format) ad.push(format);
+#  ah[0] = ad.join('.');
+#  aq[0] = ah.join('#');
+#  return aq.join('?');
+#}
 
 
 @rails_data = {}

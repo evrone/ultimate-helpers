@@ -1,3 +1,5 @@
+// TODO http://habrahabr.ru/post/139969/
+
 $pie-url: "PIE.htc";
 
 @mixin pie {
@@ -7,18 +9,19 @@ $pie-url: "PIE.htc";
 }
 
 @mixin border-radius($params) {
-  -webkit-border-radius: $params;
-  -moz-border-radius: $params;
+  -moz-border-radius: $params; // FF 3.6
   border-radius: $params;
 }
 
 @mixin box-shadow($params0, $params1: false) {
   @if $params1 {
+    -webkit-box-shadow: $params0, $params1; // Safari 5.0
+    -moz-box-shadow: $params0, $params1;    // FF 3.6
     box-shadow: $params0, $params1;
-    -webkit-box-shadow: $params0, $params1;
   } @else {
+    -webkit-box-shadow: $params0; // Safari 5.0
+    -moz-box-shadow: $params0;    // FF 3.6
     box-shadow: $params0;
-    -webkit-box-shadow: $params0;
   }
 }
 
@@ -32,6 +35,7 @@ $pie-url: "PIE.htc";
 // !!! EXPERIMENTAL !!!
 // @include linear-gradient(white, $c-black, left)
 @mixin linear-gradient($color_start, $color_stop, $start: top, $color_middle: none) {
+  // TODO: colors as list argument
   $wk_start: left top;
   $wk_stop: left bottom;
   @if $start == top {
@@ -59,12 +63,18 @@ $pie-url: "PIE.htc";
   $wk-colors: "#{$wk-colors}, to(#{$color_stop})";
   $colors: "#{$colors}, #{$color_stop}";
   background-color: $bg-color;
-  background-image: -webkit-gradient(linear, $wk_start, $wk_stop, unquote($wk-colors));
-  background-image:       -moz-linear-gradient($start, unquote($colors));
-  background-image:         -o-linear-gradient($start, unquote($colors));
-  background-image:            linear-gradient($start, unquote($colors));
-  @if $pie-url {
-    -pie-background: $bg-color linear-gradient($start, unquote($colors));
+  // TODO: $color_middle leave out
+  @if $color_start != $color_stop {
+    background-image: -webkit-gradient(linear, $wk_start, $wk_stop, unquote($wk-colors));
+    background-image:       -moz-linear-gradient($start, unquote($colors));
+    background-image:        -ms-linear-gradient($start, unquote($colors)); // IE 10 TODO check
+    background-image:         -o-linear-gradient($start, unquote($colors));
+    // TODO: conflict with Compass
+    //background-image:            linear-gradient($start, unquote($colors));
+    @if $pie-url {
+    // TODO: conflict with Compass
+    //  -pie-background: $bg-color linear-gradient($start, unquote($colors));
+    }
   }
 }
 
@@ -121,8 +131,16 @@ $pie-url: "PIE.htc";
 }
 
 @mixin transform($params) {
-  -webkit-transition: $params;
-  -moz-transition: $params;
-  -o-transition: $params;
-  transition: $params;
+  -webkit-transform: $params;
+  -moz-transform: $params;
+  -o-transform: $params;
+  transform: $params;
 }
+
+//@mixin placeholder {
+//  &::-webkit-input-placeholder { color: #a3a3a3; }
+//  &:-moz-placeholder {
+//    color: #a3a3a3;
+//  }
+//input::-webkit-input-placeholder { color: #a3a3a3 !important;}
+//input:-moz-placeholder { color: #a3a3a3 !important; }
