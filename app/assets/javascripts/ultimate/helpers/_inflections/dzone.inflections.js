@@ -7,7 +7,7 @@ pluralize(9)                        // "9th"
 
 
 
-Dogs suck! CATS FOREVER!
+//Dogs suck! CATS FOREVER!
 
 Inflector = {
   Inflections: {
