@@ -1,9 +1,9 @@
-pluralize(9)                        // "9th"
-'dog'.pluralize()                   // "dogs"
-'dog'.pluralize(4)                  // "4 dogs"
-'dog'.pluralize(2, 'dogs too many') // "2 dogs too many"
-'dogs'.singularize()                // "dog"
-'dogs'.singularize(1)               // "1 dog"
+//pluralize(9)                        // "9th"
+//'dog'.pluralize()                   // "dogs"
+//'dog'.pluralize(4)                  // "4 dogs"
+//'dog'.pluralize(2, 'dogs too many') // "2 dogs too many"
+//'dogs'.singularize()                // "dog"
+//'dogs'.singularize(1)               // "1 dog"
 
 
 

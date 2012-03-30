@@ -1,5 +1,2 @@
-function singular(plural) {
-  plural = plural.replace(/ies$/, 'y');
-  plural = plural.replace(/s$/, '');
-  return plural;
-}
+@singular = (plural) =>
+  plural.replace(/ies$/, 'y').replace(/s$/, '')
