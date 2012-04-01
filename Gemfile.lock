@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ultimate-base (0.1.4.alpha)
+    ultimate-base (0.1.5.alpha)
       coffee-script (~> 2.1)
       rails (~> 3.1)
 

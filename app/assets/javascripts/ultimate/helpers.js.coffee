@@ -34,17 +34,17 @@
   Array::push.apply r, a  if a.length > 0
   r
 
+@blockGiven = (args) =>
+  l = args.length
+  if l
+    l = args[l - 1]
+    if _.isFunction l then l else false
+  else
+    false
+
 @isset = (obj) =>
   @deprecate 'isset(obj)', 'obj isnt undefined" OR "obj?'
   obj isnt undefined
-
-@getParams = ->
-  q = location.search.substring(1).split '&'
-  r = {}
-  for e in q
-    t = e.split '='
-    r[t[0]] = t[1]
-  r
 
 @isString = (v) =>
   @deprecate 'isString(v)', '_.isString v'
@@ -64,19 +64,6 @@
   r = []
   r.push e  for e in arrOrString  when not _.include r, e
   if isStr then r.join '' else r
-
-@compact = (arr) ->
-  @deprecate 'compact(arr)', '_.compact arr'
-  r = []
-  for e in arr
-    r.push e if e?
-  r
-
-@reverse = (arr) =>
-  @deprecate 'reverse(arr)', 'arr.reverse()'
-  _isString = _.isString arr
-  return arr unless _isString or $.isArray arr
-  if _isString then @warning 'reverse(someString)', 'STOP USE IT!' else arr.reverse()
 
 @logicalXOR = (a, b) ->
   ( a and not b ) or ( not a and b )
@@ -108,11 +95,21 @@
     b = a
   "#{r.substring(1)} #{units}"
 
+
+
+@getParams = ->
+  q = location.search.substring(1).split '&'
+  r = {}
+  for e in q
+    t = e.split '='
+    r[t[0]] = t[1]
+  r
+
 @respondFormat = (url, format = null) ->
   aq = url.split '?'
   ah = aq[0].split '#'
   ad = ah[0].split '.'
-  currentFormat = if ad.length > 1 then ad.pop() else ''
+  currentFormat = if ad.length > 1 and not /\//.test(ad[ad.length - 1]) then ad.pop() else ''
   return currentFormat  unless format?
   return url  if format is currentFormat
   ad.push format  if format
@@ -120,20 +117,6 @@
   aq[0] = ah.join '#'
   aq.join '?'
 
-# TODO
-#function respondFormat(url, format) {
-#  if (format == null) format = null;
-#  var aq = url.split('?'),
-#      ah = aq[0].split('#'),
-#      ad = ah[0].split('.'),
-#      currentFormat = ad.length > 1 && !/\//.test(ad[ad.length - 1]) ? ad.pop() : '';
-#  if (format == null) return currentFormat;
-#  if (format === currentFormat) return url;
-#  if (format) ad.push(format);
-#  ah[0] = ad.join('.');
-#  aq[0] = ah.join('#');
-#  return aq.join('?');
-#}
 
 
 @rails_data = {}

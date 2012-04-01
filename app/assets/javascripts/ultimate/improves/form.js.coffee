@@ -12,6 +12,7 @@
 
 
   $.fn.closestEdge = (edgeSelector = '.input-line, tr, fieldset, .g-box, form') ->
+    deprecate 'closestEdge', '$().closest(\'selector\')'
     @closest edgeSelector
 
 
