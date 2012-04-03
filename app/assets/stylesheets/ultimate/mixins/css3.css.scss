@@ -1,35 +1,78 @@
-// TODO http://habrahabr.ru/post/139969/
+// Use compatibility tables from http://caniuse.com/
+// http://css3pie.com/documentation/supported-css3-features/#pie-watch-ancestors
+// http://css3pie.com/documentation/supported-css3-features/#pie-lazy-init
 
 $pie-url: "PIE.htc";
+$boxsizing-url: "boxsizing.htc";
 
-@mixin pie {
+@mixin pie($poll: none) {
   @if $pie-url {
+    // TODO try: behavior: assets-url($pie-url, '');
     behavior: assets-url("#{$pie-url}", '');
+    // http://css3pie.com/documentation/supported-css3-features/#pie-poll
+    @if $poll != none {
+      -pie-poll: $poll;
+    }
   }
 }
 
+// TODO may be funcs, may be other (see enother realizations)
+@mixin vendors($vendors, $property, $params) {
+  @each $vendor in $vendors {
+    -#{$vendor}-#{$property}: $params;
+  }
+  #{$property}: $params;
+}
+
 @mixin border-radius($params) {
-  -moz-border-radius: $params; // FF 3.6
-  border-radius: $params;
+  @include vendors(webkit moz, border-radius, $params);
+  //-webkit-border-radius: $params; // iOS-Safari <= 3.2, Android <= 2.1
+  //   -moz-border-radius: $params; // FF 3.6
+  //        border-radius: $params;
+}
+
+@mixin border-radius_complex($params) {
+  $l: length($params);
+  @if $l == 4 {
+    $i: 0;
+    @each $corner in top-left, top-right, bottom-right, bottom-left {
+      $i: $i + 1;
+      $p: nth($params, $i);
+      @if $p != none and $p != false {
+        @include vendors(webkit moz, border-#{$corner}-radius, $p);
+      }
+    }
+  } @else if $l == 2 {
+    @debug "border-radius_complex don't support 2 parameters now!";
+    @warn "border-radius_complex don't support 2 parameters now!";
+  } @else if $l == 3 {
+    @debug "border-radius_complex don't support 3 parameters now!";
+    @warn "border-radius_complex don't support 3 parameters now!";
+  } @else {
+    @include border-rasius($params);
+  }
 }
 
 @mixin box-shadow($params0, $params1: false) {
   @if $params1 {
-    -webkit-box-shadow: $params0, $params1; // Safari 5.0
-    -moz-box-shadow: $params0, $params1;    // FF 3.6
-    box-shadow: $params0, $params1;
+    -webkit-box-shadow: $params0, $params1; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
+       -moz-box-shadow: $params0, $params1; // FF 3.6
+            box-shadow: $params0, $params1;
   } @else {
-    -webkit-box-shadow: $params0; // Safari 5.0
-    -moz-box-shadow: $params0;    // FF 3.6
-    box-shadow: $params0;
+    -webkit-box-shadow: $params0;
+       -moz-box-shadow: $params0;
+            box-shadow: $params0;
   }
 }
 
-// !!! IE6-7 NOT SUPPORTED !!!
 @mixin box-sizing($params: border-box) {
-  -webkit-box-sizing: $params;
-  -moz-box-sizing: $params;
-  box-sizing: $params;
+  -webkit-box-sizing: $params; // Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0
+     -moz-box-sizing: $params; // actual
+          box-sizing: $params;
+  @if $boxsizing-url {
+    // https://github.com/Schepp/box-sizing-polyfill
+    *behavior: assets-url($boxsizing-url, ''); // IE 6-7
+  }
 }
 
 // !!! EXPERIMENTAL !!!
@@ -65,15 +108,16 @@ $pie-url: "PIE.htc";
   background-color: $bg-color;
   // TODO: $color_middle leave out
   @if $color_start != $color_stop {
-    background-image: -webkit-gradient(linear, $wk_start, $wk_stop, unquote($wk-colors));
-    background-image:       -moz-linear-gradient($start, unquote($colors));
-    background-image:        -ms-linear-gradient($start, unquote($colors)); // IE 10 TODO check
-    background-image:         -o-linear-gradient($start, unquote($colors));
+    background-image: -webkit-gradient(linear, $wk_start, $wk_stop, unquote($wk-colors)); // old webkit (Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0)
+    // TODO may be new -webkit-gradient?
+    background-image:       -moz-linear-gradient($start, unquote($colors)); // actual
+    background-image:        -ms-linear-gradient($start, unquote($colors)); // IE 10+
+    background-image:         -o-linear-gradient($start, unquote($colors)); // Opera 11.10+
     // TODO: conflict with Compass
-    //background-image:            linear-gradient($start, unquote($colors));
+    //background-image:            linear-gradient($start, unquote($colors)); // future
     @if $pie-url {
     // TODO: conflict with Compass
-    //  -pie-background: $bg-color linear-gradient($start, unquote($colors));
+    //  -pie-background: $bg-color linear-gradient($start, unquote($colors)); // IE 6-9
     }
   }
 }
@@ -90,10 +134,12 @@ $pie-url: "PIE.htc";
     $wk_stop: left bottom;
   }
   border-color: $color_start mix($color_start, $color_stop) $color_stop;
-  -webkit-border-image: -webkit-gradient(linear, $wk_start, $wk_stop, from($color_start), to($color_stop));
-  -moz-border-image: -moz-linear-gradient($start, $color_start, $color_stop);
-  -o-border-image: -o-linear-gradient($start, $color_start, $color_stop);
-  border-image: linear-gradient($start, $color_start, $color_stop);
+  -webkit-border-image: -webkit-gradient(linear, $wk_start, $wk_stop, from($color_start), to($color_stop)); // old webkit (Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0)
+  // TODO may be new -webkit-gradient?
+  -moz-border-image: -moz-linear-gradient($start, $color_start, $color_stop); // actual
+    -o-border-image:  -ms-linear-gradient($start, $color_start, $color_stop); // IE 10+
+    -o-border-image:   -o-linear-gradient($start, $color_start, $color_stop); // Opera 11.10+
+       border-image:      linear-gradient($start, $color_start, $color_stop); // future
 }
 
 @mixin opacity($value: 0.5) {
@@ -123,20 +169,29 @@ $pie-url: "PIE.htc";
   }
 }
 
+@mixin ellipsis {
+  -o-text-overflow: ellipsis; // Opera Mini and Opera Mobile
+     text-overflow: ellipsis; // all
+}
+
+
 @mixin transition($what, $time, $method: ease) {
-  -webkit-transition: $what $time $method;
-  -moz-transition: $what $time $method;
-  -o-transition: $what $time $method;
-  transition: $what $time $method;
+  -webkit-transition: $what $time $method; // actual
+     -moz-transition: $what $time $method; // FF 8+
+      -ms-transition: $what $time $method; // IE 10+
+       -o-transition: $what $time $method; // Opera 11.6+
+       // transition: $what $time $method; // future
 }
 
 @mixin transform($params) {
-  -webkit-transform: $params;
-  -moz-transform: $params;
-  -o-transform: $params;
-  transform: $params;
+  -webkit-transform: $params; // actual
+     -moz-transform: $params; // actual
+      -ms-transform: $params; // IE 9+
+       -o-transform: $params; // actual
+       // transform: $params; // future
 }
 
+// TODO
 //@mixin placeholder {
 //  &::-webkit-input-placeholder { color: #a3a3a3; }
 //  &:-moz-placeholder {
