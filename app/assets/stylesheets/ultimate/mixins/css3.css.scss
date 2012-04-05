@@ -2,13 +2,12 @@
 // http://css3pie.com/documentation/supported-css3-features/#pie-watch-ancestors
 // http://css3pie.com/documentation/supported-css3-features/#pie-lazy-init
 
-$pie-url: "PIE.htc";
-$boxsizing-url: "boxsizing.htc";
+$pie-url: "polyfills/PIE.htc";
+$boxsizing-url: "polyfills/boxsizing.htc";
 
 @mixin pie($poll: none) {
   @if $pie-url {
-    // TODO try: behavior: assets-url($pie-url, '');
-    behavior: assets-url("#{$pie-url}", '');
+    behavior: asset-url($pie-url, '');
     // http://css3pie.com/documentation/supported-css3-features/#pie-poll
     @if $poll != none {
       -pie-poll: $poll;
@@ -71,7 +70,7 @@ $boxsizing-url: "boxsizing.htc";
           box-sizing: $params;
   @if $boxsizing-url {
     // https://github.com/Schepp/box-sizing-polyfill
-    *behavior: assets-url($boxsizing-url, ''); // IE 6-7
+    *behavior: asset-url($boxsizing-url, ''); // IE 6-7
   }
 }
 
