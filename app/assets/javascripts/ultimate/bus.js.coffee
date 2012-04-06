@@ -1,3 +1,7 @@
+# TODO bus as class
+# TODO may be, settable maxInstances
+# TODO tree presentative logic in eventName syntax provided by ':', '.', ...
+
 @bus =
   events: {}
 

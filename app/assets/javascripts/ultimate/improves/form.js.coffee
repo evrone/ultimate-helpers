@@ -12,7 +12,7 @@
 
 
   $.fn.closestEdge = (edgeSelector = '.input-line, tr, fieldset, .g-box, form') ->
-    deprecate 'closestEdge', '$().closest(\'selector\')'
+    deprecate 'closestEdge', '$().closest(\'your selector\')'
     @closest edgeSelector
 
 
@@ -137,6 +137,7 @@
 
   $.fillTabIndexesCounter = 0
 
+  # TODO this may be .is 'input'
   $.fn.fillTabIndexes = (onlyVisible = false) ->
     if @length
       @find("input:not([readonly])#{if onlyVisible then ':visible' else ''}").each ->
