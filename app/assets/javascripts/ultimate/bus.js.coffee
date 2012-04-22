@@ -1,9 +1,13 @@
 # TODO bus as class
 # TODO may be, settable maxInstances
 # TODO tree presentative logic in eventName syntax provided by ':', '.', ...
+# require underscore
 
-@bus =
+class EventBus
+
   events: {}
+
+  #constructor: ->
 
   bind: (eventName, callback) ->
     if @events[eventName]
@@ -44,4 +48,10 @@
       false
 
   trigger: (eventName, callbackArguments...) ->
-    callback.apply(@, callbackArguments)  for callback in @events[eventName] or []
+    for callback in @events[eventName] or []
+      callback.apply(@, callbackArguments)
+
+
+
+# transitional instance
+@bus = new EventBus

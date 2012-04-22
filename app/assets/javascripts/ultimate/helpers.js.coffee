@@ -7,6 +7,7 @@
 
 @DEBUG_MODE ?= false
 @TEST_MODE ?= false
+@WARNINGS ?= true
 
 @cout = =>
   args = @args arguments
@@ -25,9 +26,12 @@
 
 @deprecate = (subject, instead = null) =>
   @cout 'warn', "\"#{subject}\" DEPRECATED!" + if instead then " Use instead: \"#{instead}\"" else ''
+  return
 
 @warning = (subject, instead = null) =>
-  @cout 'warn', "\"#{subject}\" WARNING!" + if instead then " Use instead: \"#{instead}\"" else ''
+  if @WARNINGS
+    @cout 'warn', "\"#{subject}\" WARNING!" + if instead then " Use instead: \"#{instead}\"" else ''
+  return
 
 @args = (a) ->
   r = []
