@@ -20,6 +20,7 @@
 # If you need to address multiple instances of the same class in the same view, you can prefix the dom_id:
 #
 #   dom_id(Post.find(45), :edit) # => "edit_post_45"
+# TODO sync with rorId and ror_id
 @dom_id = (record, prefix = '') =>
   if record_id = @record_key_for_dom_id record
     "#{@dom_class record, prefix}_#{record_id}"

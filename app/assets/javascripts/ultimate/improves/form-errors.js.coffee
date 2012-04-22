@@ -94,7 +94,7 @@
       responseJSON = $.parseJSON jqXHR.responseText
       errors = responseJSON['errors'] or responseJSON
       if errors
-        jFields = jForm.find '[name*="["]:input:visible'
+        jFields = jForm.find '[name*="["]:input:visible' # TODO research without :visible, because has custom elements
         if jFields.length
           for fieldErrors, fieldName of errors
             jField = jFields.filter "[name$=\"[#{fieldName}]\"]"

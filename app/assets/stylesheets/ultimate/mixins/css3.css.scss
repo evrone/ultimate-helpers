@@ -76,7 +76,7 @@ $boxsizing-url: "polyfills/boxsizing.htc";
 
 // !!! EXPERIMENTAL !!!
 // @include linear-gradient(white, $c-black, left)
-@mixin linear-gradient($color_start, $color_stop, $start: top, $color_middle: none) {
+@mixin linear-gradient($color_start, $color_stop, $start: top, $color_middle: none, $percent_middle: 50%) {
   // TODO: colors as list argument
   $wk_start: left top;
   $wk_stop: left bottom;
@@ -97,8 +97,8 @@ $boxsizing-url: "polyfills/boxsizing.htc";
   $wk-colors: "from(#{$color_start})";
   $colors: "#{$color_start}";
   @if $color_middle != none {
-    $wk-colors: "#{$wk-colors}, color-stop(50%, #{$color_middle})";
-    $colors: "#{$colors}, #{$color_middle}";
+    $wk-colors: "#{$wk-colors}, color-stop(#{$percent_middle}, #{$color_middle})";
+    $colors: "#{$colors}, #{$color_middle} #{$percent_middle}";
   } @else {
     $bg-color: mix($color_start, $color_stop);
   }
@@ -168,7 +168,10 @@ $boxsizing-url: "polyfills/boxsizing.htc";
   }
 }
 
-@mixin ellipsis {
+@mixin ellipsis($overflow: hidden) {
+  @if $overflow != false {
+    overflow: $overflow;
+  }
   -o-text-overflow: ellipsis; // Opera Mini and Opera Mobile
      text-overflow: ellipsis; // all
 }

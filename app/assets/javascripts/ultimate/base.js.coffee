@@ -10,13 +10,12 @@
  *
 ###
 
-@Ultimate = {}
-
 @_delete = (object, key) ->
   value = object[key]
   delete object[key]
   value
 
+# TODO do ($ = jQuery) =>
 ( ($) =>
 
   $.regexp ||= {}

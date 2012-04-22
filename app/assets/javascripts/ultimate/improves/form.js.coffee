@@ -11,7 +11,8 @@
   
 
 
-  $.fn.closestEdge = (edgeSelector = '.input-line, tr, fieldset, .g-box, form') ->
+  $.fn.closestEdge = (edgeSelector = '.input-line, .field, .field-line, tr, fieldset, .g-box, form') ->
+    # TODO remove and extract edgeSelector, else undeprecate
     deprecate 'closestEdge', '$().closest(\'your selector\')'
     @closest edgeSelector
 

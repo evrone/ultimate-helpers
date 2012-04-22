@@ -10,10 +10,16 @@
   }
 }
 
-@mixin inline-block {
+@mixin inline-block($width: false, $height: false) {
   display: inline-block;
   *display: inline;
   *zoom: 1;
+  @if $width != false {
+    width: $width;
+  }
+  @if $height != false {
+    height: $height;
+  }
 }
 
 @mixin g-justify($item: unquote(".item")) {
