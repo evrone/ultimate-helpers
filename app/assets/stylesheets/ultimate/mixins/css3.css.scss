@@ -5,12 +5,16 @@
 $pie-url: "polyfills/PIE.htc";
 $boxsizing-url: "polyfills/boxsizing.htc";
 
-@mixin pie($poll: none) {
+@mixin pie($poll: none, $watch-ancestors: 0) {
   @if $pie-url {
     behavior: asset-url($pie-url, '');
     // http://css3pie.com/documentation/supported-css3-features/#pie-poll
     @if $poll != none {
       -pie-poll: $poll;
+    }
+    // http://css3pie.com/documentation/supported-css3-features/#pie-watch-ancestors
+    @if $watch-ancestors > 0 {
+      -pie-watch-ancestors: $watch-ancestors;
     }
   }
 }
