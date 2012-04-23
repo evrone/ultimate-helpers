@@ -24,12 +24,13 @@
 
 @mixin g-justify($item: unquote(".item")) {
   text-align: justify;
-  *text-justify: newspaper;
+  text-justify: newspaper;
   text-align-last: justify;
-  font-size: 0;
+  font-size: 2px;
   line-height: 0;
   > #{$item}, &:after {
     @include inline-block;
+    text-align: left;
   }
   &:after {
     content: "";
