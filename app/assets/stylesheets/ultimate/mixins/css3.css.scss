@@ -116,11 +116,9 @@ $boxsizing-url: "polyfills/boxsizing.htc";
     background-image:       -moz-linear-gradient($start, unquote($colors)); // actual
     background-image:        -ms-linear-gradient($start, unquote($colors)); // IE 10+
     background-image:         -o-linear-gradient($start, unquote($colors)); // Opera 11.10+
-    // TODO: conflict with Compass
-    //background-image:            linear-gradient($start, unquote($colors)); // future
+    background-image:            linear-gradient($start, unquote($colors)); // future
     @if $pie-url {
-    // TODO: conflict with Compass
-    //  -pie-background: $bg-color linear-gradient($start, unquote($colors)); // IE 6-9
+      -pie-background: $bg-color linear-gradient($start, unquote($colors)); // IE 6-9
     }
   }
 }
