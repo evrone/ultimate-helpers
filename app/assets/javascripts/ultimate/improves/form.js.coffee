@@ -11,7 +11,7 @@
   
 
 
-  $.fn.closestEdge = (edgeSelector = '.input-line, .field, .field-line, tr, fieldset, .g-box, form') ->
+  $.fn.closestEdge = (edgeSelector = '.input-line, .field, .field-line, tr, li, fieldset, .g-box, form') ->
     # TODO remove and extract edgeSelector, else undeprecate
     deprecate 'closestEdge', '$().closest(\'your selector\')'
     @closest edgeSelector
@@ -129,9 +129,7 @@
         if attr = jInput.attr replacerAttr
           # dup attr
           newAttr = attr
-          cout 'info', 'DEBUG >> replacerPairs', replacerPairs
           for pair in replacerPairs
-            cout 'info', 'DEBUG >> ', newAttr, pair[0], pair[1]
             newAttr = newAttr.replace pair[0], pair[1]
           if newAttr isnt attr
             jInput.attr replacerAttr, newAttr
