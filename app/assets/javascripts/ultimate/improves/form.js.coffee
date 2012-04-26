@@ -25,9 +25,9 @@
       jLabel = jInput.data 'closestLabel'  unless passCache
       unless jLabel
         if jLabel is false
-          jLabel = length: 0
+          return null
         else
-          jLabel = length: 0
+          jLabel = {length: 0}
           jEdge = jInput.closestEdge()   # TODO may be need params
           inputId = jInput.attr 'id'
           if inputId
@@ -39,19 +39,24 @@
               # try search in the closest form
               jLabel = jInput.closest('form').find labelSelectorByFor
               # trust only unique label on the form
-              jLabel = length: 0  if jLabel.length > 1
+              jLabel = {length: 0}  if jLabel.length > 1
           # try get first labet in the edge area
           jLabel = jEdge.find('label:first')  unless jLabel.length
           # taken!
           if jLabel.length
             # oh, this label already linked
             if jLabel.data 'closestInput'
-              jLabel = length: 0
+              jLabel = {length: 0}
             else
               jLabel.data 'closestInput', jInput
           jInput.data 'closestLabel', jLabel
-      jLabel = length: 0  if strongById and jLabel.length and jLabel.attr('for') isnt jInput.attr('id')
-      if jLabel.length then jLabel[0] else null
+      if jLabel.length
+        if strongById and jLabel.attr('for') isnt jInput.attr('id')
+          null
+        else
+          jLabel[0]
+      else
+        null
 
 
 
