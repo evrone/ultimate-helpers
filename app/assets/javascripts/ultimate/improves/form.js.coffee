@@ -109,7 +109,7 @@
   $.fn.setNestedIndex = ->
     params = {}
     if arguments.length is 1
-      params = arguments
+      params = arguments[0]
     else
       params[arguments[0]] = (if arguments.length > 2 then [arguments[1], arguments[2]] else arguments[1])
     replacers =
@@ -125,9 +125,13 @@
     ( if @is(':input') then @filter('[name]') else @find(':input[name]') ).map ->
       jInput = $ @
       for replacerAttr, replacerPairs of replacers
+        # if extract attribute
         if attr = jInput.attr replacerAttr
+          # dup attr
           newAttr = attr
+          cout 'info', 'DEBUG >> replacerPairs', replacerPairs
           for pair in replacerPairs
+            cout 'info', 'DEBUG >> ', newAttr, pair[0], pair[1]
             newAttr = newAttr.replace pair[0], pair[1]
           if newAttr isnt attr
             jInput.attr replacerAttr, newAttr
