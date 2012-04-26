@@ -120,8 +120,8 @@
         [index, oldIndex] = index
       else
         oldIndex = '\\d*'
-      replacers['id'].push   [ new RegExp "_#{nestedField}_#{oldIndex}_",          "_#{nestedField}_#{index}_"  ]
-      replacers['name'].push [ new RegExp "\\[#{nestedField}\\]\\[#{oldIndex}\\]", "[#{nestedField}][#{index}]" ]
+      replacers['id'].push   [ (new RegExp "_#{nestedField}_#{oldIndex}_"),          "_#{nestedField}_#{index}_"  ]
+      replacers['name'].push [ (new RegExp "\\[#{nestedField}\\]\\[#{oldIndex}\\]"), "[#{nestedField}][#{index}]" ]
     ( if @is(':input') then @filter('[name]') else @find(':input[name]') ).map ->
       jInput = $ @
       for replacerAttr, replacerPairs of replacers
