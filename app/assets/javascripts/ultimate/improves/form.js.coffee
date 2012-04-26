@@ -132,8 +132,8 @@
           for pair in replacerPairs
             newAttr = newAttr.replace pair[0], pair[1]
           if newAttr isnt attr
-            jInput.attr replacerAttr, newAttr
             jInput.closestLabel(true).attr('for', newAttr)  if replacerAttr is 'id'
+            jInput.attr replacerAttr, newAttr
     @
 
 
