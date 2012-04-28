@@ -28,7 +28,7 @@ $boxsizing-url: "polyfills/boxsizing.htc";
 }
 
 @mixin border-radius($params) {
-  @include vendors(webkit moz, border-radius, $params);
+  @include vendors(webkit, border-radius, $params);
   //-webkit-border-radius: $params; // iOS-Safari <= 3.2, Android <= 2.1
   //   -moz-border-radius: $params; // FF 3.6
   //        border-radius: $params;
@@ -42,7 +42,7 @@ $boxsizing-url: "polyfills/boxsizing.htc";
       $i: $i + 1;
       $p: nth($params, $i);
       @if $p != none and $p != false {
-        @include vendors(webkit moz, border-#{$corner}-radius, $p);
+        @include vendors(webkit, border-#{$corner}-radius, $p);
       }
     }
   } @else if $l == 2 {
@@ -59,11 +59,9 @@ $boxsizing-url: "polyfills/boxsizing.htc";
 @mixin box-shadow($params0, $params1: false) {
   @if $params1 {
     -webkit-box-shadow: $params0, $params1; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
-       -moz-box-shadow: $params0, $params1; // FF 3.6
             box-shadow: $params0, $params1;
   } @else {
     -webkit-box-shadow: $params0;
-       -moz-box-shadow: $params0;
             box-shadow: $params0;
   }
 }
