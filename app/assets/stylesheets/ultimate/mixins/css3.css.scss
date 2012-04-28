@@ -30,7 +30,6 @@ $boxsizing-url: "polyfills/boxsizing.htc";
 @mixin border-radius($params) {
   @include vendors(webkit, border-radius, $params);
   //-webkit-border-radius: $params; // iOS-Safari <= 3.2, Android <= 2.1
-  //   -moz-border-radius: $params; // FF 3.6
   //        border-radius: $params;
 }
 
@@ -46,11 +45,14 @@ $boxsizing-url: "polyfills/boxsizing.htc";
       }
     }
   } @else if $l == 2 {
-    @debug "border-radius_complex don't support 2 parameters now!";
-    @warn "border-radius_complex don't support 2 parameters now!";
+    $first: nth($params, 0);
+    $second: nth($params, 1);
+    @include border-radius_complex($first, $second, $first, $second);
   } @else if $l == 3 {
-    @debug "border-radius_complex don't support 3 parameters now!";
-    @warn "border-radius_complex don't support 3 parameters now!";
+    $first: nth($params, 0);
+    $second: nth($params, 1);
+    $third: nth($params, 2);
+    @include border-radius_complex($first, $second, $third, $second);
   } @else {
     @include border-rasius($params);
   }
