@@ -58,8 +58,8 @@ $boxsizing-url: "polyfills/boxsizing.htc";
 
 @mixin box-shadow($params0, $params1: false) {
   @if $params1 {
-    -webkit-box-shadow: $params0, $params1; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
-            box-shadow: $params0, $params1;
+    -webkit-box-shadow: $params0 $params1; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
+            box-shadow: $params0 $params1;
   } @else {
     -webkit-box-shadow: $params0;
             box-shadow: $params0;
