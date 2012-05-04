@@ -34,6 +34,8 @@ $font-family_accident_bold: "PFDinTextCondProRegular";
   }
 }
 
+// TODO http://paulirish.com/2010/font-face-gotchas/
+// TODO -webkit-font-smoothing: antialiased; /* This needs to be set or some font faced fonts look bold on Mac. */
 @mixin g-font_accident_bold($font-size: false, $line-height: false) {
   font-family: $font-family_accident_bold;
   font-weight: normal;
@@ -70,25 +72,3 @@ $font-family_accident_bold: "PFDinTextCondProRegular";
     }
   }
 }
-
-
-@mixin sticky-footer($layout-padding-bottom, $footer-selector: ".l-page__footer", $layout-selector: ".l-page") {
-  html {
-    height: 100%;
-  }
-  body {
-    position: relative;
-    min-height: 100%;
-  }
-  #{$layout-selector} {
-    position: static;
-    padding-bottom: $layout-padding-bottom;
-    #{$footer-selector} {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-    }
-  }
-}
-
-
