@@ -65,13 +65,18 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   }
 }
 
+//  Provide CSS3 box-shadow property.
+//    example:
+//      @include box-shadow(#00F -10px 0 10px, #F00 10px 0 10px);
+//    produce:
+//      -webkit-box-shadow: #00F -10px 0 10px, #F00 10px 0 10px; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
+//              box-shadow: #00F -10px 0 10px, #F00 10px 0 10px;
 @mixin box-shadow($shadow0, $shadow1: false) {
+  $shadows: $shadow0;
   @if $shadow1 {
-    $shadow0: "#{$shadow0}, #{$shadow1}";
+    $shadows: "#{$shadows}, #{$shadow1}";
   }
-  $shadows: unquote($shadow0);
-  -webkit-box-shadow: $shadows; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
-          box-shadow: $shadows;
+  @include vendors(webkit, box-shadow, unquote($shadows));
 }
 
 //  Change the box model of element.
@@ -172,6 +177,11 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   }
 }
 
+//  TODO redisign with parsing params, activate IE filter
+//    example:
+//      @include text-shadow(#000 0 2px 1px);
+//    produce:
+//      text-shadow: #000 0 2px 1px;
 @mixin text-shadow($color, $params: none, $direction: 180, $strength: 1) {
   @if $color == none {
     text-shadow: none;
@@ -182,12 +192,31 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   }
 }
 
+
+//    example:
+//      @include ellipsis;
+//    produce:
+//      overflow: hidden;           // need to work text-overflow
+//      -o-text-overflow: ellipsis; // Opera Mini and Opera Mobile
+//         text-overflow: ellipsis; // all
 @mixin ellipsis($overflow: hidden) {
   @if $overflow != false {
     overflow: $overflow;
   }
-  -o-text-overflow: ellipsis; // Opera Mini and Opera Mobile
-     text-overflow: ellipsis; // all
+  @include vendors(o, text-overflow, ellipsis);
+}
+
+//    $param: none || text || all || element
+//    example:
+//      @include user-select;
+//    produce:
+//      -webkit-user-select: none;
+//      -moz-user-select: none;
+//      -ms-user-select: none; // IE 10+
+//      -o-user-select: none;
+//      user-select: none;
+@mixin user-select($param: none) {
+  @include vendors(webkit moz ms o, user-select, $param);
 }
 
 //  Provide vendorized CSS transition.
