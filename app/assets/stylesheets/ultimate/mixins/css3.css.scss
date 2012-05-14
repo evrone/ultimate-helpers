@@ -1,13 +1,15 @@
 // Use compatibility tables from http://caniuse.com/
 // http://css3pie.com/documentation/supported-css3-features/#pie-watch-ancestors
 // http://css3pie.com/documentation/supported-css3-features/#pie-lazy-init
+// TODO use !default http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#variable_defaults_
 
-$pie-url: "polyfills/PIE.htc";
-$boxsizing-url: "polyfills/boxsizing.htc";
+$support-ie: true !default;
+$pie-url: asset-url("polyfills/PIE.htc", '') !default;
+$boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 
 @mixin pie($poll: none, $watch-ancestors: 0) {
-  @if $pie-url {
-    behavior: asset-url($pie-url, '');
+  @if $support-ie and $pie-url {
+    behavior: $pie-url;
     // http://css3pie.com/documentation/supported-css3-features/#pie-poll
     @if $poll != none {
       -pie-poll: $poll;
@@ -19,60 +21,72 @@ $boxsizing-url: "polyfills/boxsizing.htc";
   }
 }
 
-// TODO may be funcs, may be other (see enother realizations)
-@mixin vendors($vendors, $property, $params) {
-  @each $vendor in $vendors {
-    -#{$vendor}-#{$property}: $params;
-  }
-  #{$property}: $params;
-}
+@import "ultimate/mixins/vendors";
+@import "ultimate/mixins/routines";
 
+//  Round all corners by a specific amount.
+//    example:
+//      @include border-radius(5px 5px 0 0);
+//    produce:
+//      -webkit-border-radius: 5px 5px 0 0; // iOS-Safari <= 3.2, Android <= 2.1
+//              border-radius: 5px 5px 0 0;
 @mixin border-radius($params) {
   @include vendors(webkit, border-radius, $params);
-  //-webkit-border-radius: $params; // iOS-Safari <= 3.2, Android <= 2.1
-  //   -moz-border-radius: $params; // FF 3.6
-  //        border-radius: $params;
 }
 
+//  Round mentioned corners by a specific amounts without muted corners by none or false.
+//    example:
+//      @include border-radius__complex(5px 7px none);
+//    produce:
+//      -webkit-border-top-left-radius: 5px; // iOS-Safari <= 3.2, Android <= 2.1
+//              border-top-left-radius: 5px;
+//      -webkit-border-top-right-radius: 7px; // iOS-Safari <= 3.2, Android <= 2.1
+//              border-top-right-radius: 7px;
+//      -webkit-border-bottom-left-radius: 7px; // iOS-Safari <= 3.2, Android <= 2.1
+//              border-bottom-left-radius: 7px;
 @mixin border-radius_complex($params) {
-  $l: length($params);
-  @if $l == 4 {
-    $i: 0;
-    @each $corner in top-left, top-right, bottom-right, bottom-left {
-      $i: $i + 1;
-      $p: nth($params, $i);
-      @if $p != none and $p != false {
-        @include vendors(webkit, border-#{$corner}-radius, $p);
+  @if isset($params) {
+    $l: length($params);
+    @if $l == 1 or complex-isset($params) {
+      @include border-radius($params);
+    } @else {
+      @if $l < 4 {
+        $params: complex-list($params);
+      }
+      $i: 0;
+      @each $corner in top-left, top-right, bottom-right, bottom-left {
+        $i: $i + 1;
+        $p: nth($params, $i);
+        @if isset($p) {
+          @include vendors(webkit, border-#{$corner}-radius, $p);
+        }
       }
     }
-  } @else if $l == 2 {
-    @debug "border-radius_complex don't support 2 parameters now!";
-    @warn "border-radius_complex don't support 2 parameters now!";
-  } @else if $l == 3 {
-    @debug "border-radius_complex don't support 3 parameters now!";
-    @warn "border-radius_complex don't support 3 parameters now!";
-  } @else {
-    @include border-rasius($params);
   }
 }
 
-@mixin box-shadow($params0, $params1: false) {
-  @if $params1 {
-    -webkit-box-shadow: $params0 $params1; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
-            box-shadow: $params0 $params1;
-  } @else {
-    -webkit-box-shadow: $params0;
-            box-shadow: $params0;
+@mixin box-shadow($shadow0, $shadow1: false) {
+  @if $shadow1 {
+    $shadow0: "#{$shadow0}, #{$shadow1}";
   }
+  $shadows: unquote($shadow0);
+  -webkit-box-shadow: $shadows; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
+          box-shadow: $shadows;
 }
 
+//  Change the box model of element.
+//    example:
+//      @include box-sizing;
+//    produce:
+//      -webkit-box-sizing: border-box; // Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0
+//         -moz-box-sizing: border-box; // actual
+//              box-sizing: border-box; //
+//      *behavior: url("/assets/polyfills/boxsizing.htc"); // IE 6-7
 @mixin box-sizing($params: border-box) {
-  -webkit-box-sizing: $params; // Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0
-     -moz-box-sizing: $params; // actual
-          box-sizing: $params;
-  @if $boxsizing-url {
+  @include vendors(webkit moz, box-sizing, $params);
+  @if $support-ie and $boxsizing-url {
     // https://github.com/Schepp/box-sizing-polyfill
-    *behavior: asset-url($boxsizing-url, ''); // IE 6-7
+    *behavior: $boxsizing-url; // IE 6-7
   }
 }
 
@@ -114,11 +128,9 @@ $boxsizing-url: "polyfills/boxsizing.htc";
     background-image:       -moz-linear-gradient($start, unquote($colors)); // actual
     background-image:        -ms-linear-gradient($start, unquote($colors)); // IE 10+
     background-image:         -o-linear-gradient($start, unquote($colors)); // Opera 11.10+
-    // TODO: conflict with Compass
-    //background-image:            linear-gradient($start, unquote($colors)); // future
-    @if $pie-url {
-    // TODO: conflict with Compass
-    //  -pie-background: $bg-color linear-gradient($start, unquote($colors)); // IE 6-9
+    background-image:            linear-gradient($start, unquote($colors)); // future
+    @if $support-ie and $pie-url {
+      -pie-background: $bg-color linear-gradient($start, unquote($colors)); // IE 6-9
     }
   }
 }
@@ -145,7 +157,7 @@ $boxsizing-url: "polyfills/boxsizing.htc";
 
 @mixin opacity($value: 0.5) {
   opacity: $value;
-  $value: $value * 100;
+  $value: round($value * 100);
   @if $value < 100 {
     filter: progid:DXImageTransform.Microsoft.Alpha(opacity=#{$value});
   } @else {
@@ -178,28 +190,52 @@ $boxsizing-url: "polyfills/boxsizing.htc";
      text-overflow: ellipsis; // all
 }
 
-
+//  Provide vendorized CSS transition.
+//    example:
+//      @include transition(all, 0.5s);
+//    produce:
+//      -webkit-transition: all 0.5s ease; // actual
+//         -moz-transition: all 0.5s ease; // FF 8+
+//          -ms-transition: all 0.5s ease; // IE 10+
+//           -o-transition: all 0.5s ease; // Opera 11.6+
+//    without:
+//              transition: all 0.5s ease; // future
 @mixin transition($what, $time, $method: ease) {
-  -webkit-transition: $what $time $method; // actual
-     -moz-transition: $what $time $method; // FF 8+
-      -ms-transition: $what $time $method; // IE 10+
-       -o-transition: $what $time $method; // Opera 11.6+
-       // transition: $what $time $method; // future
+  @include vendors(webkit moz ms o, transition, $what $time $method, false);
 }
 
+//  Provide vendorized CSS transform.
+//    example:
+//      @include transform(scale(1.2, 1.2));
+//    produce:
+//      -webkit-transform: $params; // actual
+//         -moz-transform: $params; // actual
+//          -ms-transform: $params; // IE 9+
+//           -o-transform: $params; // actual
+//    without:
+//              transform: $params; // future
 @mixin transform($params) {
-  -webkit-transform: $params; // actual
-     -moz-transform: $params; // actual
-      -ms-transform: $params; // IE 9+
-       -o-transform: $params; // actual
-       // transform: $params; // future
+  @include vendors(webkit moz ms o, transform, $params, false);
+}
+
+//  Scale an object along the x and y axis.
+//    example:
+//      @include scale(1.2);
+//    produce:
+//      -webkit-transform: scale(1.2, 1.2);
+//         -moz-transform: scale(1.2, 1.2);
+//          -ms-transform: scale(1.2, 1.2);
+//           -o-transform: scale(1.2, 1.2);
+@mixin scale($scale-x, $scale-y: $scale-x) {
+  @include transform(scale($scale-x, $scale-y));
 }
 
 // TODO
-//@mixin placeholder {
-//  &::-webkit-input-placeholder { color: #a3a3a3; }
-//  &:-moz-placeholder {
-//    color: #a3a3a3;
+//@mixin placeholder($params) {
+//  &::-webkit-input-placeholder, &:-moz-placeholder {
+//    #{$params};
 //  }
+//}
 //input::-webkit-input-placeholder { color: #a3a3a3 !important;}
 //input:-moz-placeholder { color: #a3a3a3 !important; }
+

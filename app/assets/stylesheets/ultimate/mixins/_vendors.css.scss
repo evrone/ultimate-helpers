@@ -1,0 +1,32 @@
+//  This mixin provides basic support for CSS properties with custom vendors implementations
+//  are identical except for the property prefix.
+//    example:
+//      @include vendors(webkit moz, border-radius, 5px);
+//    produce:
+//      -webkit-border-radius: 5px;
+//         -moz-border-radius: 5px;
+//              border-radius: 5px;
+@mixin vendors($vendors, $property, $params, $origin: true) {
+  @each $vendor in $vendors {
+    -#{$vendor}-#{$property}: $params;
+  }
+  @if $origin {
+    #{$property}: $params;
+  }
+}
+
+//  Same as veendors(), but for cases when the property is the same and the value is vendorized.
+//    examples:
+//      @include vendors-param(webkit moz ms o, background-image, linear-gradient(left top, #F00, #FF0 50%, #0F0));
+//    produce:
+//      background-image: -webkit-linear-gradient(left top, #F00, #FF0 50%, #0F0);
+//      background-image:    -moz-linear-gradient(left top, #F00, #FF0 50%, #0F0);
+//      background-image:     -ms-linear-gradient(left top, #F00, #FF0 50%, #0F0);
+//      background-image:      -o-linear-gradient(left top, #F00, #FF0 50%, #0F0);
+//      background-image:         linear-gradient(left top, #F00, #FF0 50%, #0F0);
+@mixin vendors-param($vendors, $property, $params) {
+  @each $vendor in $vendors {
+    #{$property}: -#{$vendor}-#{$params};
+  }
+  #{$property}: $params;
+}

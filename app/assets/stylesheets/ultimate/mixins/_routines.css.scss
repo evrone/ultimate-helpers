@@ -1,0 +1,52 @@
+
+@function isset($v) {
+  @return $v != none and $v != false;
+}
+
+@function complex-isset($list, $l: length($list)) {
+  $i: 1;
+  @while $i <= $l and isset(nth($list, $i)) {
+    $i: $i + 1;
+  }
+  @return $i > $l;
+}
+
+@function complex-list($params) {
+  $l: length($params);
+  @if $l < 4 {
+    @if $l < 3 {
+      $params: join($params, nth($params, 1));
+    }
+    @if $l > 1 {
+      $params: join($params, nth($params, 2));
+    } @else {
+      $params: join($params, $params);
+    }
+  }
+  @return $params;
+}
+
+@mixin complex-property($property, $params, $complex-params: false) {
+  @if isset($params) {
+    $l: length($params);
+    @if $l == 1 or complex-isset($params) {
+      #{$property}: $params;
+    } @else {
+      @if $l < 4 {
+        @if length($complex-params) >= 4 {
+          $params: $complex-params;
+        } @else {
+          $params: complex-list($params);
+        }
+      }
+      $i: 0;
+      @each $side in top, right, bottom, left {
+        $i: $i + 1;
+        $p: nth($params, $i);
+        @if isset($p) {
+          #{$property}-#{$side}: $p;
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,77 @@
+@import "ultimate/mixins/routines";
 
+$support-ie: true !default;
+
+//  example:
+//    @include complex-padding(10px 20px none);
+//  same:
+//    padding: {
+//      top: 10px;
+//      right: 20px;
+//      left: 20px;
+//    }
+//  produce:
+//    padding-top: 10px;
+//    padding-right: 20px;
+//    padding-left: 20px;
+@mixin complex-padding($params) {
+  $params: complex-list($params);
+  @include complex-property(padding, $params);
+}
+
+//  Provide complex box metrics.
+//    example:
+//      @include box(400px, none, 10px 20px none, 0 auto);
+//    produce:
+//      padding-top: 10px;
+//      padding-right: 20px;
+//      padding-left: 20px;
+//      margin: 0 auto;
+//      width: 360px;
+//  TODO border as 2px solid black
+@mixin box($width,
+           $height          : false,
+           $padding         : false,
+           $margin          : false,
+           $border          : false,
+           $include-padding : true,
+           $include-margin  : false,
+           $include-border  : true) {
+  $properties: $padding $margin $border;
+  $include-properties: $include-padding $include-margin $include-border;
+  $i: 0;
+  @each $property-name in padding, margin, border {
+    $i: $i + 1;
+    $property: nth($properties, $i);
+    @if $property {
+      $complex: false;
+      @if nth($include-properties, $i) and $property {
+        $complex: complex-list($property);
+        @if isset($width) {
+          $width: $width - nth($complex, 2) - nth($complex, 4);
+        }
+        @if isset($height) {
+          $height: $height - nth($complex, 1) - nth($complex, 3);
+        }
+      }
+      @include complex-property($property-name, $property, $complex);
+    }
+  }
+  @if isset($width) {
+    width: $width;
+  }
+  @if isset($height) {
+    height: $height;
+  }
+}
+
+//  Set to container includes float blocks.
+//  DEPRECATED, use "overflow: hidden;" instead.
 @mixin g-line {
-  *zoom: 1;
-  _height: 0;
+  @if $support-ie {
+    *zoom: 1;
+    _height: 0;
+  }
   &:after {
     content: " ";
     display: block;
@@ -10,22 +80,46 @@
   }
 }
 
-@mixin inline-block($width: false, $height: false) {
+//  Set to element which disappear after animation in IE6-7.
+//  DEPRECATED
+@mixin fix-disapp {
+  *overflow: hidden;
+  _zoom: 1;
+}
+
+//  Provides a cross-browser method to implement `display: inline-block;`
+//    example:
+//      @include inline-block(80px, 20px);
+//    produce:
+//      display: inline-block;
+//      *display: inline;
+//      *zoom: 1;
+//      width: 80px;
+//      height: 20px;
+//      vertical-align: middle;
+@mixin inline-block($width: false, $height: false, $vertical-align: middle) {
   display: inline-block;
-  *display: inline;
-  *zoom: 1;
-  @if $width != false {
+  @if $support-ie {
+    *display: inline;
+    *zoom: 1;
+  }
+  @if $width != none and $width != false {
     width: $width;
   }
-  @if $height != false {
+  @if $height != none and $height != false {
     height: $height;
+  }
+  @if $vertical-align != none and $vertical-align != false {
+    vertical-align: $vertical-align;
   }
 }
 
 @mixin g-justify($item: unquote(".item")) {
   text-align: justify;
-  text-justify: newspaper;
-  text-align-last: justify;
+  @if $support-ie {
+    text-justify: newspaper;
+    text-align-last: justify;
+  }
   font-size: 2px;
   line-height: 0;
   > #{$item}, &:after {
@@ -50,7 +144,7 @@
 }
 
 @mixin block-list($item: "li") {
-  @include g-line;
+  overflow: hidden; // @include g-line;
   position: relative;
   list-style: none;
   margin: 0;
@@ -73,9 +167,21 @@
   }
 }
 
-// назначается блокам, которые пропадают после анимации в ИЕ6-7
-// DEPRICATED
-@mixin fix-disapp {
-  *overflow: hidden;
-  _zoom: 1;
+@mixin sticky-footer($layout-padding-bottom, $footer-selector: ".l-page__footer", $layout-selector: ".l-page") {
+  html {
+    height: 100%;
+  }
+  body {
+    position: relative;
+    min-height: 100%;
+  }
+  #{$layout-selector} {
+    position: static;
+    padding-bottom: $layout-padding-bottom;
+    #{$footer-selector} {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+  }
 }
