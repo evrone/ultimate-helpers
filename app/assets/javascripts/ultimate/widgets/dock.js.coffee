@@ -5,7 +5,13 @@
   Observers: {}
   Plugins: {}
 
+  docks: []
+
   widgetsHeap: []
+
+  initialize: ->
+    @docks = [@Proto, @Widgets, @LazyWidgets, @Observers, @Plugins]
+    @distributeClassNames()
 
   # get last instance by default
   getWidgetByName: (widgetClassName, instanceIndex = -1) ->
@@ -41,11 +47,18 @@
         widget = new widgetClass jContainer, options
         widget.heapIndex = @widgetsHeap.push widget
       else
-        warning "Ultimate.createWidget() can't create widget on passed jContainer, because it already has widget #{widgetClass.name}"
+        warning "Ultimate.createWidget() can't create widget on passed jContainer, because it already has widget #{widgetClass.className}"
     else
       warning "Ultimate.createWidget() can't create widget, because blocked by widgetClass.canCreateInstance()"
     widget
 
+  distributeClassNames: (widgetClassesOrDocs = @docks, deep = true) ->
+    if deep
+      for dockName, dock of widgetClassesOrDocs
+        @distributeClassNames dock, false
+    else
+      for widgetName, widgetClass of widgetClassesOrDocs
+        widgetClass.className = widgetName
 
 #
 _.bindAll Ultimate

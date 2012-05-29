@@ -21,6 +21,7 @@ class Ultimate.Proto.Widget extends Ultimate.Proto.Gear
   # TODO move to @defaults.options :
   @loadingWidthMethodName: 'innerWidth'
   @loadingHeightMethodName: 'innerHeight'
+  loadingState: false
 
   eventsMatcher = /^(\S+)\s*(.*)$/ # /^\s*([\w\.:]+)(\s+(.+?))?\s*$/
   @events: {}
@@ -106,7 +107,7 @@ class Ultimate.Proto.Widget extends Ultimate.Proto.Gear
     jLoadingContainer = @getJLoadingContainer()
     if jLoadingContainer and jLoadingContainer.length
       jLoadingContainer.children('.loading-overlay').remove()
-      if state
+      if @loadingState = state
         width = jLoadingContainer[@constructor.loadingWidthMethodName]()
         height = jLoadingContainer[@constructor.loadingHeightMethodName]()
         text = "<span class=\"text\">#{text}</span>"  if text

@@ -57,6 +57,6 @@ do ($ = jQuery) ->
  * ajaxError       .ultimateFlash('ajaxError'[, String text = settings.translations.defaultErrorText][, Arguments errorArgs = []])
 ###
 
-Ultimate.createPlugin = (widgetClass, pluginName = widgetClass.name) ->
-  cout "Ultimate.createPlugin", (typeof widgetClass), pluginName
+Ultimate.createPlugin = (widgetClass, pluginName = widgetClass.className) ->
+  cout "Ultimate.createPlugin", pluginName
   jQuery.fn[pluginName] = -> @pluginAdapter widgetClass, pluginName, arguments

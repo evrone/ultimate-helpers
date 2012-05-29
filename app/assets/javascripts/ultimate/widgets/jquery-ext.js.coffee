@@ -28,7 +28,7 @@ do ($ = jQuery) ->
       for o in @
         widgets = $(o).data('widgets') or []
         for w in widgets
-          return w  if w.constructor.name is widgetClass
+          return w  if w.constructor.className is widgetClass
     else if Ultimate.isWidgetClass widgetClass
       for o in @
         widgets = $(o).data('widgets') or []
@@ -43,7 +43,7 @@ do ($ = jQuery) ->
   $.fn.hasWidget = (widgetClass) ->
     if _.isString widgetClass
       for o in @
-        return true  if _.any $(o).data('widgets') or [], (w) -> w.constructor.name is widgetClass
+        return true  if _.any $(o).data('widgets') or [], (w) -> w.constructor.className is widgetClass
     else if Ultimate.isWidgetClass widgetClass
       for o in @
         return true  if _.any $(o).data('widgets') or [], (w) -> w.constructor is widgetClass
@@ -66,7 +66,7 @@ do ($ = jQuery) ->
       else
         warning "$.fn.bindOneWidget() call from empty jQuery()"
     else
-      warning "Widget #{widgetClass.name} can't create call from empty jQuery()"
+      warning "Widget #{widgetClass.className} can't create call from empty jQuery()"
     bindedWidget
 
   $.fn.bindWidget = (widgetClass, options = {}) ->
@@ -87,8 +87,7 @@ do ($ = jQuery) ->
     bindedWidgets = []
     if @length
       bindedWidgets = for widgetName, widgetClass of widgetClasses when widgetClass.canCreateInstance()
-        cout 'info', 'bindWidgets: widget = ', widgetClass.name, widgetName
-        widgetClass.constructor.className = widgetName
+        widgetClass.constructor.className ||= widgetName
         @bindWidget widgetClass, options
     _.flatten bindedWidgets, true
 

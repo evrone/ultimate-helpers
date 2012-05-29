@@ -1,4 +1,4 @@
-# Ultimate ase
+# Ultimate base object
 #   * base OOP improves
 #   * instances controls
 #   * options and settings controls
@@ -39,14 +39,14 @@ class Ultimate.Proto.Gear
 
   uniqId: null
 
-  debugMode: true
+  debugMode: false
 
   constructor: (options = {}) ->
-    @uniqId = _.uniqueId @constructor.name
-    @debug "#{@constructor.name}.constructor()", @uniqId
+    @uniqId = _.uniqueId @constructor.className
     @constructor.pushInstance @
     @updateSettings @constructor.defaults.options
     @updateSettings @initTranslations(options)
+    @debug "#{@constructor.className}.constructor()", @uniqId, options
 
   # use I18n, and modify locale and translations in options
   # modify and return merged data
@@ -72,8 +72,13 @@ class Ultimate.Proto.Gear
     @settings = settings
 
   updateSettings: (options) ->
+    cout 'updateSettings', options
+    for optionsKey, optionsValue of options when optionsKey in @ then @[optionsKey] = optionsValue
     translations = if (l = options['locale']) then @constructor.defaults.locales[l] or {} else {}
     $.extend true, @settings, translations: translations, options
 
   debug: ->
-    cout.apply @, arguments  if @debugMode
+    if @settings.debugMode
+      a = ["DEBUG | #{@constructor.className}   >>> "]
+      Array::push.apply a, arguments
+      cout.apply @, a
