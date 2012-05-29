@@ -5,12 +5,17 @@
   Observers: {}
   Plugins: {}
 
-  docks: []
+  scopes: {}
 
   widgetsHeap: []
 
   initialize: ->
-    @docks = [@Proto, @Widgets, @LazyWidgets, @Observers, @Plugins]
+    @scopes =
+      Proto       : @Proto
+      Widgets     : @Widgets
+      LazyWidgets : @LazyWidgets
+      Observers   : @Observers
+      Plugins     : @Plugins
     @distributeClassNames()
 
   # get last instance by default
@@ -52,40 +57,13 @@
       warning "Ultimate.createWidget() can't create widget, because blocked by widgetClass.canCreateInstance()"
     widget
 
-  distributeClassNames: (widgetClassesOrDocs = @docks, deep = true) ->
+  distributeClassNames: (widgetClassesOrScopes = @scopes, deep = true) ->
     if deep
-      for dockName, dock of widgetClassesOrDocs
-        @distributeClassNames dock, false
+      for scopeName, scope of widgetClassesOrScopes
+        @distributeClassNames scope, false
     else
-      for widgetName, widgetClass of widgetClassesOrDocs
+      for widgetName, widgetClass of widgetClassesOrScopes
         widgetClass.className = widgetName
 
 #
 _.bindAll Ultimate
-
-#@Widgets = []
-#
-#@getWidgetByName = (widgetClassName, instanceIndex = -1) ->
-#  if widgetClass = Classes.Widgets[widgetClassName] or Classes.LazyWidgets[widgetClassName]
-#    instanceIndex += widgetClass.instances.length  if instanceIndex < 0
-#    widgetClass.instances[instanceIndex]
-#
-#@gcWidgets = =>
-#  newHeap = []
-#  garbage = []
-#  for widget in @Widgets
-#    if widget.isGarbage()
-#      instances = widget.constructor.instances
-#      i = _.indexOf instances, widget
-#      instances.splice i, 1  if i >= 0
-#      garbage.push widget
-#    else
-#      widget.heapIndex = newHeap.push widget
-#  @Widgets = newHeap  if garbage.length
-#  garbage
-#
-#@isWidget = (candidate) ->
-#  candidate instanceof Classes.Proto.Observer
-#
-#@isWidgetClass = (candidate) ->
-#  (candidate::) instanceof Classes.Proto.Observer

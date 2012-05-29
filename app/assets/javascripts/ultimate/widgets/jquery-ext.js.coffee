@@ -1,8 +1,10 @@
-$ ->
-  cout '>>> go $(\'body\').bindWidgets Ultimate.Widgets'
-  cout '>>> binded', $('body').bindWidgets Ultimate.Widgets
-
-
+###
+ For begin Ultimate actions use:
+  $ ->
+    Ultimate.initialize()
+    cout '>>> go $(\'body\').bindWidgets Ultimate.Widgets'
+    cout '>>> binded', $('body').bindWidgets Ultimate.Widgets
+###
 
 do ($ = jQuery) ->
 
