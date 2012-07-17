@@ -15,7 +15,7 @@
   }
 }
 
-//  Same as veendors(), but for cases when the property is the same and the value is vendorized.
+//  Same as vendors(), but for cases when the property is the same and the value is vendorized.
 //    examples:
 //      @include vendors-param(webkit moz ms o, background-image, linear-gradient(left top, #F00, #FF0 50%, #0F0));
 //    produce:
@@ -24,9 +24,11 @@
 //      background-image:     -ms-linear-gradient(left top, #F00, #FF0 50%, #0F0);
 //      background-image:      -o-linear-gradient(left top, #F00, #FF0 50%, #0F0);
 //      background-image:         linear-gradient(left top, #F00, #FF0 50%, #0F0);
-@mixin vendors-param($vendors, $property, $params) {
+@mixin vendors-param($vendors, $property, $params, $origin: true) {
   @each $vendor in $vendors {
     #{$property}: -#{$vendor}-#{$params};
   }
-  #{$property}: $params;
+  @if $origin {
+    #{$property}: $params;
+  }
 }

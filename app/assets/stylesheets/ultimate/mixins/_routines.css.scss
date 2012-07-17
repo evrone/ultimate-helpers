@@ -33,11 +33,7 @@
       #{$property}: $params;
     } @else {
       @if $l < 4 {
-        @if length($complex-params) >= 4 {
-          $params: $complex-params;
-        } @else {
-          $params: complex-list($params);
-        }
+        $params: if(length($complex-params) >= 4, $complex-params, complex-list($params));
       }
       $i: 0;
       @each $side in top, right, bottom, left {
@@ -49,4 +45,44 @@
       }
     }
   }
+}
+
+@function max($a, $b) {
+  @return if($a > $b, $a, $b);
+}
+
+@function strip-px($v) {
+  @return if(unit($v) == "px", $v / 1px, $v);
+}
+
+@function list-to-string($list, $separator: "") {
+  $result: "";
+  $first: true;
+  @each $cut in $list {
+    @if $first {
+      $first: false;
+      $result: $cut;
+    } @else {
+      $result: "#{$result}#{$separator}#{$cut}"
+    }
+  }
+  @return $result;
+}
+
+@function change-separator($list, $separator: comma) {
+  $result: ();
+  @each $value in $list {
+    $result: append($result, $value, $separator);
+  }
+  @return $result;
+}
+
+@function compact-list($list, $separator: comma) {
+  $result: ();
+  @each $value in $list {
+    @if isset($value) {
+      $result: append($result, $value, $separator);
+    }
+  }
+  @return $result;
 }

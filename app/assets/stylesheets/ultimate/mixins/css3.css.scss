@@ -40,9 +40,9 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //    produce:
 //      -webkit-border-top-left-radius: 5px; // iOS-Safari <= 3.2, Android <= 2.1
 //              border-top-left-radius: 5px;
-//      -webkit-border-top-right-radius: 7px; // iOS-Safari <= 3.2, Android <= 2.1
+//      -webkit-border-top-right-radius: 7px;
 //              border-top-right-radius: 7px;
-//      -webkit-border-bottom-left-radius: 7px; // iOS-Safari <= 3.2, Android <= 2.1
+//      -webkit-border-bottom-left-radius: 7px;
 //              border-bottom-left-radius: 7px;
 @mixin border-radius_complex($params) {
   @if isset($params) {
@@ -71,12 +71,9 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //    produce:
 //      -webkit-box-shadow: #00F -10px 0 10px, #F00 10px 0 10px; // Safari 5.0, iOS-Safari <= 4.3, Android <= 4.0      missing "inset" and blur radius value support for iOS-Safari <= 3.2, Android <= 3.0
 //              box-shadow: #00F -10px 0 10px, #F00 10px 0 10px;
-@mixin box-shadow($shadow0, $shadow1: false) {
-  $shadows: $shadow0;
-  @if $shadow1 {
-    $shadows: "#{$shadows}, #{$shadow1}";
-  }
-  @include vendors(webkit, box-shadow, unquote($shadows));
+@mixin box-shadow($shadow0, $shadow1: false, $shadow2: false, $shadow3: false, $shadow4: false, $shadow5: false, $shadow6: false, $shadow7: false, $shadow8: false, $shadow9: false) {
+  $shadows: compact-list($shadow0 $shadow1 $shadow2 $shadow3 $shadow4 $shadow5 $shadow6 $shadow7 $shadow8 $shadow9);
+  @include vendors(webkit, box-shadow, $shadows);
 }
 
 //  Change the box model of element.
@@ -95,51 +92,110 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   }
 }
 
-// !!! EXPERIMENTAL !!!
-// @include linear-gradient(white, $c-black, left)
-@mixin linear-gradient($color_start, $color_stop, $start: top, $color_middle: none, $percent_middle: 50%) {
-  // TODO: colors as list argument
+//  Provide CSS3 linear-gradient as background image.
+//    params:
+//      $corner:
+//        Represents the position of the starting-point of the gradient line.
+//        It consists of two keywords: the first one indicates the horizontal side, `left` or `right`,
+//        and the second one the vertical side, `top` or `bottom`.
+//        The order is not relevant and each of the keyword is optional.
+//        The values `to top`, `to bottom`, `to left` and `to right`
+//        are translated into the angles `0deg`, `180deg`, `270deg`, `90deg` respectively.
+//        The others are translated into an angle that let the starting-point to be in the same quadrant
+//        than the described corner and so that the line defined by the starting-point and the corner
+//        is perpendicular to the gradient line. That way, the color described by the <color-stop>
+//        will exactly apply to the corner point. This is sometimes called the "magic corner" property.
+//        The end-point of the gradient line is the symmetrical point of the starting-point
+//        on the other direction of the center box.
+//      _angle:
+//        An angle of direction for the gradient. See <angle> (https://developer.mozilla.org/en/CSS/angle).
+//      $stops:
+//        This value is comprised of a <color> value, followed by an optional stop position
+//        (either a percentage between 0% and 100% or a <length> along the gradient axis).
+//        Rendering of color-stops in CSS gradients follows the same rules as color-stops in SVG gradients.
+//    example:
+//      @include linear-gradient(right, (green, orange 20%, red 100%));
+//    produce:
+//      background-color: $bg-color;
+//      background-image:        -webkit-gradient(linear, right top, left top, color-stop(0%, green), color-stop(20%, orange), color-stop(100%, red)); // old webkit (Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0)
+//      background-image: -webkit-linear-gradient(right, green, orange 20%, red 100%); // Chrome 10+, Safari 5.1+
+//      background-image:    -moz-linear-gradient(right, green, orange 20%, red 100%); // FF 3.6+
+//      background-image:     -ms-linear-gradient(right, green, orange 20%, red 100%); // IE 10+
+//      background-image:      -o-linear-gradient(right, green, orange 20%, red 100%); // Opera 11.1+
+//      background-image:         linear-gradient(right, green, orange 20%, red 100%); // future
+//      -pie-background: $bg-c    linear-gradient(right, green, orange 20%, red 100%); // IE 6-9
+@mixin linear-gradient($corner_angle, $stops) {
   $wk_start: left top;
-  $wk_stop: left bottom;
+  $wk_end: left bottom;
+  $start: nth($corner_angle, 1);
   @if $start == top {
     $wk_start: left top;
-    $wk_stop: left bottom;
+    $wk_end: left bottom;
   } @else if $start == bottom {
     $wk_start: left bottom;
-    $wk_stop: left top;
+    $wk_end: left top;
   } @else if $start == left {
     $wk_start: left top;
-    $wk_stop: right top;
+    $wk_end: right top;
   } @else if $start == right {
     $wk_start: right top;
-    $wk_stop: left top;
+    $wk_end: left top;
   }
-  $bg-color: $color_middle;
-  $wk-colors: "from(#{$color_start})";
-  $colors: "#{$color_start}";
-  @if $color_middle != none {
-    $wk-colors: "#{$wk-colors}, color-stop(#{$percent_middle}, #{$color_middle})";
-    $colors: "#{$colors}, #{$color_middle} #{$percent_middle}";
-  } @else {
-    $bg-color: mix($color_start, $color_stop);
-  }
-  $wk-colors: "#{$wk-colors}, to(#{$color_stop})";
-  $colors: "#{$colors}, #{$color_stop}";
-  background-color: $bg-color;
-  // TODO: $color_middle leave out
-  @if $color_start != $color_stop {
-    background-image: -webkit-gradient(linear, $wk_start, $wk_stop, unquote($wk-colors)); // old webkit (Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0)
-    // TODO may be new -webkit-gradient?
-    background-image:       -moz-linear-gradient($start, unquote($colors)); // actual
-    background-image:        -ms-linear-gradient($start, unquote($colors)); // IE 10+
-    background-image:         -o-linear-gradient($start, unquote($colors)); // Opera 11.10+
-    background-image:            linear-gradient($start, unquote($colors)); // future
-    @if $support-ie and $pie-url {
-      -pie-background: $bg-color linear-gradient($start, unquote($colors)); // IE 6-9
+  $wk_stops: ();
+  $stops_length: length($stops);
+  $repcents-by-stop: 100 / ($stops_length - 1);
+  $i: 0;
+  $p: 0;
+  @each $stop in $stops {
+    $i: $i + 1;
+    $cp: "#{$p}%";
+    @if length($stop) > 1 {
+      $cp: nth($stop, 2);
     }
+    $stop: "#{$cp}, #{nth($stop, 1)}";
+    $wk_stops: append($wk_stops, color-stop(#{$stop}), comma);
+    $p: $p + $repcents-by-stop;
+  }
+  $bg-color: nth(nth($stops, 1), 1);
+  background-color: $bg-color;
+  background-image: -webkit-gradient(linear, $wk_start, $wk_end, $wk_stops);
+  $linear-gradient: linear-gradient($corner_angle, $stops);
+  @include vendors-param(webkit moz ms o, background-image, $linear-gradient);
+  @if $support-ie and $pie-url {
+    -pie-background: $bg-color $linear-gradient;
   }
 }
 
+//  Provide CSS3 radial-gradient as background image.
+//    params:
+//      $position:
+//        A position, interpreted in the same way as background-position or transform-origin. If omitted, the default is center.
+//      _angle:
+//        An angle establishing the gradient line, which extends from the starting point at this angle; this is 0deg by default.
+//      $shape:
+//        circle            Meaning that the gradient's shape is a circle with constant radius.
+//        ellipse           Meaning that the shape is an axis-aligned ellipse.
+//      _size:
+//        closest-side      The gradient's shape meets the side of the box closest to its center (for circles) or meets both the vertical and horizontal sides closest to the center (for ellipses).
+//        closest-corner    The gradient's shape is sized so it exactly meets the closest corner of the box from its center.
+//        farthest-side     Similar to closest-side, except the shape is sized to meet the side of the box farthest from its center (or vertical and horizontal sides).
+//        farthest-corner   The gradient's shape is sized so it exactly meets the farthest corner of the box from its center.
+//        contain           A synonym for closest-side.
+//        cover             A synonym for farthest-corner.
+//    example:
+//      @include radial-gradient(center 45deg, circle closest-side, (orange 0%, red 100%));
+//    produce:
+//      background-image: -webkit-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // Chrome 10+, Safari 5.1+
+//      background-image:    -moz-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // FF 3.6+
+//      background-image:     -ms-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // IE 10+
+//      background-image:      -o-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // Opera 11.6+
+//      background-image:         radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // future
+@mixin radial-gradient($position_angle, $shape_size, $stops) {
+  // TODO may be deprecate background-image: -webkit-gradient(radial, $wk_start, $wk_end, unquote(list-to-string($wk_stops, ", ")));
+  @include vendors-param(webkit moz ms o, background-image, radial-gradient($position_angle, $shape_size, change-separator($stops)));
+}
+
+// EXPERIMENTAL
 @mixin border-gradient($color_start, $color_stop, $is_horizontal: false) {
   $start: top;
   $wk_start: left top;
@@ -154,44 +210,37 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   border-color: $color_start mix($color_start, $color_stop) $color_stop;
   -webkit-border-image: -webkit-gradient(linear, $wk_start, $wk_stop, from($color_start), to($color_stop)); // old webkit (Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0)
   // TODO may be new -webkit-gradient?
-  -moz-border-image: -moz-linear-gradient($start, $color_start, $color_stop); // actual
-    -o-border-image:  -ms-linear-gradient($start, $color_start, $color_stop); // IE 10+
-    -o-border-image:   -o-linear-gradient($start, $color_start, $color_stop); // Opera 11.10+
+  -moz-border-image: -moz-linear-gradient($start, $color_start, $color_stop); // FF 3.5+
+   -ms-border-image:  -ms-linear-gradient($start, $color_start, $color_stop); // IE 10+
+    -o-border-image:   -o-linear-gradient($start, $color_start, $color_stop); // Opera 11.0+
        border-image:      linear-gradient($start, $color_start, $color_stop); // future
 }
 
+//  Provide cross-browser CSS opacity.
+//    example:
+//      @include opacity(0.3);
+//    produce:
+//      opacity: 0.3;
+//      filter: progid:DXImageTransform.Microsoft.Alpha(opacity=30); // IE <= 8.0
 @mixin opacity($value: 0.5) {
   opacity: $value;
-  $value: round($value * 100);
-  @if $value < 100 {
-    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=#{$value});
-  } @else {
-    filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+  @if $support-ie {
+    $value: round($value * 100);
+    @if $value < 100 {
+      filter: progid:DXImageTransform.Microsoft.Alpha(opacity=#{$value});
+    } @else {
+      filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
+    }
   }
 }
 
+// For rgba()
 @mixin pie-bg($bg) {
   background: $bg;
   @if $pie-url {
     -pie-background: $bg;
   }
 }
-
-//  TODO redisign with parsing params, activate IE filter
-//    example:
-//      @include text-shadow(#000 0 2px 1px);
-//    produce:
-//      text-shadow: #000 0 2px 1px;
-@mixin text-shadow($color, $params: none, $direction: 180, $strength: 1) {
-  @if $color == none {
-    text-shadow: none;
-    //filter: progid:DXImageTransform.Microsoft.Shadow(enabled=false);
-  } @else {
-    text-shadow: $color $params;
-    //filter: progid:DXImageTransform.Microsoft.Shadow(Color=#{$color}, Direction=#{$direction}, strength=#{$strength});
-  }
-}
-
 
 //    example:
 //      @include ellipsis;
@@ -211,10 +260,10 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //      @include user-select;
 //    produce:
 //      -webkit-user-select: none;
-//      -moz-user-select: none;
-//      -ms-user-select: none; // IE 10+
-//      -o-user-select: none;
-//      user-select: none;
+//         -moz-user-select: none;
+//          -ms-user-select: none; // IE 10+
+//           -o-user-select: none;
+//              user-select: none;
 @mixin user-select($param: none) {
   @include vendors(webkit moz ms o, user-select, $param);
 }
