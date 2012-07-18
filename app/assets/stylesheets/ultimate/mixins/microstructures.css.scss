@@ -66,8 +66,8 @@ $support-ie: true !default;
 }
 
 //  Set to container includes float blocks.
-//  DEPRECATED, use "overflow: hidden;" instead.
 @mixin g-line {
+  @include deprecate("@include g-line;", "overflow: hidden;");
   @if $support-ie {
     *zoom: 1;
     _height: 0;
@@ -81,8 +81,8 @@ $support-ie: true !default;
 }
 
 //  Set to element which disappear after animation in IE6-7.
-//  DEPRECATED
 @mixin fix-disapp {
+  @include deprecate("@include fix-disapp;");
   *overflow: hidden;
   _zoom: 1;
 }

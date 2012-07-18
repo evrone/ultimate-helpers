@@ -1,3 +1,6 @@
+@mixin deprecate($subject, $instead: false) {
+  @warn "\"#{$subject}\" DEPRECATED!#{if($instead, " Use instead: \"#{$instead}\"", '')}";
+}
 
 @function isset($v) {
   @return $v != none and $v != false;

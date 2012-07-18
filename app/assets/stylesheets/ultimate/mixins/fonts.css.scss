@@ -2,12 +2,15 @@
 
 $font-family_base: Tahoma, Verdana, sans-serif;
 $font-size_base: 11px;
+$font-family_custom: "PFDinTextCondProThin", Tahoma, Arial, Verdana, sans-serif;
+$font-family_custom_bold: "PFDinTextCondProRegular", Verdana, sans-serif;
+// DEPRECATED:
 $line-height-addition_base: 3px;
 $font-family_accident: "PFDinTextCondProThin", Tahoma, Arial, Verdana, sans-serif;
-$font-family_accident_bold: "PFDinTextCondProRegular";
+$font-family_accident_bold: "PFDinTextCondProRegular", Verdana, sans-serif;
 
 
-@mixin font-face($family, $url-without-ext, $font-weight: normal) {
+@mixin font-face($family, $url-without-ext, $font-weight: normal, $font-style: normal) {
   @font-face {
     font-family: "#{$family}";
     src: font-url("#{$url-without-ext}.eot");
@@ -16,11 +19,22 @@ $font-family_accident_bold: "PFDinTextCondProRegular";
          font-url("#{$url-without-ext}.ttf") format("truetype"),
          font-url("#{$url-without-ext}.svg##{$family}") format("svg");
     font-weight: $font-weight;
-    font-style: normal;
+    font-style: $font-style;
+  }
+}
+
+@mixin font($font-family, $font-size: false, $line-height: false) {
+  font-family: $font-family;
+  @if $font-size {
+    font-size: $font-size;
+  }
+  @if $line-height {
+    line-height: $line-height;
   }
 }
 
 @mixin g-font_base($font-size: $font-size_base, $line-height: false) {
+  @include deprecate("g-font_base", "font_base");
   font-family: $font-family_base;
   @if $font-size {
     font-size: $font-size;
@@ -34,9 +48,20 @@ $font-family_accident_bold: "PFDinTextCondProRegular";
   }
 }
 
+@mixin font_base($font-size: $font-size_base, $line-height: false) {
+  @include font($font-family_base, $font-size, $line-height);
+}
+
+@mixin font_custom($font-size: false, $line-height: false, $font-family: $font-family_custom) {
+  font-weight: normal;
+  font-style: normal;
+  @include font($font-family, $font-size, $line-height);
+}
+
 // TODO http://paulirish.com/2010/font-face-gotchas/
 // TODO -webkit-font-smoothing: antialiased; /* This needs to be set or some font faced fonts look bold on Mac. */
 @mixin g-font_accident_bold($font-size: false, $line-height: false) {
+  @include deprecate("g-font_accident_bold", "font_custom");
   font-family: $font-family_accident_bold;
   font-weight: normal;
   font-style: normal;
@@ -53,6 +78,7 @@ $font-family_accident_bold: "PFDinTextCondProRegular";
 }
 
 @mixin g-font_accident($font-size: false, $line-height: false) {
+  @include deprecate("g-font_accident", "font_custom");
   font-family: $font-family_accident;
   font-weight: normal;
   font-style: normal;
