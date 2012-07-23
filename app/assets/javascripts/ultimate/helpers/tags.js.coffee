@@ -51,11 +51,11 @@
 
 @concat_class = =>
   @warning 'concat_class()', 'refactoring with underscore'
-  @uniq(@compact(arguments).join(' ').split(/\s+/)).join ' '
+  @uniq(@compact(arguments).join(' ').split(/\s+/)).join(' ')
 
 @html_options_to_s = (html_options) =>
   if $.isPlainObject html_options
-    (" #{k}=\"#{v}\""  for k, v of html_options).join()
+    (" #{k}=\"#{v}\""  for k, v of html_options).join('')
   else
     ''
 
@@ -68,5 +68,3 @@
 @link_to = (body, url, html_options = {}) =>
   html_options['href'] = url
   @content_tag 'a', body, html_options
-
-@image_tag = () =>

@@ -41,7 +41,6 @@
   source = @rewrite_relative_url_root(source, @RELATIVE_URL_ROOT)
   source
 
-
 @image_path = (source) =>
   @compute_public_path(source, 'images')
 
