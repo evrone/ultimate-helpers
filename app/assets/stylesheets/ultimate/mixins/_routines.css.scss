@@ -89,3 +89,7 @@
   }
   @return $result;
 }
+
+@function hack-ie8($params) {
+  @return unquote("#{$params}\0/");
+}

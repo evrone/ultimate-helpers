@@ -286,28 +286,33 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //    example:
 //      @include transform(scale(1.2, 1.2));
 //    produce:
-//      -webkit-transform: $params; // actual
-//         -moz-transform: $params; // actual
-//          -ms-transform: $params; // IE 9+
-//           -o-transform: $params; // actual
+//      -webkit-transform: scale(1.2, 1.2); // actual
+//         -moz-transform: scale(1.2, 1.2); // actual
+//          -ms-transform: scale(1.2, 1.2); // IE 9+
+//           -o-transform: scale(1.2, 1.2); // actual
 //    without:
-//              transform: $params; // future
+//              transform: scale(1.2, 1.2); // future
 @mixin transform($params) {
   @include vendors(webkit moz ms o, transform, $params, false);
 }
 
-//  Scale an object along the x and y axis.
+//  Scale an object along the x and y axis. IE < 9 only proportional scale by $scale-x.
 //    example:
 //      @include scale(1.2);
 //    produce:
-//      -webkit-transform: scale(1.2, 1.2);
-//         -moz-transform: scale(1.2, 1.2);
-//          -ms-transform: scale(1.2, 1.2);
-//           -o-transform: scale(1.2, 1.2);
+//      -webkit-transform: scale(1.2, 1.2); // actual
+//         -moz-transform: scale(1.2, 1.2); // actual
+//          -ms-transform: scale(1.2, 1.2); // IE 9+
+//           -o-transform: scale(1.2, 1.2); // actual
+//                  *zoom: 1.2;             // IE 5.5-7
+//                   zoom: 1.2\0/;          // IE 8
+//    without:
+//              transform: scale(1.2, 1.2); // future
 @mixin scale($scale-x, $scale-y: $scale-x) {
   @include transform(scale($scale-x, $scale-y));
   @if $support-ie {
-    zoom: $scale-x;
+    *zoom: $scale-x;
+    zoom: hack-ie8($scale-x);
   }
 }
 
