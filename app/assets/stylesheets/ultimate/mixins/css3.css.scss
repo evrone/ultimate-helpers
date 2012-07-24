@@ -306,6 +306,9 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //           -o-transform: scale(1.2, 1.2);
 @mixin scale($scale-x, $scale-y: $scale-x) {
   @include transform(scale($scale-x, $scale-y));
+  @if $support-ie {
+    zoom: $scale-x;
+  }
 }
 
 // TODO
