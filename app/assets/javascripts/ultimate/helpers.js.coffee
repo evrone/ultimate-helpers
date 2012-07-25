@@ -51,6 +51,11 @@
   delete object[key]
   value
 
+# Helper function to get a value from a object as a property or as a function.
+@getValue = (object, prop) ->
+  return null  unless object and object[prop]
+  return if _.isFunction(object[prop]) then object[prop]() else object[prop]
+
 @isset = (obj) =>
   @deprecate 'isset(obj)', 'obj isnt undefined" OR "obj?'
   obj isnt undefined
