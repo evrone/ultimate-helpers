@@ -46,6 +46,11 @@
   else
     false
 
+@_delete = (object, key) ->
+  value = object[key]
+  delete object[key]
+  value
+
 @isset = (obj) =>
   @deprecate 'isset(obj)', 'obj isnt undefined" OR "obj?'
   obj isnt undefined
