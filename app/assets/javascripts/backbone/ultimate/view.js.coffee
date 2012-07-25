@@ -21,14 +21,16 @@ class Backbone.Ultimate.View extends Backbone.View
 
   findNodes: (jRoot = @$el, nodes = @nodes) ->
     jNodes = {}
-    for nodeName, selector of nodes
-      _isObject = _.isObject(selector)
-      if _isObject
-        nestedNodes = selector
-        selector = _delete(nestedNodes, "selector")
-      jNodes[nodeName] = @[nodeName] = jRoot.find(selector)
-      if _isObject
-        _.extend jNodes, @findNodes(jNodes[nodeName], nestedNodes)
+    nodes = nodes()  if _.isFunction(nodes)
+    if _.isObject(nodes)
+      for nodeName, selector of nodes
+        _isObject = _.isObject(selector)
+        if _isObject
+          nestedNodes = selector
+          selector = _delete(nestedNodes, "selector")
+        jNodes[nodeName] = @[nodeName] = jRoot.find(selector)
+        if _isObject
+          _.extend jNodes, @findNodes(jNodes[nodeName], nestedNodes)
     jNodes
 
 
