@@ -312,7 +312,7 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   @include transform(scale($scale-x, $scale-y));
   @if $support-ie {
     *zoom: $scale-x;
-    zoom: hack-ie8($scale-x);
+    //zoom: hack-ie8($scale-x); TODO temp!
   }
 }
 
