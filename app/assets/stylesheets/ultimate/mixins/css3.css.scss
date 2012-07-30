@@ -23,6 +23,7 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 
 @import "ultimate/mixins/vendors";
 @import "ultimate/mixins/routines";
+@import "ultimate/mixins/css3/text-shadow";
 
 //  Round all corners by a specific amount.
 //    example:

@@ -1,0 +1,37 @@
+//  Provide cross-browser CSS text-shadow with hardcore ie-hack.
+//    example:
+//      @include text-shadow(#3b3b3b 1px 1px 1px);
+//    produce:
+//      text-shadow: 0 2px #000;
+//      filter: shadow(Color=#3b3b3b, Direction=135, Strength=1.414);
+@mixin text-shadow_hard($params) {
+  $l: length($params);
+  $color: nth($params, $l);
+  @if $color == none {
+    text-shadow: none;
+    @if $support-ie {
+      filter: shadow(enabled=false);
+    }
+  } @else {
+    text-shadow: $params;
+    @if $support-ie {
+      $params-offset: 0;
+      @if type-of($color) != 'color' {
+        $color: nth($params, 1);
+        @if type-of($color) == 'color' {
+          $params-offset: 1;
+        } @else {
+          $color: #000;
+        }
+      }
+      $offset-x: 0;
+      $offset-y: 0;
+      @if $l > 2 {
+        $offset-x : nth($params, $params-offset + 1);
+        $offset-y : nth($params, $params-offset + 2);
+      }
+      $polar: polar($offset-x, $offset-y);
+      filter: shadow(Color=$color, Direction=nth($polar, 1), Strength=nth($polar, 2));
+    }
+  }
+}
