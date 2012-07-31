@@ -21,8 +21,9 @@
   # get last instance by default
   getWidgetByName: (widgetClassName, instanceIndex = -1) ->
     if widgetClass = @Widgets[widgetClassName] or @LazyWidgets[widgetClassName]
-      instanceIndex += widgetClass.instances.length  if instanceIndex < 0
-      widgetClass.instances[instanceIndex]
+      if _.isArray(widgetClass.instances)
+        instanceIndex += widgetClass.instances.length  if instanceIndex < 0
+        widgetClass.instances[instanceIndex]
 
   gcWidgets: ->
     newHeap = []
