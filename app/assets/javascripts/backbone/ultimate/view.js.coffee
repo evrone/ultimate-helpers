@@ -3,6 +3,7 @@ Backbone.Ultimate ||= {}
 class Backbone.Ultimate.View extends Backbone.View
 
   viewOptions: []
+
   loadingState: null
   loadingWidthMethodName: "innerWidth"
   loadingHeightMethodName: "innerHeight"
@@ -11,6 +12,7 @@ class Backbone.Ultimate.View extends Backbone.View
 
   constructor: ->
     super
+
 
 
   # Overload parent method Backbone.View.setElement() as hook for findNodes().
@@ -32,6 +34,32 @@ class Backbone.Ultimate.View extends Backbone.View
         if _isObject
           _.extend jNodes, @findNodes(jNodes[nodeName], nestedNodes)
     jNodes
+
+
+
+  # Overload and proxy parent method Backbone.View.delegateEvents() as hook for normalizeEvents().
+  delegateEvents: (events) ->
+    args = []
+    Array::push.apply args, arguments  if arguments.length > 0
+    args[0] = @normalizeEvents(events)
+    super args...
+
+  # Cached regex to split keys for `delegate`, from backbone.js.
+  delegateEventSplitter = /^(\S+)\s*(.*)$/
+
+  normalizeEvents: (events) ->
+    events = getValue(@, "events")  unless events
+    if events
+      normalizedEvents = {}
+      for key, method of events
+        [[], eventName, selector] = key.match(delegateEventSplitter)
+        jObj = @[selector]
+        if jObj instanceof jQuery and _.isString(jObj.selector)
+          key = "#{eventName} #{jObj.selector}"
+        normalizedEvents[key] = method
+      events = normalizedEvents
+    events
+
 
 
   # Overload parent method Backbone.View._configure() as hook for reflectOptions().

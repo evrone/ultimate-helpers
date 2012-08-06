@@ -69,6 +69,7 @@
   not isNaN parseInt v
 
 @isJQ = (obj) ->
+  @deprecate 'isJQ(obj)', 'obj instanceof jQuery'
   _.isObject(obj) and _.isString obj.jquery
 
 @uniq = (arrOrString) ->
