@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Ultimate::Base::VERSION
   s.authors     = ["Dmitry KODer Karpunin"]
   s.email       = ["koderfunk@gmail.com"]
-  s.homepage    = "http://github.com/KODer/ultimate-base"
+  s.homepage    = "http://github.com/KODerFunk/ultimate-base"
   s.summary     = %q{Ultimate UI core, base helpers and improves for Ruby on Rails Front-end}
   s.description = %q{Ultimate UI core, base helpers and improves for Ruby on Rails Front-end}
 

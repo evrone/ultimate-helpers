@@ -53,9 +53,12 @@
   @warning "concat_class()", "refactoring with underscore"
   @uniq(@compact(arguments).join(" ").split(/\s+/)).join(" ")
 
-@html_options_to_s = (html_options) =>
+@html_options_to_s = (html_options, prefix = "") =>
   if $.isPlainObject(html_options)
-    (" #{key}=\"#{value}\""  for key, value of html_options  when typeof value isnt "undefined").join("")
+    prefix = "#{prefix}-"  if prefix
+    (for key, value of html_options when typeof value isnt "undefined"
+      if $.isPlainObject(value) then @html_options_to_s(value, "#{prefix}#{key}") else " #{prefix}#{key}=\"#{value}\""
+    ).join("")
   else
     ""
 
