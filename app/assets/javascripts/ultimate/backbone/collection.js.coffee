@@ -1,9 +1,9 @@
-Backbone.Ultimate ||= {}
+(@Ultimate ||= {}).Backbone ||= {}
 
-class Backbone.Ultimate.Model extends Backbone.Model
+class Ultimate.Backbone.Collection extends Backbone.Collection
 
   ready: (callback, context = @) ->
-    if _.isEmpty(@attributes)
+    unless @length
       @readyDeferred ||= $.Deferred()
       @readyDeferred.done =>
         callback.apply context, [@]

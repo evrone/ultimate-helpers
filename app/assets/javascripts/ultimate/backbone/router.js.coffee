@@ -1,6 +1,6 @@
-Backbone.Ultimate ||= {}
+(@Ultimate ||= {}).Backbone ||= {}
 
-class Backbone.Ultimate.Router extends Backbone.Router
+class Ultimate.Backbone.Router extends Backbone.Router
 
   namedParam    = /:\w+/g
   splatParam    = /\*\w+/g

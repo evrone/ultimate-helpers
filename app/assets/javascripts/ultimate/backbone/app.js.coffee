@@ -1,6 +1,6 @@
-Backbone.Ultimate ||= {}
+(@Ultimate ||= {}).Backbone ||= {}
 
-class Backbone.Ultimate.App
+class Ultimate.Backbone.App
   @App: null
 
   name: null
@@ -14,7 +14,7 @@ class Backbone.Ultimate.App
 
   constructor: (name = null) ->
     if @constructor.App
-      throw new Error("Can't create new Backbone.Ultimate.App because the single instance has already been created");
+      throw new Error("Can't create new Ultimate.Backbone.App because the single instance has already been created");
     else
       @constructor.App = @
       @name = name
@@ -22,4 +22,4 @@ class Backbone.Ultimate.App
 
 
 
-_.extend Backbone.Ultimate.App::, Backbone.Events
+_.extend Ultimate.Backbone.App::, Backbone.Events

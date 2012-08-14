@@ -1,6 +1,6 @@
-Backbone.Ultimate ||= {}
+(@Ultimate ||= {}).Backbone ||= {}
 
-class Backbone.Ultimate.View extends Backbone.View
+class Ultimate.Backbone.View extends Backbone.View
 
   viewOptions: []
 
