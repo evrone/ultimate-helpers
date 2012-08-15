@@ -1,6 +1,10 @@
-(@Ultimate ||= {}).Backbone ||= {}
+#= require ./base
 
 class Ultimate.Backbone.Collection extends Backbone.Collection
+
+  constructor: ->
+    Ultimate.Backbone.debug ".Collection.constructor()", @
+    super
 
   ready: (callback, context = @) ->
     unless @length

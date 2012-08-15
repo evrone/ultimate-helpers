@@ -1,4 +1,4 @@
-(@Ultimate ||= {}).Backbone ||= {}
+#= require ./base
 
 class Ultimate.Backbone.App
   @App: null
@@ -13,6 +13,7 @@ class Ultimate.Backbone.App
   scopes: ["Models", "Collections", "Routers", "Views"]
 
   constructor: (name = null) ->
+    Ultimate.Backbone.debug ".App.constructor()", @
     if @constructor.App
       throw new Error("Can't create new Ultimate.Backbone.App because the single instance has already been created");
     else

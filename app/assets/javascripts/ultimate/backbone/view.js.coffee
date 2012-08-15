@@ -1,4 +1,4 @@
-(@Ultimate ||= {}).Backbone ||= {}
+#= require ./base
 
 class Ultimate.Backbone.View extends Backbone.View
 
@@ -11,13 +11,24 @@ class Ultimate.Backbone.View extends Backbone.View
   loadingOverlayClass: "loading-overlay"
 
   constructor: ->
+    Ultimate.Backbone.debug ".View.constructor()", @
     super
 
 
 
-  # Overload parent method Backbone.View.setElement() as hook for findNodes().
-  setElement: (element, delegate) ->
+  # Overload parent method Backbone.View.setElement() as hook for findNodes() and trick for data("views").
+  setElement: (element, delegate, sideCall = false) ->
+    if @$el?.length and not sideCall
+      views = @$el.data("views")
+      for view in views  when view isnt @
+        view.setElement element, delegate, true
+      @$el.data("views", [])
     super
+    if @$el.length
+      if views = @$el.data("views")
+        views.push @
+      else
+        @$el.data "views", [@]
     @findNodes()
     @
 
@@ -53,9 +64,10 @@ class Ultimate.Backbone.View extends Backbone.View
       normalizedEvents = {}
       for key, method of events
         [[], eventName, selector] = key.match(delegateEventSplitter)
-        jObj = @[selector]
-        if jObj instanceof jQuery and _.isString(jObj.selector)
-          key = "#{eventName} #{jObj.selector}"
+        selector = getValue(@, selector)
+        selector = selector.selector if selector instanceof jQuery
+        if _.isString(selector)
+          key = "#{eventName} #{selector}"
         normalizedEvents[key] = method
       events = normalizedEvents
     events
@@ -67,7 +79,8 @@ class Ultimate.Backbone.View extends Backbone.View
     super
     @reflectOptions()
 
-  reflectOptions: (viewOptions = @viewOptions, options = @options) ->
+  reflectOptions: (viewOptions, options = @options) ->
+    viewOptions = getValue(@, "viewOptions")  unless viewOptions
     @[attr] = options[attr]  for attr in viewOptions  when options[attr]
 
 

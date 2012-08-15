@@ -70,26 +70,4 @@
         .change()
     @
 
-  $('input:text[data-data-type], input:text[data-regexp-mask]')
-  .live('keypress', (event) ->
-    if event.metaKey
-      $(@).trigger 'paste', arguments
-      return true
-    return true  unless event.charCode
-    jThis = $ @
-    oldValue = jThis.val()
-    newValue = oldValue.substring(0, @selectionStart) + String.fromCharCode(event.charCode) + oldValue.substring(@selectionEnd)
-    return false  unless jThis.getRegExpMask().test(newValue)
-    jThis.data 'value', newValue
-  ).live('change', ->
-    jThis = $ @
-    if This.getRegExpMask().test(jThis.val())
-      jThis.data 'value', jThis.val()
-    else
-      jThis.val jThis.data('value')
-  ).live('paste drop', ->
-    jThis = $ @
-    setTimeout ( -> jThis.trigger 'change', arguments ), 100
-  )
-
 )( jQuery )
