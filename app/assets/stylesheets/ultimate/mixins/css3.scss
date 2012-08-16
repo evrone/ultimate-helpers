@@ -74,6 +74,9 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //              box-shadow: #00F -10px 0 10px, #F00 10px 0 10px;
 @mixin box-shadow($shadow0, $shadow1: false, $shadow2: false, $shadow3: false, $shadow4: false, $shadow5: false, $shadow6: false, $shadow7: false, $shadow8: false, $shadow9: false) {
   $shadows: compact-list($shadow0 $shadow1 $shadow2 $shadow3 $shadow4 $shadow5 $shadow6 $shadow7 $shadow8 $shadow9);
+  @if length($shadows) == 0 {
+    $shadows: none;
+  }
   @include vendors(webkit, box-shadow, $shadows);
 }
 
