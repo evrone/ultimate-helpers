@@ -45,7 +45,7 @@
     position: absolute;
     top: 0;
     @if $nav_sprite {
-      background: image-url($nav_sprite) 1000px center no-repeat;
+      background: asset-data-url($nav_sprite) 1000px center no-repeat;
     }
     @include _slider__nav(prev, $nav_width);
     @include _slider__nav(next, $nav_width);
