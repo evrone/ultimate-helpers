@@ -20,10 +20,11 @@ do ($ = jQuery) ->
 
   $.fn.getView = (viewClass, inheritance = false) ->
     if _.isString(viewClass)
-      for o in @
-        views = $(o).data("views") or []
-        for view in views
-          return view  if view.constructor.className is viewClass
+      deprecate "getView() with viewClass as string", "viewClass as Backbone.View inheritor"
+#      for o in @
+#        views = $(o).data("views") or []
+#        for view in views
+#          return view  if view.constructor.className is viewClass
     else if Ultimate.Backbone.isViewClass(viewClass)
       for o in @
         views = $(o).data("views") or []
@@ -37,8 +38,9 @@ do ($ = jQuery) ->
 
   $.fn.hasView = (viewClass) ->
     if _.isString(viewClass)
-      for o in @
-        return true  if _.any $(o).data("views") or [], (w) -> w.constructor.className is viewClass
+      deprecate "hasView() with viewClass as string", "viewClass as Backbone.View inheritor"
+#      for o in @
+#        return true  if _.any $(o).data("views") or [], (w) -> w.constructor.className is viewClass
     else if Ultimate.Backbone.isViewClass(viewClass)
       for o in @
         return true  if _.any $(o).data("views") or [], (w) -> w.constructor is viewClass

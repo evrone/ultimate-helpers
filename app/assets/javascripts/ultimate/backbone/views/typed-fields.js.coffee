@@ -1,8 +1,9 @@
+#= require ../view
 #= require ultimate/improves/typed-fields
 
-Ultimate.Backbone.Views ||= {}
+Ultimate.Backbone.Observers ||= {}
 
-class Ultimate.Backbone.Views.TypedFields extends Ultimate.Backbone.View
+class Ultimate.Backbone.Observers.TypedFields extends Ultimate.Backbone.View
 
   selector: "input:text[data-data-type], input:text[data-regexp-mask]"
 
@@ -37,4 +38,4 @@ class Ultimate.Backbone.Views.TypedFields extends Ultimate.Backbone.View
 
 
 
-Ultimate.Backbone.createJQueryPlugin? "typedFields", Ultimate.Backbone.Views.TypedFields
+Ultimate.Backbone.createJQueryPlugin? "typedFields", Ultimate.Backbone.Observers.TypedFields

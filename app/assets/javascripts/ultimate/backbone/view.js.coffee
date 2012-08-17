@@ -2,13 +2,20 @@
 
 class Ultimate.Backbone.View extends Backbone.View
 
-  viewOptions: []
+  @defaultLocales:
+    en: {}
+    ru: {}
+
+  locale: "en"
+  translations: {}
 
   loadingState: null
   loadingWidthMethodName: "innerWidth"
   loadingHeightMethodName: "innerHeight"
   loadingStateClass: "loading"
   loadingOverlayClass: "loading-overlay"
+
+  viewOptions: -> []
 
   constructor: ->
     Ultimate.Backbone.debug ".View.constructor()", @
@@ -77,12 +84,41 @@ class Ultimate.Backbone.View extends Backbone.View
   # Overload parent method Backbone.View._configure() as hook for reflectOptions().
   _configure: (options) ->
     super
+    @initTranslations()
     @reflectOptions()
 
-  reflectOptions: (viewOptions, options = @options) ->
-    viewOptions = getValue(@, "viewOptions")  unless viewOptions
-    @[attr] = options[attr]  for attr in viewOptions  when options[attr]
+  reflectOptions: (viewOptions = getValue(@, "viewOptions"), options = @options) ->
+    @[attr] = options[attr]  for attr in viewOptions  when typeof options[attr] isnt "undefined"
+    @[attr] = value  for attr, value of options  when typeof @[attr] isnt "undefined"
+    @
 
+  updateOptions: (options) ->
+    @_configure(options)
+    @options
+
+  # use I18n, and modify locale and translations in options
+  # modify and return merged data
+  initTranslations: (options = @options) ->
+    # if global compatible I18n
+    if I18n? and I18n.locale and I18n.t
+      options["locale"] ||= I18n.locale
+      if options["locale"] is I18n.locale
+        # pointing to defaults locales of language specified in I18n
+        _defaultLocales = @constructor.defaultLocales?[I18n.locale] ||= {}
+        unless _defaultLocales["loaded"]
+          _defaultLocales["loaded"] = true
+          # try read localized strings
+          if _localesFromI18n = I18n.t(options["i18nKey"] or _.underscored(@constructor.pluginName or @constructor.name))
+            # fill it from I18n
+            _.extend _defaultLocales, _localesFromI18n
+    @locale = options["locale"] if options["locale"]
+    translations = if @locale then @constructor.defaultLocales?[@locale] or {} else {}
+    $.extend true, options, translations: translations, options
+    options
+
+  t: (key) ->
+    # TODO maybe use I18n there
+    @translations[key]
 
 
   # Overloadable getter for jQuery-container that will be blocked.

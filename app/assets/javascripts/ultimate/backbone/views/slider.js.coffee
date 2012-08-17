@@ -14,7 +14,7 @@ class Ultimate.Backbone.Views.Slider extends Ultimate.Backbone.View
   events: ->
     "click   .nav.enabled" : "navClick"
 
-  viewOptions: ["vertical", "cycling", "interval", "durationPerPixel", "prevItems"]
+  viewOptions: -> _.union super, ["vertical", "cycling", "interval", "durationPerPixel", "prevItems"]
 
   vertical: false
   cycling: false

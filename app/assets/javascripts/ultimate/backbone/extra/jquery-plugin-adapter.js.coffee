@@ -25,7 +25,7 @@ do ($ = jQuery) ->
       else
         return view  if _returnView
         return jContainer  unless argsLength
-        command = "updateSettings"
+        command = "_configure"
       if view[command]
         return getValue(view, command)
       else
@@ -39,28 +39,22 @@ do ($ = jQuery) ->
     if _returnView then view else jContainer
 
 
-# TODO rewrite docs
-###
- * Invoke Ultimate Flash functionality for the first element in the set of matched elements.
+###*
+ * Make $.fn.pluginName() as wrapper under Backbone.View.
+ * First call on jQuery object invoke View functionality for the first element in the set of matched elements.
+ * Subsequent calls forwarding on view methods or return view property.
  * If last argument {Boolean} true, then returns {View}.
  * @usage
- *** standart actions ***
- * construction    .ultimateFlash([Object options = {}])                  ~ {jQuery} jContainer
- * show            .ultimateFlash("show", String type, String text)       ~ {jQuery} jFlash | {Boolean} false
- * notice          .ultimateFlash("notice", String text)                  ~ {jQuery} jFlash | {Boolean} false
- * alert           .ultimateFlash("alert", String text)                   ~ {jQuery} jFlash | {Boolean} false
- *** extended actions ***
- * getSettings     .ultimateFlash("getSettings")                          ~ {Object} settings
- * setSettings     .ultimateFlash("setSettings", {Object} settings)       ~ {jQuery} jContainer
- * updateSettings  .ultimateFlash({Object} options)                       ~ {Object} settings
- * auto            .ultimateFlash("auto", {ArrayOrObject} obj)            ~ {Array} ajFlashes | {Boolean} false
- * ajaxSuccess     .ultimateFlash("ajaxSuccess"[, Arguments successArgs = []])
- * ajaxError       .ultimateFlash("ajaxError"[, String text = settings.translations.defaultErrorText][, Arguments errorArgs = []])
+ *   construction    .pluginName([Object options = {}])           : {jQuery} jContainer
+ *   updateOptions   .pluginName({Object} options)                : {Object} view options
+ *   get options     .pluginName("options")                       : {Object} view options
+ *   some method     .pluginName("methodName", *methodArguments)  : {jQuery} chanin object || {AnotherType} method result
 ###
 
 Ultimate.Backbone.createJQueryPlugin = (pluginName, viewClass) ->
-  cout "info", "Ultimate.Backbone.createJQueryPlugin", pluginName, viewClass
+  Ultimate.Backbone.debug ".createJQueryPlugin()", pluginName, viewClass
   if Ultimate.Backbone.isViewClass(viewClass)
+    viewClass.pluginName = pluginName
     jQuery.fn[pluginName] = -> @ultimateBackboneViewPluginAdapter pluginName, viewClass, arguments
   else
     jQuery.error "Second argument of Ultimate.Backbone.createJQueryPlugin() must be View class inherited from Backbone.View"
