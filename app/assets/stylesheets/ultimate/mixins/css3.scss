@@ -241,7 +241,7 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 // For rgba()
 @mixin pie-bg($bg) {
   background: $bg;
-  @if $pie-url {
+  @if $support-ie and $pie-url and type-of($bg) == "color" and alpha($bg) < 1 {
     -pie-background: $bg;
   }
 }
