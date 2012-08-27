@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "ultimate-base/version"
+require "ultimate/base/version"
 
 Gem::Specification.new do |s|
   s.name        = "ultimate-base"
@@ -13,9 +13,9 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "ultimate-base"
 
-  #s.add_dependency "rails", "~> 3.1"
-  #s.add_dependency "coffee-script", "~> 2.1"
-  #s.add_dependency "sass", "~> 3.1"
+  s.add_development_dependency "rails", "~> 3.2.8"
+  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "coffee-rails", "~> 3.2.1"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

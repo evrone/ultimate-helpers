@@ -1,3 +1,6 @@
+# TODO timeout without cycling, maybe bouce effect
+# TODO mousewheel
+
 Ultimate.Backbone.Views ||= {}
 
 class Ultimate.Backbone.Views.Slider extends Ultimate.Backbone.View
@@ -39,7 +42,7 @@ class Ultimate.Backbone.Views.Slider extends Ultimate.Backbone.View
     if @totalItems
       @jItems.each (index) -> $(@).attr "data-slide-index", index
       jFirstItem = @jItems.first()
-      @itemSize = jFirstItem[_.camelize("outer-#{@sizeAttr}")](true)
+      @itemSize = jFirstItem[_.string.camelize("outer-#{@sizeAttr}")](true)
       needSize = @totalItems * @itemSize
       @jLine[@sizeAttr](needSize)  if @jLine[@sizeAttr]() < needSize
       @displayItems = Math.round(@jDisplay[@sizeAttr]() / @itemSize)

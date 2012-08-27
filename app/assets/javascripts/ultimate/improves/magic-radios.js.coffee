@@ -1,5 +1,7 @@
 #
 # Magic Radios
+# TODO refactoring
+# TODO checkboxes
 #
 #  @example
 #    = f.radio_button :main_addr_same_as_jur, true, data: {disable: ".main-addr"}

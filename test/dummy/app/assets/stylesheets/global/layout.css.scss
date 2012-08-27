@@ -1,0 +1,46 @@
+@import "import/base";
+//@import "ultimate/flash";
+
+$images-path: $layout-images-path;
+
+//@include font-face($font-name_custom, "appetite");
+
+body {
+  @include font_base($font-size_base /*, 1.2*/);
+  min-width:  $l-page_width;
+  margin:     0;
+  padding:    0;
+  cursor:     default;
+  background: $c-body;
+  color:      $c-white;
+}
+
+.l-page {
+  width:    $l-page_width;
+  margin:   0 auto;
+  overflow: hidden;
+
+  //.l-page__flashes {
+  //  @include ultimate-flash($background-alpha: 0.7);
+  //  @include font_custom;
+  //}
+
+  @import "layout/header";
+
+  //@import "layout/main-menu";
+
+  > .l-page__content {
+    .l-page__title {
+      @include font_custom(23px);
+      border-bottom: 1px solid #434343;
+      padding:       0;
+      height:        35px;
+      margin-bottom: 12px;
+    }
+  }
+
+  @import "layout/footer";
+
+}
+
+@include sticky-footer($l-page__footer_height);

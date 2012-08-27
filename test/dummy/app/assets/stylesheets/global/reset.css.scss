@@ -1,0 +1,85 @@
+@import "../import/base";
+
+img {
+  border:         0;
+  outline:        0;
+  vertical-align: bottom;
+}
+
+div {
+  position: relative;
+}
+
+header, nav, aside, section, article, footer {
+  display:  block;
+  position: relative;
+}
+
+em, i {
+  font-style: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin:      0;
+  padding:     5px 0;
+  font-weight: normal;
+}
+
+//@mixin hx($n, $size, $margin: false) {
+//  h#{$n} {
+//    font-size: $size;
+//    @if $margin {
+//      margin: $margin;
+//    }
+//  }
+//}
+//@include hx(1, 38px);
+//@include hx(2, 36px);
+//@include hx(3, 21px);
+//@include hx(4, 18px);
+//@include hx(5, 14px);
+//@include hx(6, 12px);
+
+p {
+  margin:  0;
+  padding: 5px 0;
+  cursor:  text;
+}
+
+span {
+  cursor: default;
+}
+
+a {
+  color:           $c-link;
+  outline:         none;
+  text-decoration: none;
+  span {
+    cursor: pointer;
+  }
+  &:hover {
+    color: $c-link_hover;
+  }
+}
+
+ul {
+  margin: 0;
+}
+
+//li {
+//  list-style-type: none;
+//}
+
+//table {
+//  width: 100%;
+//  border-collapse: collapse;
+//  tr {
+//    > th, > td {
+//      padding: 0;
+//      vertical-align: top;
+//    }
+//    > th {
+//      font-weight: normal;
+//    }
+//  }
+//}

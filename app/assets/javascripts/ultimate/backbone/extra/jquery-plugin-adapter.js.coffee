@@ -27,7 +27,7 @@ do ($ = jQuery) ->
         return jContainer  unless argsLength
         command = "_configure"
       if view[command]
-        return getValue(view, command)
+        return _.result(view, command)
       else
         $.error "Command [#{command}] does not exist on jQuery.#{pluginName}()"
     else

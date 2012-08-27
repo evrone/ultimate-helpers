@@ -1,0 +1,18 @@
+> .l-page__footer {
+  @include user-select;
+  height: $l-page__footer_height;
+  line-height: $l-page__footer_height - 2px;
+  color:     #545454;
+  font-size: 12px;
+  a {
+    color:       #545454;
+    font-weight: bold;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  .l-page__center {
+    width:    $l-page_width - 20px * 2;
+    margin:   0 auto;
+  }
+}

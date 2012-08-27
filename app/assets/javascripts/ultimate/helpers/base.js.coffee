@@ -1,0 +1,3 @@
+@Ultimate ||= {}
+
+@Ultimate.Helpers ||= {}

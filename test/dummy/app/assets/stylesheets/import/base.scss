@@ -1,0 +1,34 @@
+@import "ultimate/mixins/microstructures";
+@import "ultimate/mixins/css3";
+@import "ultimate/mixins/fonts";
+
+$layout-images-path: "layout";
+
+$font-family_base: Tahoma, Helvetica, sans-serif;
+$font-size_base: 14px;
+$font-name_custom: "Cuprum";
+$font-family_custom: $font-name_custom, "Trebuchet MS", Tahoma, sans-serif;
+
+$l-page__header_height: 50px;
+$l-page__footer_height: 60px;
+
+$l-page_width: 980px;
+
+$news__picture_width:  246px;
+$news__picture_height: 163px;
+
+$model__photo_small_width:    80px;
+$model__photo_small_height:  111px;
+$model__photo_middle_width:  230px;
+$model__photo_middle_height: 306px;
+$model__photo_big_width:     325px;
+$model__photo_big_height:    475px;
+
+$c-pitch-black: #000000;
+$c-white: #ffffff;
+$c-body: #1f1f1f;
+$c-page: $c-pitch-black;
+$c-link: $c-white;
+$c-link_hover: #9df;
+$c-pink: #FF0F51;
+$c-sub-menu: $c-pink;

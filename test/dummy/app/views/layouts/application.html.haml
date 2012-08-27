@@ -1,0 +1,24 @@
+!!!
+%html{lang: "ru-RU"}
+  %head
+    %meta{charset: "UTF-8"}
+    %title Ultimate Base — #{@page_title ? @page_title.gsub("\n", "") : "Testing App"}
+    = favicon_link_tag "/favicon.png", type: "image/png"
+    - if Rails.env.development?
+      :javascript
+        var DEBUG_MODE = true;
+    /[if lt IE 9]
+      = javascript_include_tag  "http://html5shiv.googlecode.com/svn/trunk/html5.js"
+    = stylesheet_link_tag    "http://fonts.googleapis.com/css?family=Cuprum:400normal&subset=all", :media => "all"
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+    = yield :head
+
+  %body{class: "l-#{@css_layout || "#{controller_name}-#{action_name}"}"}
+    .l-page
+      =# render "flashes"
+      = render "header"
+      %section.l-page__content
+        = yield
+      = render "footer"

@@ -1,0 +1,18 @@
+source "http://rubygems.org"
+
+# Specify your gem's dependencies in ultimate-base.gemspec
+gemspec path: "../.."
+
+#gem "rails", "~> 3.2.8"
+#gem "sqlite3"
+#
+#group :assets do
+#  gem "coffee-rails", "~> 3.2.1"
+#  gem "therubyracer"
+#end
+
+#gem "sass-rails", "~> 3.2.3"
+#gem "haml"
+#gem "jquery-rails"
+#gem "qunit-rails"
+#gem "quiet_assets"

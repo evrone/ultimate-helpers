@@ -1,14 +1,4 @@
-###
- *  front-end ui-components routines
- *
- *   @version 0.5.5.alpha / 2010-2012
- *   @author Karpunin Dmitry / Evrone.com
- *   @email koderfunk_at_gmail_dot_com
- *
- *   TODO register components
- *   TODO using underscore.js
- *
-###
+# TODO: register components
 
 do ($ = jQuery) =>
 
@@ -18,43 +8,39 @@ do ($ = jQuery) =>
 
   @ror_id = (jObjOrString) ->
     if jObjOrString instanceof jQuery
-      id = jObjOrString.data('rorId') # Maybe use "id"
-      unless id
-        id = jObjOrString.attr('id')
-        if id
-          matchResult = id.match($.regexp.rorId)
-          id = if matchResult then matchResult[2] else null
-          jObjOrString.data 'rorId', id
-          id
-        else 
-          null
-    else
+      id = jObjOrString.data("rorId") # Maybe use "id"
+      unless id?
+        id = ror_id(jObjOrString.attr("id"))
+        jObjOrString.data("rorId", id)  if id?
+      id
+    else if _.isString(jObjOrString)
       matchResult = jObjOrString.match($.regexp.rorId)
       if matchResult then matchResult[2] else null
+    else
+      null
 
-  $.fn.rorId = ->
+  $.fn.rorId = (id = null, prefix = null) ->
     if arguments.length
-      id = arguments[0]
-      word = 'ror_id'
-      thisId = @attr('id')
-      if thisId
-        word = matchResult[1]  if matchResult = thisId.match($.regexp.rorId)
-      @data('rorId', id).attr 'id', "${word}_#{id}"
-      @
+      jThis = @first()
+      thisId = @attr("id")
+      if not prefix? and _.isString(thisId)
+        prefix = matchResult[1]  if matchResult = thisId.match($.regexp.rorId)
+      @data("rorId", id)
+      if prefix?
+        jThis.attr "id", "#{prefix}_#{id}"
+      jThis
     else
       ror_id @
 
   $.fn.getClasses = ->
-    _.words @attr("class")
+    _.string.words @attr("class")
 
   # Get hash of html-dom attributes from first matched element or false, if no elements
   $.fn.getAttributes = ->
+    attrs = {}
     if @length
-      attrs = {}
-      attrs[attr.nodeName] = attr.nodeValue for attr in this[0].attributes
-      attrs
-    else
-      false
+      attrs[attr.nodeName] = attr.nodeValue  for attr in this[0].attributes
+    attrs
 
   # [showOrHide[, duration[, callback]]]
   $.fn.slideToggleByState = ->
@@ -74,7 +60,8 @@ do ($ = jQuery) =>
     $.isHTML = (content, strong = false) ->
       return false  unless _.isString(content)
       matches = content.match($.regexp.HTML)
-      matches and not strong or matches[1] is matches[2]
+      return false  unless matches?
+      not strong or matches[1] is matches[2]
 
   # TODO replace usages to underscore methods and using distribution
   unless $.isRegExp

@@ -7,10 +7,10 @@
 
 @DEBUG_MODE ?= false
 @TEST_MODE ?= false
-@WARNINGS ?= true
+@LOG_TODO ?= true
 
 @cout = =>
-  args = @args(arguments)
+  args = _.toArray(arguments)
   method = if args[0] in ['log', 'info', 'warn', 'error', 'assert', 'clear'] then args.shift() else 'log'
   if @DEBUG_MODE and console?
     method = console[method]
@@ -25,34 +25,70 @@
   arguments[0]
 
 @deprecate = (subject, instead = null) =>
-  @cout 'warn', "\"#{subject}\" DEPRECATED!#{if instead then " Use instead: \"#{instead}\"" else ''}"
-  return
+  @cout 'error', "`#{subject}` DEPRECATED!#{if instead then " Use instead `#{instead}`" else ''}"
 
-@warning = (subject, instead = null) =>
-  if @WARNINGS
-    @cout 'warn', "\"#{subject}\" WARNING!#{if instead then " Use instead: \"#{instead}\"" else ''}"
-  return
+@todo = (subject, location = null, numberOrString = null) =>
+  if @LOG_TODO
+    @cout 'warn', "TODO: #{subject}#{if location then " ### #{location}" else ''}#{if numberOrString then (if _.isNumber(numberOrString) then ":#{numberOrString}" else " > #{numberOrString}") else ''}"
 
 @args = (a) ->
+  @deprecate 'arg()', '_.toArray()'
   r = []
   Array::push.apply(r, a)  if a.length > 0
   r
 
-@blockGiven = (args) =>
-  l = args.length
-  if l
-    l = args[l - 1]
-    if _.isFunction(l) then l else false
-  else
-    false
+@logicalXOR = (a, b) ->
+  ( a and not b ) or ( not a and b )
 
-@_delete = (object, key) ->
-  value = object[key]
-  delete object[key]
-  value
+@bound = (number, min, max) ->
+  Math.max(min, Math.min(max, number))
+
+@roundWithPrecision = (number, precision = 2) ->
+  precision = Math.pow(10, precision)
+  Math.round(number * precision) / precision
+
+
+
+@getParams = ->
+  q = location.search.substring(1).split('&')
+  r = {}
+  for e in q
+    t = e.split('=')
+    r[t[0]] = t[1]
+  r
+
+@respondFormat = (url, format = null) ->
+  aq = url.split('?')
+  ah = aq[0].split('#')
+  ad = ah[0].split('.')
+  currentFormat = if ad.length > 1 and not /\//.test(ad[ad.length - 1]) then ad.pop() else ''
+  return currentFormat  unless format?
+  return url  if format is currentFormat
+  ad.push format  if format
+  ah[0] = ad.join('.')
+  aq[0] = ah.join('#')
+  aq.join('?')
+
+@number_to_currency = (number, units) =>
+  # TODO
+  @todo "number_to_currency()", "enother functions frome some ports or do port"
+  precision = 2
+  s = parseFloat(number).toFixed(precision)
+  b = s.length - 1 - precision
+  r = s.substring(b)
+  while b > 0
+    a = b - 3
+    r = ' ' + s.substring(a, b) + r
+    b = a
+  "#{r.substring(1)} #{units}"
+
+
+
+###########   Deprecated   ###########
 
 # Helper function to get a value from a object as a property or as a function.
 @getValue = (object, prop) ->
+  @deprecate "getValue()", "_.result()"
   return null  unless object and object[prop]
   return if _.isFunction(object[prop]) then object[prop]() else object[prop]
 
@@ -80,16 +116,6 @@
   r.push(e)  for e in arrOrString  when not _.include(r, e)
   if isStr then r.join('') else r
 
-@logicalXOR = (a, b) ->
-  ( a and not b ) or ( not a and b )
-
-@bound = (number, min, max) ->
-  Math.max(min, Math.min(max, number))
-
-@roundWithPrecision = (number, precision = 2) ->
-  precision = Math.pow(10, precision)
-  Math.round(number * precision) / precision
-
 @regexpSpace = /^\s*$/
 @regexpTrim = /^\s*(.*?)\s*$/
 
@@ -97,53 +123,17 @@
   @deprecate "strTrim(s)", "_.trim(s)"
   s.match(@regexpTrim)[1]
 
-# !!!!!!!!!!! tags !!!!!!!!!!!!
-
-@number_to_currency = (number, units) ->
-  precision = 2
-  s = parseFloat(number).toFixed(precision)
-  b = s.length - 1 - precision
-  r = s.substring(b)
-  while b > 0
-    a = b - 3
-    r = ' ' + s.substring(a, b) + r
-    b = a
-  "#{r.substring(1)} #{units}"
-
-
-
-@getParams = ->
-  q = location.search.substring(1).split('&')
-  r = {}
-  for e in q
-    t = e.split('=')
-    r[t[0]] = t[1]
-  r
-
-@respondFormat = (url, format = null) ->
-  aq = url.split('?')
-  ah = aq[0].split('#')
-  ad = ah[0].split('.')
-  currentFormat = if ad.length > 1 and not /\//.test(ad[ad.length - 1]) then ad.pop() else ''
-  return currentFormat  unless format?
-  return url  if format is currentFormat
-  ad.push format  if format
-  ah[0] = ad.join('.')
-  aq[0] = ah.join('#')
-  aq.join('?')
-
 
 
 @rails_data = {}
 
 @rails_scope = (controller_name, action_name, scopedCloasure = null, scopedCloasureArguments...) =>
+  @deprecate 'rails_scope'
   return false if _.isString(controller_name) and controller_name isnt @rails_data['controller_name']
   return false if _.isString(action_name)     and action_name     isnt @rails_data['action_name']
   if _.isFunction(scopedCloasure)
     arguments[2] scopedCloasureArguments...
   true
-
-
 
 $ =>
   @rails_data = $('body').data()

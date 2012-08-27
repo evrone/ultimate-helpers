@@ -1,0 +1,13 @@
+> .l-page__header {
+  @include user-select;
+  height: $l-page__header_height;
+  line-height: $l-page__header_height - 2px;
+  padding: 0 20px;
+
+  .logo {
+    > .caption {
+      @include font_custom(27px);
+    }
+  }
+
+}

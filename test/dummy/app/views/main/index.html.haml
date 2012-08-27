@@ -1,0 +1,13 @@
+-#%h1.l-page__title= @page_title = "Testing Application"
+-#
+-#%h2= link_to "QUnit tests", "/qunit2"
+
+
+
+- @page_title = "QUnit Test Runner"
+- content_for :head do
+  = stylesheet_link_tag "qunit"
+  = javascript_include_tag "qunit", "all_tests"
+
+#qunit
+#qunit-fixture

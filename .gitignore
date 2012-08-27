@@ -1,5 +1,8 @@
 *.gem
 .bundle
 pkg/*
-/vendors/assets/javascripts/jquery-1*
 .idea/
+test/dummy/db/*.sqlite3
+test/dummy/log/*.log
+test/dummy/tmp/
+test/dummy/.sass-cache

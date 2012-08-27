@@ -1,3 +1,4 @@
+#  * Require ./../underscore/underscore.outcasts
 #= require ./base
 
 class Ultimate.Backbone.View extends Backbone.View
@@ -47,7 +48,7 @@ class Ultimate.Backbone.View extends Backbone.View
         _isObject = _.isObject(selector)
         if _isObject
           nestedNodes = selector
-          selector = _delete(nestedNodes, "selector")
+          selector = _.outcasts.delete(nestedNodes, "selector")
         jNodes[nodeName] = @[nodeName] = jRoot.find(selector)
         if _isObject
           _.extend jNodes, @findNodes(jNodes[nodeName], nestedNodes)
@@ -66,12 +67,12 @@ class Ultimate.Backbone.View extends Backbone.View
   delegateEventSplitter = /^(\S+)\s*(.*)$/
 
   normalizeEvents: (events) ->
-    events = getValue(@, "events")  unless events
+    events = _.result(@, "events")  unless events
     if events
       normalizedEvents = {}
       for key, method of events
         [[], eventName, selector] = key.match(delegateEventSplitter)
-        selector = getValue(@, selector)
+        selector = _.result(@, selector)
         selector = selector.selector if selector instanceof jQuery
         if _.isString(selector)
           key = "#{eventName} #{selector}"
@@ -87,7 +88,7 @@ class Ultimate.Backbone.View extends Backbone.View
     @initTranslations()
     @reflectOptions()
 
-  reflectOptions: (viewOptions = getValue(@, "viewOptions"), options = @options) ->
+  reflectOptions: (viewOptions = _.result(@, "viewOptions"), options = @options) ->
     @[attr] = options[attr]  for attr in viewOptions  when typeof options[attr] isnt "undefined"
     @[attr] = value  for attr, value of options  when typeof @[attr] isnt "undefined"
     @

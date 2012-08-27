@@ -1,0 +1,68 @@
+> ul.l-page__main-menu {
+  @include user-select;
+  @include inline-block-list;
+  @include font_custom(22px);
+  padding:  18px 0 35px 15px;
+  position: relative;
+  z-index:  10;
+
+  > li {
+    padding:        8px 20px;
+    text-transform: capitalize;
+    > a {
+      display:       block;
+      padding:       0 7px;
+      border-bottom: 1px solid #00c9eb;
+      &:hover {
+        border-bottom-color: $c-sub-menu;
+      }
+    }
+
+    &.with-sub-menu {
+      @include border-radius(10px 10px 0 0);
+      @include pie;
+      position: relative;
+      > a {
+        padding:       0 11px;
+      }
+      > ul.sub-menu {
+        display:       none;
+        position:      absolute;
+        left:          0;
+        top:           35px;
+        background:    $c-sub-menu;
+        font-size:     18px;
+        width:         100%;
+        border-radius: 0 0 10px 10px;
+        text-align:    left;
+        padding:       5px 0 10px;
+
+        > li {
+          padding:     0 10px;
+          line-height: 24px;
+          display:     block;
+
+          > a {
+            @include inline-block($vertical-align: baseline);
+            border-bottom: 1px dotted $c-sub-menu;
+            &:hover {
+              border-bottom-color: $c-white;
+            }
+          }
+        }
+      }
+
+      &:hover {
+        background: $c-sub-menu asset-data-url("layout/main-menu__item_hover.png") 50% -4px no-repeat;
+        > a {
+          border-bottom-color: $c-sub-menu;
+        }
+        > ul.sub-menu {
+          display: block;
+        }
+      }
+
+    }
+  }
+
+}

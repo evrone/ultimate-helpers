@@ -1,0 +1,65 @@
+@import "import/base";
+
+label {
+  display:   block;
+  padding:   0 0 5px 0;
+  font-size: 16px;
+  cursor: pointer;
+  &.small {
+    @include inline-block;
+    margin-left: 5px;
+    font-size: 13px;
+    color:     #ccc;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+input {
+  position: relative;
+  border: 0;
+  &::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+  }
+  &[type="text"] {
+    width:      260px;
+    height:     21px;
+  }
+  &[type="submit"] {
+    height:     27px;
+    padding:    0 5px;
+    @include font_custom(16px);
+    color:      $c-white;
+    background: $c-pink;
+    cursor:     pointer;
+  }
+}
+
+input, select {
+  outline: 0;
+  @include font_base(15px, 21px);
+}
+
+input[type="text"], select, textarea {
+  border:     0;
+  padding:    3px 6px;
+  background: #4C4C4C;
+  color:      $c-white;
+}
+
+select {
+  width:      88px;
+  height:     26px;
+}
+
+textarea {
+  height:     140px;
+  max-width:  360px;
+  min-height: 140px;
+  min-height: 100px;
+  min-width:  260px;
+  width:      260px;
+}
+

@@ -1,3 +1,5 @@
+#  * Require ./../underscore/underscore.string
+#  * Require ./../underscore/underscore.inflection
 #= require ./base
 
 class Ultimate.Backbone.Model extends Backbone.Model
@@ -14,3 +16,7 @@ class Ultimate.Backbone.Model extends Backbone.Model
       @fetch success: (=> @readyDeferred.resolve()), silent: true
     else
       callback.apply context, [@]
+
+  singular: ->
+    _.singularize(_.string.underscored(constructor.name))
+    (@className or @constructor.name or 'Model')

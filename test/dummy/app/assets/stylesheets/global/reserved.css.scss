@@ -1,0 +1,79 @@
+@import "import/base";
+
+.bold {
+  font-weight: bold;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.uline {
+  text-decoration: underline;
+}
+
+.strike {
+  text-decoration: line-through;
+}
+
+.hidden {
+  display: none;
+}
+
+.hidden-important {
+  display: none !important;
+}
+
+.block {
+  display: block;
+}
+
+.inline-block {
+  @include inline-block;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+a.image {
+  display:         block;
+  position:        relative;
+  text-decoration: none;
+}
+
+.no-info, .loading {
+  font-style: italic;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.clear {
+  clear: both;
+}
+
+.clear-left {
+  clear: left;
+}
+
+.clear-right {
+  clear: right;
+}
+
+.g-justify {
+  @include g-justify;
+}
+
+img.middle {
+  vertical-align: middle;
+}
+
+.text-center {
+  text-align: center;
+}

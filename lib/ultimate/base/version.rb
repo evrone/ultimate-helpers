@@ -1,5 +1,5 @@
 module Ultimate
   module Base
-    VERSION = "0.2.4"
+    VERSION = "0.3.0.alpha"
   end
 end
