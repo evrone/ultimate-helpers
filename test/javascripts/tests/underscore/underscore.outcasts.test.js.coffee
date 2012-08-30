@@ -23,3 +23,16 @@ test "sortHash", ->
   deepEqual _.sortHash({}), []
   deepEqual _.sortHash(title: 'cadabra', alt: 'bubble', href: 'abra'), [['alt', 'bubble'], ['href', 'abra'], ['title', 'cadabra']]
   deepEqual _.sortHash(title: 'cadabra', alt: 'bubble', href: 'abra', true), [['href', 'abra'], ['alt', 'bubble'], ['title', 'cadabra']]
+
+test "invert", ->
+  deepEqual _.invert(a: 1, b: 2, c: 0), {1: 'a', 2: 'b', 0: 'c'}
+  obj =
+    a: 1
+    b: 2
+    c: 0
+    d: 1
+    2: 'e-1'
+    f: -> 'func'
+  deepEqual _.invert(obj), {1: ['a', 'd'], 2: 'b', 0: 'c', 'e-1': '2'}
+  deepEqual _.invert(_.invert(obj)), {a: '1', b: '2', c: '0', d: '1', 2: 'e-1'}
+  deepEqual _.invert(), {}

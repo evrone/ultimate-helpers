@@ -45,10 +45,3 @@ test "bound", ->
   equal bound(-20, -10, 100), -10
   equal bound(-20, 10, -10), 10
   equal bound(20, 10, -10), 10
-
-test "roundWithPrecision", ->
-  strictEqual roundWithPrecision(10/3), 3.33
-  strictEqual roundWithPrecision(10/3, 0), 3
-  strictEqual roundWithPrecision(100/3, 5), 33.33333
-  strictEqual roundWithPrecision(100/3, -1), 30
-  strictEqual roundWithPrecision("19.3", -1), 20

@@ -4,7 +4,7 @@
   Underscore.outcasts is freely distributable under the terms of the MIT license.
   Documentation: https://github.com/KODerFunk/underscore.outcasts
   Some code is borrowed from outcasts pull requests to Underscore.
-  Version '0.1.0'
+  Version '0.1.1'
 ###
 
 'use strict'
@@ -15,7 +15,7 @@
 
 UnderscoreOutcasts =
 
-  VERSION: '0.1.0'
+  VERSION: '0.1.1'
 
   delete: (object, key) ->
     value = object[key]
@@ -28,6 +28,25 @@ UnderscoreOutcasts =
 
   sortHash: (hash, byValue = false) ->
     _.sortBy(_.map(hash, (value, key) -> [key, value]), (pair) -> pair[if byValue then 1 else 0])
+
+  regexpValidKey: /^[\w\-]+$/
+
+  invert: (object) ->
+    result = {}
+    for key, value of object
+      if _.isArray(value)
+        for newKey in value when UnderscoreOutcasts.regexpValidKey.test(newKey)
+          result[newKey] = key
+      else if UnderscoreOutcasts.regexpValidKey.test(value)
+        if _.has(result, value)
+          if _.isArray(result[value])
+            result[value].push key
+          else
+            result[value] = [result[value], key]
+        else
+          result[value] = key
+    result
+
 
   ###
    Split array into slices of <number> elements.

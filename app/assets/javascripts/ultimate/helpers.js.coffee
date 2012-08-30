@@ -43,10 +43,6 @@
 @bound = (number, min, max) ->
   Math.max(min, Math.min(max, number))
 
-@roundWithPrecision = (number, precision = 2) ->
-  precision = Math.pow(10, precision)
-  Math.round(number * precision) / precision
-
 
 
 @getParams = ->
@@ -68,19 +64,6 @@
   ah[0] = ad.join('.')
   aq[0] = ah.join('#')
   aq.join('?')
-
-@number_to_currency = (number, units) =>
-  # TODO
-  @todo "number_to_currency()", "enother functions frome some ports or do port"
-  precision = 2
-  s = parseFloat(number).toFixed(precision)
-  b = s.length - 1 - precision
-  r = s.substring(b)
-  while b > 0
-    a = b - 3
-    r = ' ' + s.substring(a, b) + r
-    b = a
-  "#{r.substring(1)} #{units}"
 
 
 
