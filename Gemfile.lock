@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ultimate-base (0.3.0.alpha)
+    ultimate-base (0.3.0)
 
 GEM
   remote: http://rubygems.org/
