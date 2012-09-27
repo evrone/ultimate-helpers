@@ -23,7 +23,7 @@
       if matches = size.match(/^(\d+)x(\d+)$/)
         options['width']  = matches[1]
         options['height'] = matches[2]
-    Ultimate.Helpers.Tag.tag 'img', options
+    Ultimate.Helpers.Tag.tag('img', options)
 
   image_alt: (src) ->
     _.string.capitalize @without_extension(@basename(src)).replace(/-[A-Fa-f0-9]{32}/, '')
@@ -47,16 +47,16 @@
     source
 
   rewrite_extension: (source, ext) ->
-    "#{@without_extension source}.#{ext}"
+    "#{@without_extension(source)}.#{ext}"
 
   without_extension: (source) ->
-    source.replace /^(.+)(\.\w+)$/, '$1'
+    source.replace(/^(.+)(\.\w+)$/, '$1')
 
   ASSET_ID: ''
   asset_ids_cache: {}
   # Use the ASSET_ID inscope variable or the random hash as its cache-busting asset id.
   asset_id: (source) ->
-    if _.isString @ASSET_ID
+    if _.isString(@ASSET_ID)
       @ASSET_ID
     else
       @asset_ids_cache[source] or (@asset_ids_cache[source] = 10000000 + Math.floor(Math.random() * 90000000))

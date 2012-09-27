@@ -1,5 +1,7 @@
 #= require ./base
 
+# TODO ready options
+
 class Ultimate.Backbone.Collection extends Backbone.Collection
 
   constructor: ->

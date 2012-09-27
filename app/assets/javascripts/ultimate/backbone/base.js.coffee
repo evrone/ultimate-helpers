@@ -2,9 +2,8 @@
 #    jquery ~> 1.7.0
 #    underscore ~> 1.3.0
 
+#= require ultimate/base
 #= require ultimate/helpers
-
-@Ultimate ||= {}
 
 @Ultimate.Backbone =
 

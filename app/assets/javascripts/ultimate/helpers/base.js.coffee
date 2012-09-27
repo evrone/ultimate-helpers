@@ -1,3 +1,3 @@
-@Ultimate ||= {}
+#= require ultimate/base
 
 @Ultimate.Helpers ||= {}
