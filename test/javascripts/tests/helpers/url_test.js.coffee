@@ -24,5 +24,8 @@ test "link_to", ->
   strictEqual link_to('Test Link', '/'), '<a href="/">Test Link</a>'
   strictEqual link_to(null, 'http://ya.ru/'), '<a href="http://ya.ru/">http://ya.ru/</a>'
   strictEqual link_to('caption'), '<a href="javascript:;">caption</a>'
+  strictEqual link_to('caption', null, class: 'link'), '<a class="link" href="javascript:;">caption</a>'
   strictEqual link_to("Hello", "http://www.example.com", class: "red", data: {confirm: 'You cant possibly be sure,\n can you?'}),
-              '<a class="red" data-confirm="You cant possibly be sure,\n can you?" href="http://www.example.com">Hello</a>'
+  '<a class="red" data-confirm="You cant possibly be sure,\n can you?" href="http://www.example.com">Hello</a>'
+  strictEqual link_to(null, -> 'caption'), '<a href="javascript:;">caption</a>'
+  strictEqual link_to(-> 'caption'), '<a href="javascript:;">caption</a>'

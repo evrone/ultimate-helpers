@@ -27,7 +27,10 @@
     url = @url_for(options)
     html_options = @_convert_options_to_data_attributes(options, html_options)
     html_options["href"] ||= url
-    Ultimate.Helpers.Tag.content_tag("a", name or url, html_options, false, block)
+    if block
+      Ultimate.Helpers.Tag.content_tag("a", html_options, null, false, block)
+    else
+      Ultimate.Helpers.Tag.content_tag("a", name or url, html_options, false)
 
 
 
