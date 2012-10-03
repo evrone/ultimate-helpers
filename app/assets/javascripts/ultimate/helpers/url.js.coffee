@@ -32,6 +32,10 @@
     else
       Ultimate.Helpers.Tag.content_tag("a", name or url, html_options, false)
 
+  link_to_js: (name = null, html_options = null, block = null) ->
+    [options, name] = [name, null]  if block = _.outcasts.blockGiven(arguments)
+    @link_to [name, options, html_options, block]...
+
 
 
   _convert_options_to_data_attributes: (options, html_options) ->
