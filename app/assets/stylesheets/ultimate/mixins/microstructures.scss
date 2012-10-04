@@ -80,6 +80,15 @@ $support-ie: true !default;
   }
 }
 
+// Adapted from: [A new micro clearfix hack](http://nicolasgallagher.com/micro-clearfix-hack/)
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
 //  Set to element which disappear after animation in IE6-7.
 @mixin fix-disapp {
   @include deprecate("@include fix-disapp;");

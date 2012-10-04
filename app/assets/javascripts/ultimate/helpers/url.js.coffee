@@ -11,7 +11,7 @@
         options
     else unless _.isEmpty(options)
       url = _.result(options, 'url') ? ''
-      if _.isObject(options)
+      if $.isPlainObject(options)
         options = _.clone(options)
         delete options['url']
         anchor = _.outcasts.delete(options, 'anchor')
