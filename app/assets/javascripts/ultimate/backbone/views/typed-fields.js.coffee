@@ -38,4 +38,4 @@ class Ultimate.Backbone.Observers.TypedFields extends Ultimate.Backbone.View
 
 
 
-Ultimate.Backbone.createJQueryPlugin? "typedFields", Ultimate.Backbone.Observers.TypedFields
+Ultimate.createJQueryPlugin? "typedFields", Ultimate.Backbone.Observers.TypedFields

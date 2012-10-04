@@ -42,7 +42,7 @@ class Ultimate.Backbone.View extends Backbone.View
 
   findNodes: (jRoot = @$el, nodes = @nodes) ->
     jNodes = {}
-    nodes = nodes()  if _.isFunction(nodes)
+    nodes = if _.isFunction(nodes) then @nodes.call(@) else _.clone(nodes)
     if _.isObject(nodes)
       for nodeName, selector of nodes
         _isObject = _.isObject(selector)
@@ -58,8 +58,7 @@ class Ultimate.Backbone.View extends Backbone.View
 
   # Overload and proxy parent method Backbone.View.delegateEvents() as hook for normalizeEvents().
   delegateEvents: (events) ->
-    args = []
-    Array::push.apply args, arguments  if arguments.length > 0
+    args = _.toArray(arguments)
     args[0] = @normalizeEvents(events)
     super args...
 

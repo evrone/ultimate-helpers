@@ -46,7 +46,7 @@ do ($ = jQuery) =>
   $.fn.slideToggleByState = ->
     if @length
       if arguments.length > 0
-        a = args(arguments)
+        a = _.toArray(arguments)
         if a.shift()
           @slideDown.apply @, a
         else
