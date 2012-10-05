@@ -1,4 +1,5 @@
 #  * Require ./../underscore/underscore.outcasts
+#  * Require ./../underscore/underscore.string
 #= require ./base
 
 class Ultimate.Backbone.View extends Backbone.View
@@ -72,8 +73,9 @@ class Ultimate.Backbone.View extends Backbone.View
       for key, method of events
         [[], eventName, selector] = key.match(delegateEventSplitter)
         selector = _.result(@, selector)
-        selector = selector.selector if selector instanceof jQuery
+        selector = selector.selector  if selector instanceof jQuery
         if _.isString(selector)
+          selector = selector.replace(@$el.selector, '')  if _.string.startsWith(selector, @$el.selector)
           key = "#{eventName} #{selector}"
         normalizedEvents[key] = method
       events = normalizedEvents

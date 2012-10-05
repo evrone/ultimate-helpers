@@ -1,6 +1,20 @@
+# TODO simlify translations infrastructure
 # `pluginClass` must store propery `$el` as jQuery object wrapped on the target DOM-object in his instance.
 
 #= require ./base
+
+# TODO minimize requirements
+# requirements stats:
+# 4 _.result
+# 3 _.extend
+# 2 _.isFunction
+# 2 _.isObject
+# 1 _.isString
+# 1 _.bind
+# 1 _.clone
+# 1 _.outcasts.delete
+# 1 _.string.underscored
+# 1 _.string.startsWith
 
 class Ultimate.Plugin
   $el: null
@@ -30,7 +44,7 @@ class Ultimate.Plugin
 
   findNodes: (jRoot = @$el, nodes = @nodes) ->
     jNodes = {}
-    nodes = nodes()  if _.isFunction(nodes)
+    nodes = if _.isFunction(nodes) then @nodes.call(@) else _.clone(nodes)
     if _.isObject(nodes)
       for nodeName, selector of nodes
         _isObject = _.isObject(selector)
@@ -77,8 +91,9 @@ class Ultimate.Plugin
       for key, method of events
         [[], eventName, selector] = key.match(delegateEventSplitter)
         selector = _.result(@, selector)
-        selector = selector.selector if selector instanceof jQuery
+        selector = selector.selector  if selector instanceof jQuery
         if _.isString(selector)
+          selector = selector.replace(@$el.selector, '')  if _.string.startsWith(selector, @$el.selector)
           key = "#{eventName} #{selector}"
         normalizedEvents[key] = method
       events = normalizedEvents
@@ -106,7 +121,7 @@ class Ultimate.Plugin
         unless _defaultLocales["loaded"]
           _defaultLocales["loaded"] = true
           # try read localized strings
-          if _localesFromI18n = I18n.t(options["i18nKey"] or _.underscored(@constructor.pluginName or @constructor.name))
+          if _localesFromI18n = I18n.t(options["i18nKey"] or _.string.underscored(@constructor.pluginName or @constructor.name))
             # fill it from I18n
             _.extend _defaultLocales, _localesFromI18n
     @locale = options["locale"]  if options["locale"]

@@ -18,5 +18,5 @@ class Ultimate.Backbone.Model extends Backbone.Model
       callback.apply context, [@]
 
   singular: ->
-    _.singularize(_.string.underscored(constructor.name))
-    (@className or @constructor.name or 'Model')
+    modelName = @constructor.modelName or @modelName or @className or @constructor.name or 'Model'
+    _.singularize(_.string.underscored(modelName))

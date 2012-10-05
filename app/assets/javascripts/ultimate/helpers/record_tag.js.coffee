@@ -21,9 +21,9 @@
     options = if  _.isObject(options) then _.clone(options) else {}
     _.extend options, {class: Ultimate.Helpers.Tag.concat_class(@dom_class(record, prefix), options['class']), id: @dom_id(record, prefix)}
     if block
-      Ultimate.Helpers.Tag.content_tag(tag_name, block(record), options)
+      Ultimate.Helpers.Tag.content_tag(tag_name, block(record), options, false)
     else
-      Ultimate.Helpers.Tag.content_tag(tag_name, block, options)
+      Ultimate.Helpers.Tag.content_tag(tag_name, block, options, false)
 
   # ============= from ActionController::RecordIdentifier ===============
 
@@ -39,10 +39,10 @@
   dom_class: (record_or_class, prefix = "") ->
     # TODO improve as in Ultimate.Backbone.Model
     if _.isString(record_or_class)
-      singular = _.singularize(record_or_class)
+      singular = record_or_class
     else unless singular = _.result(record_or_class, 'singular')
-      if _.isString(record_or_class?.constructor?.name)
-        singular = _.singularize(_.string.underscored(record_or_class.constructor.name))
+      singular = record_or_class.constructor?.modelName or record_or_class.modelName or record_or_class.className or record_or_class.constructor?.name or 'Model'
+    singular = _.singularize(_.string.underscored(singular))
     if prefix then "#{prefix}_#{singular}" else singular
 
   # The DOM id convention is to use the singular form of an object or class with the id following an underscore.

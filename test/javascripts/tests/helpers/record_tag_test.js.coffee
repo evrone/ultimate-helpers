@@ -17,6 +17,7 @@ singular = 'record_tag_post'
 
 test "dom_class", ->
   equal dom_class(record), singular
+  equal dom_class(record.constructor.name), singular
   equal dom_class(record, "custom_prefix"), "custom_prefix_#{singular}"
 
 test "dom_id", ->
@@ -37,8 +38,8 @@ test "content_tag_for", ->
         "<tr class=\"#{singular} special\" id=\"#{singular}_45\" style=\"background-color: #f0f0f0\"></tr>"
   equal content_tag_for('tr', record, 'archived', class: "special", style: "background-color: #f0f0f0"),
         "<tr class=\"archived_#{singular} special\" id=\"archived_#{singular}_45\" style=\"background-color: #f0f0f0\"></tr>"
-  equal content_tag_for('tr', record, -> record.body),
-        "<tr class=\"#{singular}\" id=\"#{singular}_45\">What a wonderful world!</tr>"
+  equal content_tag_for('tr', record, -> "<b>#{record.body}</b>"),
+        "<tr class=\"#{singular}\" id=\"#{singular}_45\"><b>What a wonderful world!</b></tr>"
   post_1 = new RecordTagPost(id: 101, body: "Hello!")
   post_2 = new RecordTagPost(id: 102, body: "World!")
   equal content_tag_for('li', [post_1, post_2], (post) -> post.body),
@@ -48,8 +49,9 @@ test "content_tag_for", ->
   deepEqual options, class: 'important'
 
 test "div_for", ->
+  record.id = 36
   equal div_for(record, class: 'special', -> record.body),
-        "<div class=\"#{singular} special\" id=\"#{singular}_45\">What a wonderful world!</div>"
+        "<div class=\"#{singular} special\" id=\"#{singular}_36\">What a wonderful world!</div>"
   post_1 = new RecordTagPost(id: 101, body: "Hello!")
   post_2 = new RecordTagPost(id: 102, body: "World!")
   equal div_for([post_1, post_2], (post) -> post.body),
