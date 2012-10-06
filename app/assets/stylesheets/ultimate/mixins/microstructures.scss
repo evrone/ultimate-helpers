@@ -65,26 +65,43 @@ $support-ie: true !default;
   }
 }
 
+@mixin before($display: block, $content: '') {
+  &:before {
+    display: $display;
+    content: $content;
+    @content;
+  }
+}
+
+@mixin after($display: block, $content: '') {
+  &:after {
+    display: $display;
+    content: $content;
+    @content;
+  }
+}
+
+@mixin both($display: block, $content: '') {
+  &:before, &:after {
+    display: $display;
+    content: $content;
+    @content;
+  }
+}
+
 //  Set to container includes float blocks.
-@mixin g-line {
+@mixin g-line($clear: both) {
   @include deprecate("@include g-line;", "overflow: hidden;");
   @if $support-ie {
     *zoom: 1;
     _height: 0;
   }
-  &:after {
-    content: " ";
-    display: block;
-    clear: both;
-    height: 0;
-  }
+  @include clearfix($clear);
 }
 
 // Adapted from: [A new micro clearfix hack](http://nicolasgallagher.com/micro-clearfix-hack/)
 @mixin clearfix($clear: both) {
-  &:after, &:before {
-    content: "";
-    display: table;
+  @include both(table) {
     clear: $clear;
   }
 }
