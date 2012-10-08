@@ -36,3 +36,12 @@ test "invert", ->
   deepEqual _.invert(obj), {1: ['a', 'd'], 2: 'b', 0: 'c', 'e-1': '2'}
   deepEqual _.invert(_.invert(obj)), {a: '1', b: '2', c: '0', d: '1', 2: 'e-1'}
   deepEqual _.invert(), {}
+
+test "scan", ->
+  a = "cruel world"
+  deepEqual _.scan(a, /\w+/)      , ["cruel", "world"]
+  deepEqual _.scan(a, /.../)      , ["cru", "el ", "wor"]
+  deepEqual _.scan(a, /(...)/)    , [["cru"], ["el "], ["wor"]]
+  deepEqual _.scan(a, /(..)(..)/) , [["cr", "ue"], ["l ", "wo"]]
+  equal _.scan(a, /\w+/, (w) -> "<<#{w}>> ").join(''), '<<cruel>> <<world>> '
+  equal _.scan(a, /(.)(.)/, (x, y) -> y + x).join(''), 'rceu lowlr'

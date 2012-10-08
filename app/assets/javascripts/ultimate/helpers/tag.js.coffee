@@ -11,7 +11,7 @@
     textarea: "\n"
 
   tag: (tag_name, options = {}, open = false, escape = true) ->
-    "<#{tag_name}#{@tag_options(options)}#{if open then '>' else ' />'}"
+    "<#{tag_name}#{@tag_options(options, escape)}#{if open then '>' else ' />'}"
 
   content_tag: (name, content_or_options_with_block = null, options = null, escape = true, block = null) ->
     if block = _.outcasts.blockGiven(arguments)
@@ -19,6 +19,10 @@
       @content_tag_string(name, block(), options, escape)
     else
       @content_tag_string(name, content_or_options_with_block, options, escape)
+
+  cdata_section: (content) ->
+    splitted = content.replace(/\]\]>/g, ']]]]><![CDATA[>')
+    "<![CDATA[#{splitted}]]>"
 
   content_tag_string: (name, content = '', options = {}, escape = true) ->
     content = _.escape(content)  if escape

@@ -1,5 +1,10 @@
 #= require ./base
 #= require ./tag
+#= require ./javascript
+
+__char_encode = (char) -> "%#{char.charCodeAt(0).toString(16)}"
+escape_path = (str) -> str.replace(/[^*\-.0-9A-Z_a-z]/g, __char_encode).replace(/\+/g, '%20')
+__string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).join('')
 
 @Ultimate.Helpers.Url =
 
@@ -35,6 +40,32 @@
   link_to_js: (name = null, html_options = null, block = null) ->
     [options, name] = [name, null]  if block = _.outcasts.blockGiven(arguments)
     @link_to [name, options, html_options, block]...
+
+
+
+  mail_to: (email_address, name = null, html_options = {}) ->
+    email_address = _.string.escapeHTML(email_address)
+    encode = _.outcasts.delete(html_options, "encode")
+    extras = _.compact _.map _.string.words('cc bcc body subject'), (item) ->
+      option = _.outcasts.delete(html_options, item)
+      if option?
+        "#{item}=#{escape_path(option)}"
+    extras = if _.isEmpty(extras) then '' else '?' + _.string.escapeHTML(extras.join('&'))
+    email_address_obfuscated = email_address
+    email_address_obfuscated = email_address_obfuscated.replace('@', _.outcasts.delete(html_options, "replace_at"))   if "replace_at" of html_options
+    email_address_obfuscated = email_address_obfuscated.replace('.', _.outcasts.delete(html_options, "replace_dot"))  if "replace_dot" of html_options
+    switch encode
+      when "javascript"
+        html   = @link_to(name or email_address_obfuscated, "mailto:#{email_address}#{extras}", html_options)
+        html   = Ultimate.Helpers.Javascript.escape_javascript(html)
+        string = _.map("document.write('#{html}');", __char_encode).join('')
+        "<script>eval(decodeURIComponent('#{string}'))</script>"
+      when "hex"
+        email_address_encoded = __string_encode(email_address_obfuscated)
+        string = __string_encode('mailto:') + _.map(email_address, (char) -> if /\w/.test(char) then __char_encode(char) else char).join('')
+        @link_to name or email_address_encoded, "#{string}#{extras}", html_options
+      else
+        @link_to name or email_address_obfuscated, "mailto:#{email_address}#{extras}", html_options
 
 
 

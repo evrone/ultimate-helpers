@@ -4,7 +4,7 @@
   Underscore.outcasts is freely distributable under the terms of the MIT license.
   Documentation: https://github.com/KODerFunk/underscore.outcasts
   Some code is borrowed from outcasts pull requests to Underscore.
-  Version '0.1.1'
+  Version '0.1.2'
 ###
 
 'use strict'
@@ -15,7 +15,7 @@
 
 UnderscoreOutcasts =
 
-  VERSION: '0.1.1'
+  VERSION: '0.1.2'
 
   delete: (object, key) ->
     value = object[key]
@@ -47,6 +47,21 @@ UnderscoreOutcasts =
           result[value] = key
     result
 
+  scan: (str, pattern) ->
+    block = @blockGiven(arguments)
+    result = []
+    while str.length
+      matches = str.match(pattern)
+      if matches
+        cut = matches.shift()
+        str = str.slice(matches.index + cut.length)
+        result.push if block
+            if matches.length then block(matches...) else block(cut)
+          else
+            if matches.length then matches else cut
+      else
+        str = ''
+    result
 
   ###
    Split array into slices of <number> elements.
