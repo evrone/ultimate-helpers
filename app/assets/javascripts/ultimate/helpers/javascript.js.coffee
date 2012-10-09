@@ -9,14 +9,12 @@ JS_ESCAPE_MAP =
   "\r"    : '\\n'
   '"'     : '\\"'
   "'"     : "\\'"
-#  "\342\200\250" : '&#x2028;'
-#  "\342\200\251" : '&#x2029;'
 
 @Ultimate.Helpers.Javascript =
 
   escape_javascript: (javascript) ->
     return ''  unless _.isString(javascript)
-    javascript.replace( /(\\|<\/|\r\n|\342\200\250|\342\200\251|[\n\r"'])/g, (match) -> JS_ESCAPE_MAP[match] )
+    javascript.replace( /(\\|<\/|\r\n|[\n\r"'])/g, (match) -> JS_ESCAPE_MAP[match] )
 
   j: -> @escape_javascript arguments...
 

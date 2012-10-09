@@ -4,7 +4,7 @@
   Underscore.outcasts is freely distributable under the terms of the MIT license.
   Documentation: https://github.com/KODerFunk/underscore.outcasts
   Some code is borrowed from outcasts pull requests to Underscore.
-  Version '0.1.2'
+  Version '0.1.3'
 ###
 
 'use strict'
@@ -15,7 +15,7 @@
 
 UnderscoreOutcasts =
 
-  VERSION: '0.1.2'
+  VERSION: '0.1.3'
 
   delete: (object, key) ->
     value = object[key]
@@ -62,6 +62,16 @@ UnderscoreOutcasts =
       else
         str = ''
     result
+
+  arrayWrap: (object) ->
+    unless object?
+      []
+    else if _.isArray(object)
+      object
+    else if _.isFunction(object.toArray)
+      object.toArray() or [object]
+    else
+      [object]
 
   ###
    Split array into slices of <number> elements.
