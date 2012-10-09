@@ -25,12 +25,12 @@
     "<![CDATA[#{splitted}]]>"
 
   content_tag_string: (name, content = '', options = {}, escape = true) ->
-    content = _.escape(content)  if escape
+    content = _.string.escapeHTML(content)  if escape
     "<#{name}#{@tag_options(options, escape)}>#{@PRE_CONTENT_STRINGS[name] ? ''}#{content}</#{name}>"
 
   html_options_to_s: (html_options, escape = false, prefix = "") ->
     deprecate 'html_options_to_s()', "tag_options()"
-    @tag_options.apply(@, arguments)
+    @tag_options arguments...
 
   tag_options: (options, escape = true) ->
     return ""  if _.isEmpty(options)

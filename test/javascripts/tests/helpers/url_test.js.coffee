@@ -20,24 +20,24 @@ test "url_for", ->
   strictEqual url_for("/back"), '/back'
 
 test "link_to", ->
-  strictEqual link_to('Hello', 'http://www.example.com'), '<a href="http://www.example.com">Hello</a>'
-  strictEqual link_to('Test Link', '/'), '<a href="/">Test Link</a>'
-  strictEqual link_to(null, 'http://ya.ru/'), '<a href="http://ya.ru/">http://ya.ru/</a>'
-  strictEqual link_to('caption'), '<a href="javascript:;">caption</a>'
-  strictEqual link_to('caption', null, class: 'link'), '<a class="link" href="javascript:;">caption</a>'
-  strictEqual link_to("Hello", "http://www.example.com", class: "red", data: {confirm: 'You cant possibly be sure,\n can you?'}),
-  '<a class="red" data-confirm="You cant possibly be sure,\n can you?" href="http://www.example.com">Hello</a>'
-  strictEqual link_to(null, -> 'caption'), '<a href="javascript:;">caption</a>'
-  strictEqual link_to(-> 'caption'), '<a href="javascript:;">caption</a>'
+  equal link_to('Hello', 'http://www.example.com'), '<a href="http://www.example.com">Hello</a>'
+  equal link_to('Test Link', '/'), '<a href="/">Test Link</a>'
+  equal link_to(null, 'http://ya.ru/'), '<a href="http://ya.ru/">http://ya.ru/</a>'
+  equal link_to('caption'), '<a href="javascript:;">caption</a>'
+  equal link_to('caption', null, class: 'link'), '<a class="link" href="javascript:;">caption</a>'
+  equal link_to("Hello", "http://www.example.com", class: "red", data: {confirm: 'You cant possibly be sure,\n can you?'}),
+        '<a class="red" data-confirm="You cant possibly be sure,\n can you?" href="http://www.example.com">Hello</a>'
+  equal link_to(null, -> 'caption'), '<a href="javascript:;">caption</a>'
+  equal link_to(-> 'caption'), '<a href="javascript:;">caption</a>'
 
 test "link_to_js", ->
-  strictEqual link_to_js('caption'), '<a href="javascript:;">caption</a>'
-  strictEqual link_to_js('caption', class: 'link'), '<a class="link" href="javascript:;">caption</a>'
-  strictEqual link_to_js("Hello", class: "red", data: {confirm: 'You cant possibly be sure,\n can you?'}),
-  '<a class="red" data-confirm="You cant possibly be sure,\n can you?" href="javascript:;">Hello</a>'
-  strictEqual link_to_js(null, -> 'caption'), '<a href="javascript:;">caption</a>'
-  strictEqual link_to_js(class: 'link', -> 'caption'), '<a class="link" href="javascript:;">caption</a>'
-  strictEqual link_to_js(-> 'caption'), '<a href="javascript:;">caption</a>'
+  equal link_to_js('caption'), '<a href="javascript:;">caption</a>'
+  equal link_to_js('caption', class: 'link'), '<a class="link" href="javascript:;">caption</a>'
+  equal link_to_js("Hello", class: "red", data: {confirm: 'You cant possibly be sure,\n can you?'}),
+        '<a class="red" data-confirm="You cant possibly be sure,\n can you?" href="javascript:;">Hello</a>'
+  equal link_to_js(null, -> 'caption'), '<a href="javascript:;">caption</a>'
+  equal link_to_js(class: 'link', -> 'caption'), '<a class="link" href="javascript:;">caption</a>'
+  equal link_to_js(-> 'caption'), '<a href="javascript:;">caption</a>'
 
 test "mail_to", ->
   equal mail_to("david@loudthinking.com"),
