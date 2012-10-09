@@ -3,7 +3,7 @@
 //  Underscore.string is freely distributable under the terms of the MIT license.
 //  Documentation: https://github.com/epeli/underscore.string
 //  Some code is borrowed from MooTools and Alexandru Marasteanu.
-//  Version '2.2.0rc'
+//  Version '2.3.0'
 
 !function(root, String){
   'use strict';
@@ -176,7 +176,7 @@
 
   var _s = {
 
-    VERSION: '2.2.0rc',
+    VERSION: '2.3.0',
 
     isBlank: function(str){
       if (str == null) str = '';
@@ -494,8 +494,8 @@
     slugify: function(str) {
       if (str == null) return '';
 
-      var from  = "ąàáäâãćęèéëêìíïîłńòóöôõùúüûñçżź",
-          to    = "aaaaaaceeeeeiiiilnooooouuuunczz",
+      var from  = "ąàáäâãåæćęèéëêìíïîłńòóöôõøùúüûñçżź",
+          to    = "aaaaaaaaceeeeeiiiilnoooooouuuunczz",
           regex = new RegExp(defaultToWhiteSpace(from), 'g');
 
       str = String(str).toLowerCase().replace(regex, function(c){
