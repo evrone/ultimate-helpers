@@ -70,7 +70,7 @@
     options ||= {}
     options = _.extend({name: 'button', type: 'submit'}, options)
     content_or_options = options  if block
-    Ultimate.Helpers.Tag.content_tag 'button', content_or_options or 'Button', options, not block, block
+    Ultimate.Helpers.Tag.content_tag 'button', content_or_options ? 'Button', options, not block, block
 
   image_submit_tag: (source, options = {}) ->
     Ultimate.Helpers.Tag.tag 'input', _.extend({type: 'image', src: path_to_image(source)}, options)
