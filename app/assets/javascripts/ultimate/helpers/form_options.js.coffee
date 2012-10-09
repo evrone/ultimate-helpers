@@ -17,6 +17,15 @@
       Ultimate.Helpers.Tag.content_tag_string 'option', text, html_attributes
     ).join("\n")
 
+  options_from_collection_for_select: (collection, value_method, text_method, selected = null) ->
+    options = _.map collection, (element) ->
+      [@_value_for_collection(element, text_method), @_value_for_collection(element, value_method)]
+    [selected, disabled] = @_extract_selected_and_disabled(selected)
+    select_deselect =
+      selected: @_extract_values_from_collection(collection, value_method, selected)
+      disabled: @_extract_values_from_collection(collection, value_method, disabled)
+    @options_for_select(options, select_deselect)
+
 
 
   _option_html_attributes: (element) ->
@@ -44,3 +53,13 @@
       options = if $.isPlainObject(_.last(selected)) then selected.pop() else {}
       selected_items = options['selected'] ? selected
       [selected_items, options['disabled']]
+
+  _extract_values_from_collection: (collection, value_method, selected) ->
+    if _.isFunction(selected)
+      _.compact _.map collection, (element) ->
+        _.result(element, value_method)  if selected(element)
+    else
+      selected
+
+  _value_for_collection: (item, value) ->
+    if _.isFunction(value) then value(item) else _.result(item, value)
