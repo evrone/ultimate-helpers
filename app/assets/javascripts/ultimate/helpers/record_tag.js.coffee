@@ -25,7 +25,17 @@
     else
       Ultimate.Helpers.Tag.content_tag(tag_name, block, options, false)
 
-  # ============= from ActionController::RecordIdentifier ===============
+
+
+  # from ActionView::ModelNaming
+  model_name_from_record_or_class: (record_or_class) ->
+    modelClass = record_or_class.constructor ? record_or_class
+    if modelClass?
+      modelClass.modelName or modelClass.className or modelClass.name or 'Model'
+    else
+      'Model'
+
+  # ============= from ActionView::RecordIdentifier ===============
 
   # The DOM class convention is to use the singular form of an object or class. Examples:
   #
@@ -34,15 +44,16 @@
   #
   # If you need to address multiple instances of the same class in the same view, you can prefix the dom_class:
   #
-  #   dom_class(post, :edit)   # => "edit_post"
-  #   dom_class(Person, :edit) # => "edit_person"
+  #   dom_class(post, 'edit')   # => "edit_post"
+  #   dom_class(Person, 'edit') # => "edit_person"
   dom_class: (record_or_class, prefix = "") ->
-    # TODO improve as in Ultimate.Backbone.Model
-    if _.isString(record_or_class)
-      singular = record_or_class
-    else unless singular = _.result(record_or_class, 'singular')
-      singular = record_or_class.constructor?.modelName or record_or_class.modelName or record_or_class.className or record_or_class.constructor?.name or 'Model'
-    singular = _.singularize(_.string.underscored(singular))
+    singular =
+      _.result(record_or_class, 'singular') ?
+      _.singularize _.string.underscored(
+        if _.isString(record_or_class)
+          record_or_class
+        else
+          @model_name_from_record_or_class(record_or_class) )
     if prefix then "#{prefix}_#{singular}" else singular
 
   # The DOM id convention is to use the singular form of an object or class with the id following an underscore.
@@ -56,11 +67,14 @@
   #   dom_id(Post.find(45), "edit") # => "edit_post_45"
   # TODO sync with rorId and ror_id
   dom_id: (record, prefix = "") ->
-    if record_id = @sanitize_dom_id(record.id)
+    if record_id = @_record_key_for_dom_id(record)
       "#{@dom_class(record, prefix)}_#{record_id}"
     else
       @dom_class(record, prefix or "new")
 
-  # Replaces characters that are invalid in HTML DOM ids with valid ones.
-  sanitize_dom_id: (candidate_id) ->
-    candidate_id # TODO implement conversion to valid DOM id values
+
+
+  # protected
+
+  _record_key_for_dom_id: (record) ->
+    record.id
