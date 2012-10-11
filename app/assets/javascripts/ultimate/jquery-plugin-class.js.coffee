@@ -10,6 +10,7 @@
 # 2 _.isFunction
 # 2 _.isObject
 # 1 _.isString
+# 1 _.isArray
 # 1 _.bind
 # 1 _.clone
 # 1 _.outcasts.delete
@@ -17,6 +18,7 @@
 # 1 _.string.startsWith
 
 class Ultimate.Plugin
+  el: null
   $el: null
   nodes: {}
   events: {}
@@ -27,7 +29,8 @@ class Ultimate.Plugin
   translations: {}
 
   constructor: (options) ->
-    @$el = $(options.el)
+    @_configure(options || {});
+    @$el = $(@el)
     @findNodes()
     @initialize arguments...
     @delegateEvents()
@@ -104,8 +107,9 @@ class Ultimate.Plugin
     @initTranslations()
     @reflectOptions()
 
-  reflectOptions: (viewOptions = _.result(@, "viewOptions"), options = @options) ->
-    @[attr] = options[attr]  for attr in viewOptions  when typeof options[attr] isnt "undefined"
+  reflectOptions: (reflectableOptions = _.result(@, "reflectableOptions"), options = @options) ->
+    if _.isArray(reflectableOptions)
+      @[attr] = options[attr]  for attr in reflectableOptions  when typeof options[attr] isnt "undefined"
     @[attr] = value  for attr, value of options  when typeof @[attr] isnt "undefined"
     @
 
@@ -113,17 +117,17 @@ class Ultimate.Plugin
   # modify and return merged data
   initTranslations: (options = @options) ->
     # if global compatible I18n
-    if I18n? and I18n.locale and I18n.t
-      options["locale"] ||= I18n.locale
-      if options["locale"] is I18n.locale
-        # pointing to defaults locales of language specified in I18n
-        _defaultLocales = @constructor.defaultLocales?[I18n.locale] ||= {}
-        unless _defaultLocales["loaded"]
-          _defaultLocales["loaded"] = true
-          # try read localized strings
-          if _localesFromI18n = I18n.t(options["i18nKey"] or _.string.underscored(@constructor.pluginName or @constructor.name))
-            # fill it from I18n
-            _.extend _defaultLocales, _localesFromI18n
+#    if I18n? and I18n.locale and I18n.t
+#      options["locale"] ||= I18n.locale
+#      if options["locale"] is I18n.locale
+#        # pointing to defaults locales of language specified in I18n
+#        _defaultLocales = @constructor.defaultLocales?[I18n.locale] ||= {}
+#        unless _defaultLocales["loaded"]
+#          _defaultLocales["loaded"] = true
+#          # try read localized strings
+#          if _localesFromI18n = I18n.t(options["i18nKey"] or _.string.underscored(@constructor.pluginName or @constructor.name))
+#            # fill it from I18n
+#            _.extend _defaultLocales, _localesFromI18n
     @locale = options["locale"]  if options["locale"]
     translations = if @locale then @constructor.defaultLocales?[@locale] or {} else {}
     $.extend true, options, translations: translations, options

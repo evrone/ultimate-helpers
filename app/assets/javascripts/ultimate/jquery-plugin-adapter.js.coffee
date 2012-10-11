@@ -14,6 +14,7 @@
 
 Ultimate.createJQueryPlugin = (pluginName, pluginClass) ->
   Ultimate.debug(".createJQueryPlugin()", pluginName, pluginClass)  if _.isFunction(Ultimate.debug)
+  pluginClass.pluginName ||= pluginName
   jQuery.fn[pluginName] = -> @ultimatePluginAdapter pluginName, pluginClass, arguments
 
 
