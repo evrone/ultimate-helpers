@@ -32,3 +32,12 @@
     #{$property}: $params;
   }
 }
+
+@mixin vendors-full($vendors, $property, $params, $origin: true) {
+  @each $vendor in $vendors {
+    -#{$vendor}-#{$property}: -#{$vendor}-#{$params};
+  }
+  @if $origin {
+    #{$property}: $params;
+  }
+}

@@ -122,7 +122,7 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //    produce:
 //      background-color: $bg-color;
 //      background-image:        -webkit-gradient(linear, right top, left top, color-stop(0%, green), color-stop(20%, orange), color-stop(100%, red)); // old webkit (Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0)
-//      background-image: -webkit-linear-gradient(right, green, orange 20%, red 100%); // Chrome 10+, Safari 5.1+
+//      background-image: -webkit-linear-gradient(right, green, orange 20%, red 100%); // Chrome 10+, Safari 5.1+, Android 4.0+
 //      background-image:    -moz-linear-gradient(right, green, orange 20%, red 100%); // FF 3.6+
 //      background-image:     -ms-linear-gradient(right, green, orange 20%, red 100%); // IE 10+
 //      background-image:      -o-linear-gradient(right, green, orange 20%, red 100%); // Opera 11.1+
@@ -163,7 +163,7 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   $bg-color: nth(nth($stops, 1), 1);
   background-color: $bg-color;
   background-image: -webkit-gradient(linear, $wk_start, $wk_end, $wk_stops);
-  $linear-gradient: linear-gradient($corner_angle, $stops);
+  $linear-gradient: linear-gradient($corner_angle, change-separator($stops));
   @include vendors-param(webkit moz ms o, background-image, $linear-gradient);
   @if $support-ie and $pie-url {
     -pie-background: $bg-color $linear-gradient;
@@ -189,35 +189,42 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //    example:
 //      @include radial-gradient(center 45deg, circle closest-side, (orange 0%, red 100%));
 //    produce:
-//      background-image: -webkit-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // Chrome 10+, Safari 5.1+
+//      background-image: -webkit-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // Chrome 10+, Safari 5.1+, Android 4.0+
 //      background-image:    -moz-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // FF 3.6+
 //      background-image:     -ms-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // IE 10+
 //      background-image:      -o-radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // Opera 11.6+
 //      background-image:         radial-gradient(center 45deg, circle closest-side, orange 0%, red 100%); // future
 @mixin radial-gradient($position_angle, $shape_size, $stops) {
-  // TODO may be deprecate background-image: -webkit-gradient(radial, $wk_start, $wk_end, unquote(list-to-string($wk_stops, ", ")));
   @include vendors-param(webkit moz ms o, background-image, radial-gradient($position_angle, $shape_size, change-separator($stops)));
 }
 
-// EXPERIMENTAL
-@mixin border-gradient($color_start, $color_stop, $is_horizontal: false) {
+@mixin border-gradient_simple($color_start, $color_stop, $is_horizontal: false) {
   $color_mix: mix($color_start, $color_stop);
-  $start: top;
-  $wk_start: left top;
-  $wk_stop: left bottom;
   @if $is_horizontal {
-    $start: left;
-    $wk_stop: right top;
     border-color: $color_mix $color_stop $color_mix $color_start;
   } @else {
     border-color: $color_start $color_mix $color_stop;
   }
-  -webkit-border-image: -webkit-gradient(linear, $wk_start, $wk_stop, from($color_start), to($color_stop)); // old webkit (Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0)
-  // TODO may be new -webkit-gradient?
-  -moz-border-image: -moz-linear-gradient($start, $color_start, $color_stop); // FF 3.5+
-   -ms-border-image:  -ms-linear-gradient($start, $color_start, $color_stop); // IE 10+
-    -o-border-image:   -o-linear-gradient($start, $color_start, $color_stop); // Opera 11.0+
-       border-image:      linear-gradient($start, $color_start, $color_stop); // future
+}
+
+// EXPERIMENTAL
+// Temporary remove webkit support, because find bug in Chromium 20
+@mixin border-gradient($color_start, $color_stop, $is_horizontal: false) {
+  @include border-gradient_simple($color_start, $color_stop, $is_horizontal);
+  $start: top;
+  //$wk_start: left top;
+  //$wk_stop: left bottom;
+  @if $is_horizontal {
+    $start: left;
+    //$wk_stop: right top;
+  }
+  // -webkit-border-image: -webkit-gradient(linear, $wk_start, $wk_stop, from($color_start), to($color_stop)); // old webkit (Safari <= 5.0, iOS-Safari <= 4.3, Android <= 3.0)
+  @include vendors-full(moz ms o, border-image, linear-gradient($start, $color_start, $color_stop));
+  //-webkit-border-image: -webkit-linear-gradient($start, $color_start, $color_stop); // Chrome 10+, Safari 5.1+, Android 4.0+
+  //   -moz-border-image:    -moz-linear-gradient($start, $color_start, $color_stop); // FF 3.5+
+  //    -ms-border-image:     -ms-linear-gradient($start, $color_start, $color_stop); // IE 10+
+  //     -o-border-image:      -o-linear-gradient($start, $color_start, $color_stop); // Opera 11.0+
+  //        border-image:         linear-gradient($start, $color_start, $color_stop); // future
 }
 
 //  Provide cross-browser CSS opacity.
