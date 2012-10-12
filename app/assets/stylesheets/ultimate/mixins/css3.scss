@@ -327,12 +327,16 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   }
 }
 
-// TODO
-//@mixin placeholder($params) {
-//  &::-webkit-input-placeholder, &:-moz-placeholder {
-//    #{$params};
-//  }
-//}
-//input::-webkit-input-placeholder { color: #a3a3a3 !important;}
-//input:-moz-placeholder { color: #a3a3a3 !important; }
-
+//  Style the html5 input placeholder in browsers that support it.
+//  The styles for the input placeholder are passed as mixin content.
+//  Mostly supported properties: color, font-*, letter-spacing.
+//    example:
+//      @include input-placeholder {
+//        color: #bfbfbf;
+//        font-style: italic;
+//      }
+@mixin input-placeholder {
+  &::-webkit-input-placeholder { @content; }
+  &:-moz-placeholder { @content; }
+  &:-ms-input-placeholder { @content; }
+}

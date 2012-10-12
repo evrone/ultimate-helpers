@@ -1,6 +1,7 @@
 #= require ./base
 #= require ./tag
 #= require ./url
+#= require ./asset_tag
 
 @Ultimate.Helpers.FormTag =
 
@@ -73,7 +74,7 @@
     Ultimate.Helpers.Tag.content_tag 'button', content_or_options ? 'Button', options, not block, block
 
   image_submit_tag: (source, options = {}) ->
-    Ultimate.Helpers.Tag.tag 'input', _.extend({type: 'image', src: path_to_image(source)}, options)
+    Ultimate.Helpers.Tag.tag 'input', _.extend({type: 'image', src: Ultimate.Helpers.AssetTag.path_to_image(source)}, options)
 
   field_set_tag: (legend = null, options = null, block) ->
     output = Ultimate.Helpers.Tag.tag('fieldset', options, true)
