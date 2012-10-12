@@ -47,6 +47,8 @@ test "content_tag_for", ->
   options = class: 'important'
   content_tag_for('li', record, options)
   deepEqual options, class: 'important'
+  strictEqual content_tag_for('tr', null), ""
+  strictEqual content_tag_for('tr', [null, null]), "\n"
 
 test "div_for", ->
   record.id = 36

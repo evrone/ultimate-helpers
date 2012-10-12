@@ -8,7 +8,7 @@
 
   content_tag_for: (tag_name, single_or_multiple_records, prefix = null, options = null, block = null) ->
     block = _.outcasts.blockGiven(arguments)
-    if _.isFunction(single_or_multiple_records.map)
+    if _.isFunction(single_or_multiple_records?.map)
       single_or_multiple_records.map( (single_record) =>
         @content_tag_for_single_record(tag_name, single_record, prefix, options, block)
       ).join("\n")
@@ -16,6 +16,7 @@
       @content_tag_for_single_record(tag_name, single_or_multiple_records, prefix, options, block)
 
   content_tag_for_single_record: (tag_name, record, prefix, options, block = null) ->
+    return ''  unless record?
     [options, prefix] = [prefix, null]  if _.isObject(prefix)
     block = _.outcasts.blockGiven(arguments)
     options = if  _.isObject(options) then _.clone(options) else {}
@@ -29,7 +30,7 @@
 
   # from ActionView::ModelNaming
   model_name_from_record_or_class: (record_or_class) ->
-    modelClass = record_or_class.constructor ? record_or_class
+    modelClass = record_or_class?.constructor ? record_or_class
     if modelClass?
       modelClass.modelName or modelClass.className or modelClass.name or 'Model'
     else
@@ -77,4 +78,4 @@
   # protected
 
   _record_key_for_dom_id: (record) ->
-    record.id
+    record?.id
