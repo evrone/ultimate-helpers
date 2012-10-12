@@ -29,6 +29,10 @@ test "link_to", ->
         '<a class="red" data-confirm="You cant possibly be sure,\n can you?" href="http://www.example.com">Hello</a>'
   equal link_to(null, -> 'caption'), '<a href="javascript:;">caption</a>'
   equal link_to(-> 'caption'), '<a href="javascript:;">caption</a>'
+  equal link_to('0', 'http://www.example.com'), '<a href="http://www.example.com">0</a>'
+  equal link_to(0, 'http://www.example.com'), '<a href="http://www.example.com">0</a>'
+  equal link_to(false, 'http://www.example.com'), '<a href="http://www.example.com">false</a>'
+  equal link_to('', 'http://www.example.com'), '<a href="http://www.example.com"></a>'
 
 test "link_to_js", ->
   equal link_to_js('caption'), '<a href="javascript:;">caption</a>'

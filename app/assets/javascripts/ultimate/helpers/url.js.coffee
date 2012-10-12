@@ -35,7 +35,7 @@ __string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).joi
     if block
       Ultimate.Helpers.Tag.content_tag('a', html_options, null, false, block)
     else
-      Ultimate.Helpers.Tag.content_tag('a', name or url, html_options, false)
+      Ultimate.Helpers.Tag.content_tag('a', name ? url, html_options, false)
 
   link_to_js: (name = null, html_options = null, block = null) ->
     [options, name] = [name, null]  if block = _.outcasts.blockGiven(arguments)
