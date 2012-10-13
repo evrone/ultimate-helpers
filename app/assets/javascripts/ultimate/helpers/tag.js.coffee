@@ -58,24 +58,34 @@
     value = _.string.escapeHTML(value)  if escape
     "#{key}=\"#{value}\""
 
-
-
-#  # TODO more zen features: +, *x, {content}
-#  # TODO cache
-#  selectorToHtml: (selector) ->
-#    if matches = selector.match(/^[\s>]*([\w\.]+)(.*)$/)
-#      selector = matches[1]
-#      continuation = matches[2]#{(if open then ">" else " />")}
-#      classes = selector.split(".")
-#      tag_name = classes.shift() or "div"
-#      html_options = {}
-#      html_options["class"] = classes.join(" ")  if classes.length
-#      if continuation
-#        @content_tag(tag_name, @selectorToHtml(continuation), html_options)
-#      else
-#        @tag(tag_name, html_options)
-#    else
-#      ""
-#
   concat_class: ->
-    _.uniq(_.compact(arguments).join(' ').split(/\s+/)).join(' ')
+    flatten_classes = _.filter( _.flatten(arguments), (e) -> _.isString(e) ).join(' ')
+    _.uniq( _.string.words(flatten_classes) ).join(' ')
+
+
+
+  selfClosedTags: _.string.words('area base br col command embed hr img input keygen link meta param source track wbr')
+
+  # Generate html from zen-selector. Ninja tool.
+  # TODO more zen features: +, *x, {content}
+  # TODO cache
+  selectorToHtml: (selector) ->
+    if matches = selector.match(/^[\s>]*([\w\.#]+)(.*)$/)
+      selector = matches[1]
+      continuation = matches[2]   # in v1 {(if continuation then ">" + content else " />")}
+      tag_name = selector.match(/^\w+/)?[0] or 'div'
+      id = selector.match(/#(\w+)/)?[1]
+      classes = _.map( selector.match(/\.\w+/g), (c) -> _.string.ltrim(c, '.') )
+      html_options = {}
+      html_options['id'] = id  if id
+      html_options['class'] = classes.join(' ')  if classes.length
+      if _.contains(@selfClosedTags, tag_name)
+        @tag(tag_name, html_options)
+      else
+        continuation = @selectorToHtml(continuation)  if continuation
+        @content_tag(tag_name, continuation, html_options)
+#    else if matches = selector.match(/^\s*\+\s*(.*)$/)       # /^\s*\+\s*([\w\.#]+)(.*)$/)
+#      continuation = matches[1]
+#      if continuation then @selectorToHtml(continuation) else continuation
+    else
+      ''

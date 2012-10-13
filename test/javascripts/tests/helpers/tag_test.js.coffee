@@ -36,3 +36,22 @@ test "cdata_section", ->
   equal cdata_section("<hello world>"), "<![CDATA[<hello world>]]>"
   equal cdata_section("hello]]>world"), "<![CDATA[hello]]]]><![CDATA[>world]]>"
   equal cdata_section("hello]]>world]]>again"), "<![CDATA[hello]]]]><![CDATA[>world]]]]><![CDATA[>again]]>"
+
+test "concat_class", ->
+  strictEqual concat_class(), ''
+  strictEqual concat_class(null), ''
+  strictEqual concat_class([]), ''
+  equal concat_class('lol', 0), 'lol'
+  equal concat_class(' lol ', false, ' wow '), 'lol wow'
+  equal concat_class('lol', null, 'rofl  lol     wow   ', ' wow '), 'lol rofl wow'
+  equal concat_class([['lol', [null]], 'rofl  lol     wow   '], ' wow '), 'lol rofl wow'
+
+test "selectorToHtml", ->
+  equal selectorToHtml(''), ''
+  equal selectorToHtml('.lol'), '<div class="lol"></div>'
+  equal selectorToHtml('tr.lol'), '<tr class="lol"></tr>'
+  equal selectorToHtml('tr.lol#rofl'), '<tr class="lol" id="rofl"></tr>'
+  equal selectorToHtml('#rofl.lol'), '<div class="lol" id="rofl"></div>'
+  equal selectorToHtml('.lol.wow'), '<div class="lol wow"></div>'
+  equal selectorToHtml('.wow#rofl.lol'), '<div class="wow lol" id="rofl"></div>'
+#  equal selectorToHtml('h1.one+p.two'), '<h1 class="one"></h1><p class="two"></p>'
