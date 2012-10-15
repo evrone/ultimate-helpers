@@ -3,7 +3,7 @@
 #= require ./javascript
 
 __char_encode = (char) -> "%#{char.charCodeAt(0).toString(16)}"
-escape_path = (str) -> str.replace(/[^*\-.0-9A-Z_a-z]/g, __char_encode).replace(/\+/g, '%20')
+__escape_path = (str) -> str.replace(/[^*\-.0-9A-Z_a-z]/g, __char_encode).replace(/\+/g, '%20')
 __string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).join('')
 
 @Ultimate.Helpers.Url =
@@ -51,7 +51,10 @@ __string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).joi
       else
         Ultimate.Helpers.Tag.content_tag('span', name ? url, html_options, false)
     else
-      @link_to arguments...
+      if block
+        @link_to options, html_options, block
+      else
+        @link_to name, options, html_options
 
   # TODO tests
   link_to_unless_current: (name, options = {}, html_options = {}, block = null) ->
@@ -77,7 +80,7 @@ __string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).joi
     extras = _.compact _.map _.string.words('cc bcc body subject'), (item) ->
       option = _.outcasts.delete(html_options, item)
       if option?
-        "#{item}=#{escape_path(option)}"
+        "#{item}=#{__escape_path(option)}"
     extras = if _.isEmpty(extras) then '' else '?' + _.string.escapeHTML(extras.join('&'))
     email_address_obfuscated = email_address
     email_address_obfuscated = email_address_obfuscated.replace('@', _.outcasts.delete(html_options, 'replace_at'))   if 'replace_at' of html_options
@@ -128,8 +131,16 @@ __string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).joi
     html_options
 
   __protect_against_forgery: false
-  __form_authenticity_token: 'secret'
   __request_forgery_protection_token: 'form_token'
+  __form_authenticity_token: 'secret'
+
+  __init_request_forgery_protection: ->
+    param = $('head meta[name="csrf-param"]').attr('content')
+    token = $('head meta[name="csrf-token"]').attr('content')
+    if param and token
+      @__protect_against_forgery = true
+      @__request_forgery_protection_token = param
+      @__form_authenticity_token = token
 
   _token_tag: (token = @__form_authenticity_token) ->
     if token isnt false and @__protect_against_forgery
