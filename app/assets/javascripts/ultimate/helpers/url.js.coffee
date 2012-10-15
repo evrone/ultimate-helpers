@@ -41,7 +41,35 @@ __string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).joi
     [options, name] = [name, null]  if block = _.outcasts.blockGiven(arguments)
     @link_to [name, options, html_options, block]...
 
+  # TODO tests
+  link_to_unless_current_span: (name, options = null, html_options = null, block = null) ->
+    [html_options, options] = [options, name]  if block = _.outcasts.blockGiven(arguments)
+    url = @url_for(options)
+    if @current_page_(url)
+      if block
+        Ultimate.Helpers.Tag.content_tag('span', html_options, null, false, block)
+      else
+        Ultimate.Helpers.Tag.content_tag('span', name ? url, html_options, false)
+    else
+      @link_to arguments...
 
+  # TODO tests
+  link_to_unless_current: (name, options = {}, html_options = {}, block = null) ->
+    @link_to_unless @current_page_(options), name, options, html_options, block
+
+  # TODO tests
+  link_to_unless: (condition, name, options = {}, html_options = {}, block = null) ->
+    if condition
+      if block = _.outcasts.blockGiven(arguments)
+        block(name, options, html_options)
+      else
+        name
+    else
+      @link_to name, options, html_options, block
+
+  # TODO tests
+  link_to_if: (condition, name, options = {}, html_options = {}, block = null) ->
+    @link_to_unless not condition, name, options, html_options, block
 
   mail_to: (email_address, name = null, html_options = {}) ->
     email_address = _.string.escapeHTML(email_address)
@@ -66,6 +94,15 @@ __string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).joi
         @link_to name or email_address_encoded, "#{string}#{extras}", html_options
       else
         @link_to name or email_address_obfuscated, "mailto:#{email_address}#{extras}", html_options
+
+  # TODO tests
+  current_page_: (options) ->
+    url_string = @url_for(options)
+    request_uri = location.pathname
+    if /^\w+:\/\//.test(url_string)
+      url_string == "#{location.protocol}#{location.host}#{request_uri}"
+    else
+      url_string == request_uri
 
 
 
