@@ -25,25 +25,23 @@ class Ultimate.Plugin
 
   options: {}
 
-  locale: "en"
+  # @defaultLocales: { en: {} }
+  locale: 'en'
   translations: {}
 
   constructor: (options) ->
-    @_configure(options || {});
+    throw new Error('Property `el` must be specified at first argument of Ultimate.Plugin.constructor')  unless options?.el
+    @cid = _.uniqueId('ultimatePlugin_')
+    @_configure options
     @$el = $(@el)
     @findNodes()
-    @initialize arguments...
+    @initialize? arguments...
     @delegateEvents()
-
 
   # jQuery delegate for element lookup, scoped to DOM elements within the
   # current plugin. This should be prefered to global lookups where possible.
   $: (selector) ->
     @$el.find(selector)
-
-  # Initialize is an empty function by default. Override it with your own
-  # initialization logic.
-  initialize: ->
 
   findNodes: (jRoot = @$el, nodes = @nodes) ->
     jNodes = {}
@@ -53,17 +51,23 @@ class Ultimate.Plugin
         _isObject = _.isObject(selector)
         if _isObject
           nestedNodes = selector
-          selector = _.outcasts.delete(nestedNodes, "selector")
+          selector = _.outcasts.delete(nestedNodes, 'selector')
         jNodes[nodeName] = @[nodeName] = jRoot.find(selector)
         if _isObject
           _.extend jNodes, @findNodes(jNodes[nodeName], nestedNodes)
     jNodes
 
   undelegateEvents: ->
-    @$el.unbind ".delegateEvents#{@cid}"
+    @$el.unbind ".delegateEvents_#{@cid}"
 
   # Cached regex to split keys for `delegate`, from backbone.js.
   delegateEventSplitter = /^(\S+)\s*(.*)$/
+
+  # Overload and proxy parent method Backbone.View.delegateEvents() as hook for normalizeEvents().
+  delegateEvents: (events) ->
+    args = _.toArray(arguments)
+    args[0] = @_normalizeEvents(events)
+    @_delegateEvents args...
 
   # delegateEvents() from backbone.js
   _delegateEvents: (events = _.result(@, "events")) ->
@@ -74,20 +78,13 @@ class Ultimate.Plugin
       throw new Error("Method \"#{events[key]}\" does not exist")  unless method
       [[], eventName, selector] = key.match(delegateEventSplitter)
       method = _.bind(method, @)
-      eventName += ".delegateEvents#{@cid}"
+      eventName += ".delegateEvents_#{@cid}"
       if selector is ''
         @$el.bind(eventName, method)
       else
         @$el.delegate(selector, eventName, method)
 
-  # Overload and proxy parent method Backbone.View.delegateEvents() as hook for normalizeEvents().
-  delegateEvents: (events) ->
-    args = []
-    Array::push.apply args, arguments  if arguments.length > 0
-    args[0] = @normalizeEvents(events)
-    @_delegateEvents args...
-
-  normalizeEvents: (events) ->
+  _normalizeEvents: (events) ->
     events = _.result(@, "events")  unless events
     if events
       normalizedEvents = {}
@@ -104,31 +101,24 @@ class Ultimate.Plugin
 
   _configure: (options) ->
     _.extend @options, options
-    @initTranslations()
-    @reflectOptions()
+    #cout '@options', @options
+    @_reflectOptions()
+    @_initTranslations()
 
-  reflectOptions: (reflectableOptions = _.result(@, "reflectableOptions"), options = @options) ->
+  _reflectOptions: (reflectableOptions = _.result(@, "reflectableOptions"), options = @options) ->
     if _.isArray(reflectableOptions)
-      @[attr] = options[attr]  for attr in reflectableOptions  when typeof options[attr] isnt "undefined"
-    @[attr] = value  for attr, value of options  when typeof @[attr] isnt "undefined"
-    @
+      @[attr] = options[attr]  for attr in reflectableOptions  when not _.isUndefined(options[attr])
+    @[attr] = value  for attr, value of options  when not _.isUndefined(@[attr])
 
-  # use I18n, and modify locale and translations in options
-  # modify and return merged data
-  initTranslations: (options = @options) ->
-    # if global compatible I18n
-#    if I18n? and I18n.locale and I18n.t
-#      options["locale"] ||= I18n.locale
-#      if options["locale"] is I18n.locale
-#        # pointing to defaults locales of language specified in I18n
-#        _defaultLocales = @constructor.defaultLocales?[I18n.locale] ||= {}
-#        unless _defaultLocales["loaded"]
-#          _defaultLocales["loaded"] = true
-#          # try read localized strings
-#          if _localesFromI18n = I18n.t(options["i18nKey"] or _.string.underscored(@constructor.pluginName or @constructor.name))
-#            # fill it from I18n
-#            _.extend _defaultLocales, _localesFromI18n
-    @locale = options["locale"]  if options["locale"]
-    translations = if @locale then @constructor.defaultLocales?[@locale] or {} else {}
-    $.extend true, options, translations: translations, options
-    options
+  # use I18n, and modify locale and translations
+  _initTranslations: ->
+    if @constructor.defaultLocales?
+      if not @options["locale"] and I18n?.locale of @constructor.defaultLocales
+        @locale = I18n.locale
+        #cout '!!!Set LOCALE FROM I18N ', @locale
+      defaultTranslations = if @locale then @constructor.defaultLocales[@locale] or {} else {}
+      #cout '!!!defaultTranslations', @locale, defaultTranslations
+      _.defaults @translations, defaultTranslations
+
+  t: (key) ->
+    @translations[key] or _.string.humanize(key)

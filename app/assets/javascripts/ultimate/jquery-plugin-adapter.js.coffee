@@ -1,5 +1,13 @@
 #= require ./base
 
+# TODO minimize requirements
+# requirements stats:
+# 1 _.extend
+# 1 _.isString
+# 1 _.isBoolean
+# 1 _.toArray
+# 1 _.last
+
 ###*
  * Make $.fn.pluginName() as adapter to plugin object (instance of Ultimate.Plugin or Backbone.View).
  * First call on jQuery object invoke View functionality for the first element in the set of matched elements.
@@ -13,7 +21,7 @@
 ###
 
 Ultimate.createJQueryPlugin = (pluginName, pluginClass) ->
-  Ultimate.debug(".createJQueryPlugin()", pluginName, pluginClass)  if _.isFunction(Ultimate.debug)
+  Ultimate.debug(".createJQueryPlugin()", pluginName, pluginClass)  if $.isFunction(Ultimate.debug)
   pluginClass.pluginName ||= pluginName
   jQuery.fn[pluginName] = -> @ultimatePluginAdapter pluginName, pluginClass, arguments
 
@@ -46,7 +54,7 @@ do ($ = jQuery) ->
           return if _returnPlugin then plugin else jContainer
       if command of plugin
         value = plugin[command]
-        return if _.isFunction(value)
+        return if $.isFunction(value)
             plugin.$el.removeData(pluginName)  if command is "destroy"
             result = value.apply(plugin, args)
             if command is "_configure" then plugin.options else result
