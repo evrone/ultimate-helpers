@@ -1,11 +1,10 @@
 // Use compatibility tables from http://caniuse.com/
-// http://css3pie.com/documentation/supported-css3-features/#pie-watch-ancestors
 // http://css3pie.com/documentation/supported-css3-features/#pie-lazy-init
-// TODO use !default http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#variable_defaults_
 
 $support-ie: true !default;
 $pie-url: asset-url("polyfills/PIE.htc", '') !default;
 $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
+
 
 @mixin pie($poll: none, $watch-ancestors: 0) {
   @if $support-ie and $pie-url {

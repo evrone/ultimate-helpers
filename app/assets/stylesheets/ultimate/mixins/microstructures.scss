@@ -65,6 +65,21 @@ $support-ie: true !default;
   }
 }
 
+@mixin position($top: false, $right: false, $bottom: false, $left: false, $position: absolute) {
+  @if length($top) == 4 {
+    $left   : nth($top, 4);
+    $bottom : nth($top, 3);
+    $right  : nth($top, 2);
+    $top    : nth($top, 1);
+    @if isset($right) { $position: $right; }
+  }
+  @if isset($position) { position: $position; }
+  @if isset($top)    { top:     $top; }
+  @if isset($right)  { right:   $right; }
+  @if isset($bottom) { botttom: $bottom; }
+  @if isset($left)   { left:    $left; }
+}
+
 @mixin before($display: block, $content: '') {
   &:before {
     display: $display;
