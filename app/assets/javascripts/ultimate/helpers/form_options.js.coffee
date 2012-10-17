@@ -18,13 +18,34 @@
     ).join("\n")
 
   options_from_collection_for_select: (collection, value_method, text_method, selected = null) ->
-    options = _.map collection, (element) ->
+    options = @__mapCollection collection, (element) ->
       [@_value_for_collection(element, text_method), @_value_for_collection(element, value_method)]
     [selected, disabled] = @_extract_selected_and_disabled(selected)
     select_deselect =
       selected: @_extract_values_from_collection(collection, value_method, selected)
       disabled: @_extract_values_from_collection(collection, value_method, disabled)
     @options_for_select(options, select_deselect)
+
+  option_groups_from_collection_for_select: (collection, group_method, group_label_method, option_key_method, option_value_method, selected_key = null) ->
+    @__mapCollection(collection, (group) ->
+      option_tags = @options_from_collection_for_select(_.result(group, group_method), option_key_method, option_value_method, selected_key)
+      Ultimate.Helpers.Tag.content_tag_string 'optgroup', option_tags, label: _.result(group, group_label_method), true, false
+    ).join('')
+
+  grouped_options_for_select: (grouped_options, selected_key = null, options = {}) ->
+    prompt  = options['prompt']
+    divider = options['divider']
+    body = ""
+    if prompt
+      body += Ultimate.Helpers.Tag.content_tag_string('option', @_prompt_text(prompt), value: '')
+    grouped_options = _.outcasts.sortHash(grouped_options)  if $.isPlainObject(grouped_options)
+    _.each grouped_options, (container) ->
+      if divider
+        label = divider
+      else
+        [label, container] = container
+      body += Ultimate.Helpers.Tag.content_tag_string('optgroup', @options_for_select(container, selected_key), label: label, true, false)
+    body
 
 
 
@@ -56,10 +77,30 @@
 
   _extract_values_from_collection: (collection, value_method, selected) ->
     if _.isFunction(selected)
-      _.compact _.map collection, (element) ->
-        _.result(element, value_method)  if selected(element)
+      _.compact @__mapCollection collection, (element) ->
+        @__getValueFromElement(element, value_method)  if selected(element)
     else
       selected
 
   _value_for_collection: (item, value) ->
-    if _.isFunction(value) then value(item) else _.result(item, value)
+    if _.isFunction(value)
+      value(item)
+    else
+      @__getValueFromElement(item, value)
+
+  _prompt_text: (prompt) ->
+    prompt = if _.isString(prompt) then prompt else I18n?.translate('helpers.select.prompt', default: 'Please select') ? 'Please select'
+
+
+
+  __getValueFromElement: (element, property) ->
+    if _.isFunction(element.get)
+      element.get(property)
+    else
+      _.result(element, property)
+
+  __mapCollection: (collection, iterator) ->
+    if _.isFunction(collection.map)
+      collection.map(iterator)
+    else
+      _.map(collection, iterator)

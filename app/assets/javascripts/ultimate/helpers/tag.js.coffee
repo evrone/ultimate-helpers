@@ -24,8 +24,8 @@
     splitted = content.replace(/\]\]>/g, ']]]]><![CDATA[>')
     "<![CDATA[#{splitted}]]>"
 
-  content_tag_string: (name, content = '', options = {}, escape = true) ->
-    content = _.string.escapeHTML(content)  if escape
+  content_tag_string: (name, content = '', options = {}, escape = true, _escapeContent = escape) ->
+    content = _.string.escapeHTML(content)  if _escapeContent
     "<#{name}#{@tag_options(options, escape)}>#{@PRE_CONTENT_STRINGS[name] ? ''}#{content}</#{name}>"
 
   html_options_to_s: (html_options, escape = false, prefix = "") ->

@@ -1,6 +1,7 @@
 #= require ultimate/underscore/underscore
 #= require ultimate/underscore/underscore.string
 #= require ultimate/underscore/underscore.outcasts
+#= require ultimate/backbone/lib/backbone
 #= require ultimate/helpers/form_options
 
 module "Ultimate.Helpers.FormOptions"
@@ -53,31 +54,24 @@ test "options_for_select", ->
 
 
 
-class Post
-  title           : null
-  author_name     : null
-  body            : null
-  secret          : null
-  written_on      : null
-  category        : null
-  origin          : null
-  allow_comments  : null
-
+class Struct
   constructor: ->
-    keys = ['title', 'author_name', 'body', 'secret', 'written_on', 'category', 'origin', 'allow_comments']
-    for a, i in arguments
-      @[keys[i]] = a
+    for key, index in @constructor.keys
+      @[key] = arguments[index] ? null
+
+class Post extends Struct
+  @keys = ['title', 'author_name', 'body', 'secret', 'written_on', 'category', 'origin', 'allow_comments']
 
 dummy_posts =
   [ new Post("<Abe> went home", "<Abe>", "To a little house", "shh!"),
     new Post("Babe went home", "Babe", "To a little house", "shh!"),
-    new Post("Cabe went home", "Cabe", "To a little house", "shh!") ]
+    new Post("Cabe went home", "Cabe", (-> "To a little house"), (-> "shh!")) ]
 
 test "options_from_collection_for_select", ->
   equal options_from_collection_for_select(dummy_posts, "author_name", "title"),
         "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
   equal options_from_collection_for_select(dummy_posts, "author_name", "title", "Babe"),
-  "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option selected=\"selected\" value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
+        "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option selected=\"selected\" value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
   equal options_from_collection_for_select(dummy_posts, "author_name", "title", [ "Babe", "Cabe" ]),
         "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option selected=\"selected\" value=\"Babe\">Babe went home</option>\n<option selected=\"selected\" value=\"Cabe\">Cabe went home</option>"
   equal options_from_collection_for_select(dummy_posts, "author_name", "title", (p) -> p.author_name is 'Babe'),
@@ -94,3 +88,83 @@ test "options_from_collection_for_select", ->
         "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
   equal options_from_collection_for_select(dummy_posts, "author_name", (p) -> p.title),
         "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
+
+
+
+_objectsArrayToHashesArray = (objectsArray) ->
+  _.map objectsArray, (element) ->
+    hash = {}
+    for key in element.constructor.keys
+      hash[key] = element[key]
+    hash
+
+test "options_from_collection_for_select with array of hashes", ->
+  equal options_from_collection_for_select(_objectsArrayToHashesArray(dummy_posts), "author_name", "title", "Babe"),
+        "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option selected=\"selected\" value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
+
+
+
+class BBPost extends Backbone.Model
+
+class BBPosts extends Backbone.Collection
+  model: BBPost
+
+test "options_from_collection_for_select with Backbone.Collection", ->
+  bbPosts = new BBPosts(_objectsArrayToHashesArray(dummy_posts))
+  equal options_from_collection_for_select(bbPosts, "author_name", "title", "Babe"),
+        "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option selected=\"selected\" value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
+  equal options_from_collection_for_select(bbPosts, "author_name", "title", disabled: (p) -> p.get('author_name') in ['Babe', 'Cabe']),
+        "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option disabled=\"disabled\" value=\"Babe\">Babe went home</option>\n<option disabled=\"disabled\" value=\"Cabe\">Cabe went home</option>"
+  equal options_from_collection_for_select(bbPosts, ((p) -> p.get('author_name')), "title"),
+        "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
+  equal options_from_collection_for_select(bbPosts, "author_name", (p) -> p.get('title')),
+        "<option value=\"&lt;Abe&gt;\">&lt;Abe&gt; went home</option>\n<option value=\"Babe\">Babe went home</option>\n<option value=\"Cabe\">Cabe went home</option>"
+
+
+
+class Continent extends Struct
+  @keys = ['continent_name', 'countries']
+
+class Country extends Struct
+  @keys = ['country_id', 'country_name']
+
+dummy_continents =
+  [ new Continent("<Africa>", [new Country("<sa>", "<South Africa>"), new Country("so", "Somalia")]),
+    new Continent("Europe", [new Country("dk", "Denmark"), new Country("ie", "Ireland")]) ]
+
+test "option_groups_from_collection_for_select", ->
+  equal option_groups_from_collection_for_select(dummy_continents, "countries", "continent_name", "country_id", "country_name", "dk"),
+        "<optgroup label=\"&lt;Africa&gt;\"><option value=\"&lt;sa&gt;\">&lt;South Africa&gt;</option>\n<option value=\"so\">Somalia</option></optgroup><optgroup label=\"Europe\"><option selected=\"selected\" value=\"dk\">Denmark</option>\n<option value=\"ie\">Ireland</option></optgroup>"
+
+
+
+class BBContinent extends Backbone.Model
+
+class BBContinents extends Backbone.Collection
+  model: BBContinent
+
+test "option_groups_from_collection_for_select with Backbone.Collection", ->
+  BBContinents = new BBContinents(_objectsArrayToHashesArray(dummy_continents))
+  equal option_groups_from_collection_for_select(dummy_continents, "countries", "continent_name", "country_id", "country_name", "dk"),
+        "<optgroup label=\"&lt;Africa&gt;\"><option value=\"&lt;sa&gt;\">&lt;South Africa&gt;</option>\n<option value=\"so\">Somalia</option></optgroup><optgroup label=\"Europe\"><option selected=\"selected\" value=\"dk\">Denmark</option>\n<option value=\"ie\">Ireland</option></optgroup>"
+
+
+
+test "grouped_options_for_select", ->
+  equal grouped_options_for_select([
+          ["North America",
+            [['United States','US'],"Canada"]],
+          ["Europe",
+            [["Great Britain","GB"], "Germany"]]
+          ]),
+        "<optgroup label=\"North America\"><option value=\"US\">United States</option>\n<option value=\"Canada\">Canada</option></optgroup><optgroup label=\"Europe\"><option value=\"GB\">Great Britain</option>\n<option value=\"Germany\">Germany</option></optgroup>"
+  equal grouped_options_for_select([['US',"Canada"] , ["GB", "Germany"]], null, divider: "----------"),
+        "<optgroup label=\"----------\"><option value=\"US\">US</option>\n<option value=\"Canada\">Canada</option></optgroup><optgroup label=\"----------\"><option value=\"GB\">GB</option>\n<option value=\"Germany\">Germany</option></optgroup>"
+  equal grouped_options_for_select([["Hats", ["Baseball Cap","Cowboy Hat"]]], "Cowboy Hat", prompt: "Choose a product..."),
+        "<option value=\"\">Choose a product...</option><optgroup label=\"Hats\"><option value=\"Baseball Cap\">Baseball Cap</option>\n<option selected=\"selected\" value=\"Cowboy Hat\">Cowboy Hat</option></optgroup>"
+  equal grouped_options_for_select([["Hats", ["Baseball Cap","Cowboy Hat"]]], "Cowboy Hat", prompt: true),
+        "<option value=\"\">Please select</option><optgroup label=\"Hats\"><option value=\"Baseball Cap\">Baseball Cap</option>\n<option selected=\"selected\" value=\"Cowboy Hat\">Cowboy Hat</option></optgroup>"
+  equal grouped_options_for_select([["Hats", ["Baseball Cap","Cowboy Hat"]]], null, prompt: '<Choose One>'),
+        "<option value=\"\">&lt;Choose One&gt;</option><optgroup label=\"Hats\"><option value=\"Baseball Cap\">Baseball Cap</option>\n<option value=\"Cowboy Hat\">Cowboy Hat</option></optgroup>"
+  equal grouped_options_for_select({'North America': ['United States','Canada'], 'Europe': ['Denmark','Germany']}),
+        "<optgroup label=\"Europe\"><option value=\"Denmark\">Denmark</option>\n<option value=\"Germany\">Germany</option></optgroup><optgroup label=\"North America\"><option value=\"United States\">United States</option>\n<option value=\"Canada\">Canada</option></optgroup>"
