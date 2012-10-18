@@ -326,6 +326,11 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
   }
 }
 
+@mixin rotate($angle) {
+  @include transform(rotate($angle));
+  //filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3); === -90deg
+}
+
 //  Style the html5 input placeholder in browsers that support it.
 //  The styles for the input placeholder are passed as mixin content.
 //  Mostly supported properties: color, font-*, letter-spacing.
