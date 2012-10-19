@@ -256,11 +256,15 @@ $boxsizing-url: asset-url("polyfills/boxsizing.htc", '') !default;
 //      @include ellipsis;
 //    produce:
 //      overflow: hidden;           // need to work text-overflow
+//      white-space: nowrap;        // need to work text-overflow
 //      -o-text-overflow: ellipsis; // Opera Mini and Opera Mobile
 //         text-overflow: ellipsis; // all
-@mixin ellipsis($overflow: hidden) {
+@mixin ellipsis($overflow: hidden, $nowrap: true) {
   @if $overflow != false {
     overflow: $overflow;
+  }
+  @if $nowrap {
+    white-space: nowrap;
   }
   @include vendors(o, text-overflow, ellipsis);
 }
