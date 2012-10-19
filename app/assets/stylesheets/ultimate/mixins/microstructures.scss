@@ -37,10 +37,10 @@ $support-ie: true !default;
            $include-padding : true,
            $include-margin  : false,
            $include-border  : true) {
-  $properties: $padding $margin $border;
+  $properties: $padding $margin nth($border, 1);
   $include-properties: $include-padding $include-margin $include-border;
   $i: 0;
-  @each $property-name in padding, margin, border {
+  @each $property-name in padding, margin, border-width {
     $i: $i + 1;
     $property: nth($properties, $i);
     @if $property {
@@ -54,7 +54,15 @@ $support-ie: true !default;
           $height: $height - nth($complex, 1) - nth($complex, 3);
         }
       }
-      @include complex-property($property-name, $property, $complex);
+      @if $property-name == border-width and length($property) == 1 {
+        border: $border;
+      } @else {
+        @include complex-property($property-name, $property, $complex);
+        @if $property-name == border-width {
+          border-style: nth($border, 2);
+          border-color: nth($border, 3);
+        }
+      }
     }
   }
   @if isset($width) {
@@ -71,7 +79,6 @@ $support-ie: true !default;
     $bottom : nth($top, 3);
     $right  : nth($top, 2);
     $top    : nth($top, 1);
-    @if isset($right) { $position: $right; }
   }
   @if isset($position) { position: $position; }
   @if isset($top)    { top:     $top; }

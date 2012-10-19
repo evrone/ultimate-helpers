@@ -3,7 +3,7 @@
   %head
     %meta{charset: "UTF-8"}
     %title Ultimate Base — #{@page_title ? @page_title.gsub("\n", "") : "Testing App"}
-    = favicon_link_tag "/favicon.png", type: "image/png"
+    =# favicon_link_tag "/favicon.png", type: "image/png"
     - if Rails.env.development?
       :javascript
         var DEBUG_MODE = true;
