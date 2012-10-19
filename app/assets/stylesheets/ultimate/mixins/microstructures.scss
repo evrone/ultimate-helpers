@@ -83,7 +83,7 @@ $support-ie: true !default;
   @if isset($position) { position: $position; }
   @if isset($top)    { top:     $top; }
   @if isset($right)  { right:   $right; }
-  @if isset($bottom) { botttom: $bottom; }
+  @if isset($bottom) { bottom:  $bottom; }
   @if isset($left)   { left:    $left; }
 }
 
