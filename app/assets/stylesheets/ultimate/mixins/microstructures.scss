@@ -28,7 +28,6 @@ $support-ie: true !default;
 //      padding-left: 20px;
 //      margin: 0 auto;
 //      width: 360px;
-//  TODO border as 2px solid black
 @mixin box($width,
            $height          : false,
            $padding         : false,
@@ -37,6 +36,10 @@ $support-ie: true !default;
            $include-padding : true,
            $include-margin  : false,
            $include-border  : true) {
+  @if length($width) == 2 {
+    $height: nth($width, 2);
+    $width:  nth($width, 1);
+  }
   $properties: $padding $margin nth($border, 1);
   $include-properties: $include-padding $include-margin $include-border;
   $i: 0;
