@@ -1,10 +1,10 @@
-( ( $ ) ->
+do ( $ = jQuery ) ->
 
   # TODO try optimize, excepting Edge and search in siblings for next cycle
   $.fn.nearestFind = (selector, extremeEdgeSelector = 'form, body') ->
     jEdge = @
-    jResult = jEdge.find selector
-    until jResult.length or jEdge.is extremeEdgeSelector
+    jResult = jEdge.find(selector)
+    until jResult.length or jEdge.is(extremeEdgeSelector)
       jEdge = jEdge.parent()
       jResult = jEdge.find selector
     jResult
@@ -21,31 +21,30 @@
   # @param strongById: Boolean = false
   $.fn.closestLabel = ( strongById = false, passCache = false ) ->
     (if @is(':input') then @ else @find(':input')).filter(':not(input[type="hidden"])').map ->
-      jInput = $ @
-      jLabel = jInput.data 'closestLabel'  unless passCache
+      jInput = $(@)
+      jLabel = jInput.data('closestLabel')  unless passCache
       unless jLabel
         if jLabel is false
           return null
         else
           jLabel = {length: 0}
-          jEdge = jInput.closestEdge()   # TODO may be need params
-          inputId = jInput.attr 'id'
+          inputId = jInput.attr('id')
           if inputId
             # try search label by id linkage
-            labelSelectorByFor = "label[for=\"#{inputId}\"]"
-            # at first search in the edge area
-            jLabel = jEdge.find labelSelectorByFor
-            unless jLabel.length
-              # try search in the closest form
-              jLabel = jInput.closest('form').find labelSelectorByFor
-              # trust only unique label on the form
-              jLabel = {length: 0}  if jLabel.length > 1
+            jLabel = jInput.nearestFind("label[for=\"#{inputId}\"]:first")
           # try get first labet in the edge area
-          jLabel = jEdge.find('label:first')  unless jLabel.length
+          unless jLabel.length
+            jLabel = jInput.nearestFind('label')
+            if jLabel.length is 1
+              jReverseInput = jLabel.nearestFind(':input')
+              unless jReverseInput.length is 1 and jReverseInput[0] is jInput[0]
+                jLabel = {length: 0}
+            else if jLabel.length > 1
+              jLabel = {length: 0}
           # taken!
           if jLabel.length
             # oh, this label already linked
-            if jLabel.data 'closestInput'
+            if jLabel.data('closestInput')
               jLabel = {length: 0}
             else
               jLabel.data 'closestInput', jInput
@@ -151,5 +150,3 @@
       @find("input:not([readonly])#{if onlyVisible then ':visible' else ''}").each ->
         $(@).attr 'tabindex', ++$.fillTabIndexesCounter
     @
-
-)( jQuery )
