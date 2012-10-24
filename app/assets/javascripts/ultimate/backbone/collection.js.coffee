@@ -19,7 +19,6 @@ class Ultimate.Backbone.Collection extends Backbone.Collection
 
   ready: (callback, fetchOptions) ->
     lifeTime = if @loadedTimeStamp then (new Date() - @loadedTimeStamp) else 0
-    cout 'lifeTime', lifeTime, @expireTime, @
     if expired = lifeTime > @expireTime
       @readyDeferred = null
     if (not @length and not @loaded) or expired
