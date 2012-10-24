@@ -4,18 +4,29 @@
 
 class Ultimate.Backbone.Model extends Backbone.Model
 
-  constructor: ->
+  readyDeferred: null
+  loaded: false
+  loadedTimeStamp: null
+  expireTime: Infinity
+
+  constructor: (attributes, options = {}) ->
     Ultimate.Backbone.debug ".Model.constructor()", @
+    @expireTime = options.expireTime  if options.expireTime?
+    @on 'sync', =>
+      @loadedTimeStamp = new Date()
+      @loaded = true
     super
 
-  ready: (callback, context = @) ->
-    if _.isEmpty(@attributes)
-      @readyDeferred ||= $.Deferred()
+  ready: (callback, fetchOptions) ->
+    lifeTime = if @loadedTimeStamp then (new Date() - @loadedTimeStamp) else 0
+    if expired = lifeTime > @expireTime
+      @readyDeferred = null
+    if @id and (not @loaded or expired)
+      @readyDeferred ||= @fetch(fetchOptions)
       @readyDeferred.done =>
-        callback.apply context, [@]
-      @fetch success: (=> @readyDeferred.resolve()), silent: true
+        callback.apply @
     else
-      callback.apply context, [@]
+      callback.apply @
 
   singular: ->
     modelName = @constructor.modelName or @modelName or @className or @constructor.name or 'Model'

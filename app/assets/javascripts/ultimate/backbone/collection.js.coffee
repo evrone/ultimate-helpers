@@ -1,18 +1,30 @@
 #= require ./base
 
-# TODO ready options
-
 class Ultimate.Backbone.Collection extends Backbone.Collection
 
-  constructor: ->
+  readyDeferred: null
+  loaded: false
+  loadedTimeStamp: null
+  expireTime: Infinity
+
+  constructor: (models, options = {}) ->
     Ultimate.Backbone.debug ".Collection.constructor()", @
+    @expireTime = options.expireTime  if options.expireTime?
     super
 
-  ready: (callback, context = @) ->
-    unless @length
-      @readyDeferred ||= $.Deferred()
+  reset: (models, options) ->
+    @loadedTimeStamp = new Date()
+    @loaded = true
+    super
+
+  ready: (callback, fetchOptions) ->
+    lifeTime = if @loadedTimeStamp then (new Date() - @loadedTimeStamp) else 0
+    cout 'lifeTime', lifeTime, @expireTime, @
+    if expired = lifeTime > @expireTime
+      @readyDeferred = null
+    if (not @length and not @loaded) or expired
+      @readyDeferred ||= @fetch(fetchOptions)
       @readyDeferred.done =>
-        callback.apply context, [@]
-      @fetch success: (=> @readyDeferred.resolve()), silent: true
+        callback.apply @
     else
-      callback.apply context, [@]
+      callback.apply @
