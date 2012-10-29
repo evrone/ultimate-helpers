@@ -65,9 +65,7 @@
   }
 }
 
-@function max($a, $b) {
-  @return if($a > $b, $a, $b);
-}
+/* https://github.com/nex3/sass/commit/40099dad35612c37c3197699a46a469af180c046 */
 
 @function strip-px($v) {
   @return if(unit($v) == "px", $v / 1px, $v);
