@@ -65,10 +65,6 @@
   }
 }
 
-@function max($a, $b) {
-  @return if($a > $b, $a, $b);
-}
-
 @function strip-px($v) {
   @return if(unit($v) == "px", $v / 1px, $v);
 }
