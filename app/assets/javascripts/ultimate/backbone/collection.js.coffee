@@ -21,7 +21,7 @@ class Ultimate.Backbone.Collection extends Backbone.Collection
     lifeTime = if @loadedTimeStamp then (new Date() - @loadedTimeStamp) else 0
     if expired = lifeTime > @expireTime
       @readyDeferred = null
-    if (not @length and not @loaded) or expired
+    if not @loaded or expired
       @readyDeferred ||= @fetch(fetchOptions)
       @readyDeferred.done =>
         callback.apply @
