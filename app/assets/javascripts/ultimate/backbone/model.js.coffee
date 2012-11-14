@@ -28,6 +28,12 @@ class Ultimate.Backbone.Model extends Backbone.Model
     else
       callback.apply @
 
+  abort: ->
+    if @readyDeferred?
+      if @readyDeferred.state() is 'pending'
+        @readyDeferred.abort()
+        @readyDeferred = null
+
   singular: ->
     modelName = @constructor.modelName or @modelName or @className or @constructor.name or 'Model'
     _.singularize(_.string.underscored(modelName))

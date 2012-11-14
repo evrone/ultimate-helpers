@@ -27,3 +27,9 @@ class Ultimate.Backbone.Collection extends Backbone.Collection
         callback.apply @
     else
       callback.apply @
+
+  abort: ->
+    if @readyDeferred?
+      if @readyDeferred.state() is 'pending'
+        @readyDeferred.abort()
+        @readyDeferred = null
