@@ -89,19 +89,22 @@ class Ultimate.Backbone.View extends Backbone.View
   # Overloadable getter for jQuery-container that will be blocked.
   getJLoadingContainer: -> @$el
 
-  loading: (state, text = "", circle = true) ->
+  loading: (state, text = "", circle = false) ->
     jLoadingContainer = @getJLoadingContainer()
-    if jLoadingContainer and jLoadingContainer.length
+    if jLoadingContainer?.length
       jLoadingContainer.removeClass @loadingStateClass
       jLoadingContainer.children(".#{@loadingOverlayClass}").remove()
       if @loadingState = state
         jLoadingContainer.addClass @loadingStateClass
-        width = jLoadingContainer[@loadingWidthMethodName]()
-        height = jLoadingContainer[@loadingHeightMethodName]()
-        text = "<span class=\"text\">#{text}</span>"  if text
-        circle = "<span class=\"circle\"></span>"  if circle
-        style = "width: #{width}px; height: #{height}px; line-height: #{height}px;"
-        jLoadingContainer.append "<div class=\"#{@loadingOverlayClass}\" style=\"#{style}\">#{circle}#{text}</div>"
+        style = []
+        if @loadingWidthMethodName
+          style.push "width: #{jLoadingContainer[@loadingWidthMethodName]()}px;"
+        if @loadingHeightMethodName
+          height = jLoadingContainer[@loadingHeightMethodName]()
+          style.push "height: #{height}px; line-height: #{height}px;"
+        text = if text then "<span class=\"text\">#{text}</span>" else ''
+        circle = if circle then "<span class=\"circle\"></span>" else ''
+        jLoadingContainer.append "<div class=\"#{@loadingOverlayClass}\" style=\"#{style.join(' ')}\">#{circle}#{text}</div>"
 
 
 
