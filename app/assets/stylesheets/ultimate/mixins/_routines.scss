@@ -104,3 +104,9 @@
 @function hack-ie8($params) {
   @return unquote("#{$params}\0/");
 }
+
+@function contains($list,$var) {
+  $_out: false;
+  @each $item in $list { @if $item == $var { $_out: true; } }
+  @return $_out;
+}
