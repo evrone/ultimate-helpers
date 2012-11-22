@@ -49,6 +49,7 @@ test "concat_class", ->
 test "selectorToHtml", ->
   equal selectorToHtml(''), ''
   equal selectorToHtml('.lol'), '<div class="lol"></div>'
+  equal selectorToHtml('.mega-lol'), '<div class="mega-lol"></div>'
   equal selectorToHtml('tr.lol'), '<tr class="lol"></tr>'
   equal selectorToHtml('tr.lol#rofl'), '<tr class="lol" id="rofl"></tr>'
   equal selectorToHtml('#rofl.lol'), '<div class="lol" id="rofl"></div>'

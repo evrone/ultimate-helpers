@@ -70,12 +70,12 @@
   # TODO more zen features: +, *x, {content}
   # TODO cache
   selectorToHtml: (selector) ->
-    if matches = selector.match(/^[\s>]*([\w\.#]+)(.*)$/)
+    if matches = selector.match(/^[\s>]*([\w\-\.#]+)(.*)$/)
       selector = matches[1]
       continuation = matches[2]   # in v1 {(if continuation then ">" + content else " />")}
       tag_name = selector.match(/^\w+/)?[0] or 'div'
-      id = selector.match(/#(\w+)/)?[1]
-      classes = _.map( selector.match(/\.\w+/g), (c) -> _.string.ltrim(c, '.') )
+      id = selector.match(/#([\w\-]+)/)?[1]
+      classes = _.map( selector.match(/\.[\w\-]+/g), (c) -> _.string.ltrim(c, '.') )
       html_options = {}
       html_options['id'] = id  if id
       html_options['class'] = classes.join(' ')  if classes.length
