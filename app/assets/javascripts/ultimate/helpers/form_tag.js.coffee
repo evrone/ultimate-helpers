@@ -26,17 +26,15 @@
     Ultimate.Helpers.Tag.tag 'input', _.extend({type: 'text', name: name, id: @_sanitize_to_id(name), value: value}, options)
 
   label_tag: (name = null, content_or_options = null, options = null, block = null) ->
-    if (block = _.outcasts.blockGiven(arguments)) and $.isPlainObject(content_or_options)
-      options = content_or_options
-    else
-      options ||= {}
+    if block = _.outcasts.blockGiven(arguments)
+      [options, content_or_options] = [content_or_options, block()]
+    options ||= {}
     if _.isString(name) and not _.string.isBlank(name)
       unless _.has(options, 'for')
         options = _.clone(options)
         options['for'] = @_sanitize_to_id(name)
       content_or_options ||= _.string.humanize(name)
-    content_or_options = options  if block
-    Ultimate.Helpers.Tag.content_tag 'label', content_or_options, options, block
+    Ultimate.Helpers.Tag.content_tag_string 'label', content_or_options, options, true, false
 
   hidden_field_tag: (name, value = null, options = {}) ->
     @text_field_tag name, value, _.extend(options, type: 'hidden')

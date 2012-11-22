@@ -79,6 +79,7 @@ test "label_tag", ->
   equal label_tag("title", "My Title"), '<label for="title">My Title</label>'
   equal label_tag("title", "My Title", class: "small-label"), '<label class="small-label" for="title">My Title</label>'
   equal label_tag( -> "Blocked" ), '<label>Blocked</label>'
+  equal label_tag( -> content_tag('span', "Blocked SPAN", class: 'inner') ), '<label><span class="inner">Blocked SPAN</span></label>'
   equal label_tag("clock", -> "Grandfather"), '<label for="clock">Grandfather</label>'
   equal label_tag("clock", id: "label_clock", -> "Grandfather"), '<label for="clock" id="label_clock">Grandfather</label>'
 
