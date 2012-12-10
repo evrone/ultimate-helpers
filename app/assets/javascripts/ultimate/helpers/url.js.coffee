@@ -123,7 +123,7 @@ __string_encode = (str) -> _.map(str, (char) -> "&##{char.charCodeAt(0)};" ).joi
 
   _add_method_to_attributes: (html_options, method) ->
     if _.isString(method) and method.toLowerCase() isnt 'get' and not /nofollow/.test(html_options['rel'])
-      html_options['rel'] = _.string.lstrip("#{html_options['rel']} nofollow")
+      html_options['rel'] = Ultimate.Helpers.Tag.concat_class(html_options['rel'], 'nofollow')
     html_options['data-method'] = method
 
   _convert_boolean_attributes: (html_options, bool_attrs) ->
