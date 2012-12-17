@@ -1,6 +1,6 @@
 #= require ./helpers
 
-@Ultimate =
+@Ultimate ||=
 
   debugMode: false
 
