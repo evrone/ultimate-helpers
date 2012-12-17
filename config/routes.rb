@@ -1,2 +1,2 @@
-Ultimate::Base::Engine.routes.draw do
+Ultimate::Helpers::Engine.routes.draw do
 end

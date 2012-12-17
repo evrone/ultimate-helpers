@@ -1,10 +1,10 @@
-Ultimate UI core, base helpers and improves for Ruby on Rails Front-end
+Ultimate Helpers, Rails ActionView helpers ported to CoffeeScript
 
 ## Licence ##
 
 The MIT License
 
-Copyright (c) 2010-2012 Dmitry Karpunin (aka KODer) koderfunk@gmail.com
+Copyright (c) 2010-2013 Dmitry Karpunin (aka KODer) koderfunk@gmail.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,11 +1,11 @@
 %ul.l-page__main-menu
-  %li= link_to t("views.main_menu.root"), root_path
-  %li= link_to t("views.main_menu.news"), news_articles_path
+  %li= link_to t('views.main_menu.root'), root_path
+  %li= link_to t('views.main_menu.news'), news_articles_path
   %li.with-sub-menu
-    = link_to t("views.main_menu.catalog"), catalog_index_path
+    = link_to t('views.main_menu.catalog'), catalog_index_path
     %ul.sub-menu
       - Model::CATEGORIES.each do |category|
         - if Model.where(category: category).count > 0
-          %li= link_to t("views.main_menu.categories.#{category}"), catalog_path(category)
-  %li= link_to t("views.main_menu.user_form"), new_model_path
-  %li= link_to t("views.main_menu.contacts"), contacts_path
+          %li= link_to t('views.main_menu.categories.#{category}'), catalog_path(category)
+  %li= link_to t('views.main_menu.user_form'), new_model_path
+  %li= link_to t('views.main_menu.contacts'), contacts_path

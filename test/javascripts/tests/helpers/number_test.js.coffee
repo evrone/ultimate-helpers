@@ -1,6 +1,6 @@
 #= require ultimate/underscore/underscore
 #= require ultimate/underscore/underscore.string
-#= require ultimate/improves/i18n-lite
+#= require vendors/i18n-lite
 #= require ultimate/helpers/number
 
 module "Ultimate.Helpers.Number"

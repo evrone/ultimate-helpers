@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-# Specify your gem's dependencies in ultimate-base.gemspec
+# Specify your gem's dependencies in ultimate-helpers.gemspec
 gemspec path: "../.."
 
 #gem "rails", "~> 3.2.8"

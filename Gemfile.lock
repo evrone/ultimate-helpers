@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ultimate-base (0.3.4.0)
+    ultimate-helpers (0.1.0.0)
 
 GEM
   remote: http://rubygems.org/
@@ -123,4 +123,4 @@ DEPENDENCIES
   rails (~> 3.2.8)
   sass-rails (~> 3.2.3)
   sqlite3
-  ultimate-base!
+  ultimate-helpers!

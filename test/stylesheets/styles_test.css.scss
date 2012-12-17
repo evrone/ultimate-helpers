@@ -1,6 +1,0 @@
-@import "ultimate/mixins/microstructures";
-@import "ultimate/mixins/css3";
-
-.box {
-  @include box(400px, none, 10px 20px none, 0 auto, (2px 4px none) solid blue);
-}

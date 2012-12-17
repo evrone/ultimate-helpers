@@ -1,13 +1,15 @@
-@import "ultimate/mixins/microstructures";
-@import "ultimate/mixins/css3";
-@import "ultimate/mixins/fonts";
+@import 'vendors/ultimate/mixins/microstructures';
+@import 'vendors/ultimate/mixins/css3';
+@import 'vendors/ultimate/mixins/fonts';
 
-$layout-images-path: "layout";
+$support-ie: false;
+
+$layout-images-path: 'layout';
 
 $font-family_base: Tahoma, Helvetica, sans-serif;
 $font-size_base: 14px;
-$font-name_custom: "Cuprum";
-$font-family_custom: $font-name_custom, "Trebuchet MS", Tahoma, sans-serif;
+$font-name_custom: 'Cuprum';
+$font-family_custom: $font-name_custom, 'Trebuchet MS', Tahoma, sans-serif;
 
 $l-page__header_height: 50px;
 $l-page__footer_height: 60px;

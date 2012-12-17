@@ -53,7 +53,7 @@ Dummy::Application.routes.draw do
 
   #match "qunit2" => "main#qunit"
 
-  #mount Ultimate::Base::Engine => "/ultimate/base"
+  #mount Ultimate::Helpers::Engine => "/ultimate/helpers"
 
   # See how all your routes lay out with "rake routes"
 

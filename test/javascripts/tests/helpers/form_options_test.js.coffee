@@ -1,7 +1,7 @@
 #= require ultimate/underscore/underscore
 #= require ultimate/underscore/underscore.string
 #= require ultimate/underscore/underscore.outcasts
-#= require ultimate/backbone/lib/backbone
+#= require vendors/backbone
 #= require ultimate/helpers/form_options
 
 module "Ultimate.Helpers.FormOptions"

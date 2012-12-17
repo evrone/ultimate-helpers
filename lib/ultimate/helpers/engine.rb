@@ -1,7 +1,7 @@
 module Ultimate
-  module Base
+  module Helpers
     class Engine < ::Rails::Engine
-      isolate_namespace Ultimate::Base
+      isolate_namespace Ultimate::Helpers
     end
   end
 end
