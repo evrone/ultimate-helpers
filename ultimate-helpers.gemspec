@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Ultimate::Helpers::VERSION
   s.authors     = ['Dmitry KODer Karpunin']
   s.email       = ['koderfunk@gmail.com']
-  s.homepage    = 'http://github.com/KODerFunk/ultimate-helpers'
+  s.homepage    = 'https://github.com/evrone/ultimate-helpers'
   s.summary     = %q{Ultimate Helpers, Rails ActionView helpers ported to CoffeeScript}
   s.description = %q{Ultimate Helpers, Rails ActionView helpers ported to CoffeeScript}
 
