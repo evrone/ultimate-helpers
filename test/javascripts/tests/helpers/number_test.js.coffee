@@ -39,6 +39,7 @@ test "number_to_currency", ->
   equal number_to_currency(1234567891.50, precision: 0), "$1,234,567,892"
   equal number_to_currency(1234567890.50, precision: 1), "$1,234,567,890.5"
   equal number_to_currency(1234567890.50, unit: "&pound;", separator: ",", delimiter: ""), "&pound;1234567890,50"
+  equal number_to_currency(1234567890.50, unit: '<span class="unit">Руб.</span>', format: "%n %u"), "1,234,567,890.50 <span class=\"unit\">Руб.</span>"
   equal number_to_currency("1234567890.50"), "$1,234,567,890.50"
   equal number_to_currency("1234567890.50", unit: "K&#269;", format: "%n %u"), "1,234,567,890.50 K&#269;"
   equal number_to_currency("-1234567890.50", unit: "K&#269;", format: "%n %u", negative_format: "%n - %u"), "1,234,567,890.50 - K&#269;"

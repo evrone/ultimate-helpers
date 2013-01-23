@@ -62,24 +62,3 @@ do ($ = jQuery) =>
       matches = content.match($.regexp.HTML)
       return false  unless matches?
       not strong or matches[1] is matches[2]
-
-  # TODO replace usages to underscore methods and using distribution
-  unless $.isRegExp
-    $.isRegExp = (candidate) ->
-      deprecate '$.isRegExp', '_.isRegExp'
-      typeof candidate is "object" and typeof candidate.test is "function"
-
-  unless $.isBoolean
-    $.isBoolean = (v) ->
-      deprecate '$.isBoolean', '_.isBoolean'
-      typeof v is "boolean"
-
-  unless $.isString
-    $.isString = (v) ->
-      deprecate '$.isString', '_.isString'
-      typeof v is "string"
-
-  if typeof $.isEmptyString is "undefined"
-    $.isEmptyString = (v) ->
-      deprecate '$.isEmptyString', '_.isBlank'
-      regexpSpace.test v

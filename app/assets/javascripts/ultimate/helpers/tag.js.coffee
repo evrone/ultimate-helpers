@@ -28,10 +28,6 @@
     content = _.string.escapeHTML(content)  if _escapeContent
     "<#{name}#{@tag_options(options, escape)}>#{@PRE_CONTENT_STRINGS[name] ? ''}#{content}</#{name}>"
 
-  html_options_to_s: (html_options, escape = false, prefix = "") ->
-    deprecate 'html_options_to_s()', "tag_options()"
-    @tag_options arguments...
-
   tag_options: (options, escape = true) ->
     return ""  if _.isEmpty(options)
     attrs = []

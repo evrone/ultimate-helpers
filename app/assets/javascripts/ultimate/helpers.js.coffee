@@ -1,8 +1,5 @@
 ###
- *  front-end js helpers
- *    0.3.3.alpha / 2010-2011
- *    Karpunin Dmitry / Evrone.com
- *    koderfunk_at_gmail_dot_com
+ *  global front-end js helpers
 ###
 
 @DEBUG_MODE ?= false
@@ -31,12 +28,6 @@
   if @LOG_TODO
     @cout 'warn', "TODO: #{subject}#{if location then " ### #{location}" else ''}#{if numberOrString then (if _.isNumber(numberOrString) then ":#{numberOrString}" else " > #{numberOrString}") else ''}"
 
-@args = (a) ->
-  @deprecate 'arg()', '_.toArray()'
-  r = []
-  Array::push.apply(r, a)  if a.length > 0
-  r
-
 @logicalXOR = (a, b) ->
   ( a and not b ) or ( not a and b )
 
@@ -50,7 +41,7 @@
   r = {}
   for e in q
     t = e.split('=')
-    r[t[0]] = t[1]
+    r[decodeURIComponent(t[0])] = decodeURIComponent(t[1])
   r
 
 @respondFormat = (url, format = null) ->
@@ -64,59 +55,3 @@
   ah[0] = ad.join('.')
   aq[0] = ah.join('#')
   aq.join('?')
-
-
-
-###########   Deprecated   ###########
-
-# Helper function to get a value from a object as a property or as a function.
-@getValue = (object, prop) ->
-  @deprecate "getValue()", "_.result()"
-  return null  unless object and object[prop]
-  return if _.isFunction(object[prop]) then object[prop]() else object[prop]
-
-@isset = (obj) =>
-  @deprecate 'isset(obj)', '_.isUndefined(obj) OR "obj isnt undefined" OR "obj?'
-  obj isnt undefined
-
-@isString = (v) =>
-  @deprecate 'isString(v)', '_.isString(v)'
-  _.isString v
-
-@isNumber = (v) =>
-  @deprecate 'isNumber(v)', '_.isNumber(v)'
-  not isNaN(parseInt(v))
-
-@isJQ = (obj) ->
-  @deprecate 'isJQ(obj)', 'obj instanceof jQuery'
-  _.isObject(obj) and _.isString(obj.jquery)
-
-@uniq = (arrOrString) ->
-  @deprecate 'uniq(a)', '_.uniq(a)'
-  isStr = _.isString(arrOrString)
-  return arrOrString  unless isStr or _.isArray(arrOrString)
-  r = []
-  r.push(e)  for e in arrOrString  when not _.include(r, e)
-  if isStr then r.join('') else r
-
-@regexpSpace = /^\s*$/
-@regexpTrim = /^\s*(.*?)\s*$/
-
-@strTrim = (s) =>
-  @deprecate "strTrim(s)", "_.trim(s)"
-  s.match(@regexpTrim)[1]
-
-
-
-@rails_data = {}
-
-@rails_scope = (controller_name, action_name, scopedCloasure = null, scopedCloasureArguments...) =>
-  @deprecate 'rails_scope'
-  return false if _.isString(controller_name) and controller_name isnt @rails_data['controller_name']
-  return false if _.isString(action_name)     and action_name     isnt @rails_data['action_name']
-  if _.isFunction(scopedCloasure)
-    arguments[2] scopedCloasureArguments...
-  true
-
-$ =>
-  @rails_data = $('body').data()
