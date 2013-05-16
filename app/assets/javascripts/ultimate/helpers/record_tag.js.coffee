@@ -1,5 +1,6 @@
 #= require ./base
 #= require ./tag
+# ! require underscore.inflection for use _.singularize()
 
 @Ultimate.Helpers.RecordTag =
 

@@ -36,8 +36,8 @@
 
 
 
-@getParams = ->
-  q = location.search.substring(1).split('&')
+@getParams = (searchString = location.search) ->
+  q = searchString.replace(/^\?/, '').split('&')
   r = {}
   for e in q
     t = e.split('=')

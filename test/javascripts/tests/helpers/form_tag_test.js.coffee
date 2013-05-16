@@ -124,7 +124,7 @@ test "radio_button_tag", ->
 
 test "submit_tag", ->
   equal submit_tag("Save", onclick: "alert('hello!')", data: { disable_with: "Saving..." }),
-        '<input data-disable-with="Saving..." name="commit" onclick="alert(&apos;hello!&apos;)" type="submit" value="Save" />'
+        '<input data-disable-with="Saving..." name="commit" onclick="alert(&#39;hello!&#39;)" type="submit" value="Save" />'
   equal submit_tag("Save", data: { disable_with: "Saving..." }),
         '<input data-disable-with="Saving..." name="commit" type="submit" value="Save" />'
   equal submit_tag("Save", data: { confirm: "Are you sure?" }),

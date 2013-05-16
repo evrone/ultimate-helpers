@@ -41,12 +41,13 @@
     lt: '<',
     gt: '>',
     quot: '"',
-    apos: "'",
-    amp: '&'
+    amp: '&',
+    apos: "'"
   };
 
   var reversedEscapeChars = {};
-  for(var key in escapeChars){ reversedEscapeChars[escapeChars[key]] = key; }
+  for(var key in escapeChars) reversedEscapeChars[escapeChars[key]] = key;
+  reversedEscapeChars["'"] = '#39';
 
   // sprintf() for JavaScript 0.7-beta1
   // http://www.diveintojavascript.com/projects/javascript-sprintf
@@ -206,7 +207,22 @@
 
     count: function(str, substr){
       if (str == null || substr == null) return 0;
-      return String(str).split(substr).length - 1;
+
+      str = String(str);
+      substr = String(substr);
+
+      var count = 0,
+        pos = 0,
+        length = substr.length;
+
+      while (true) {
+        pos = str.indexOf(substr, pos);
+        if (pos === -1) break;
+        count++;
+        pos += length;
+      }
+
+      return count;
     },
 
     chars: function(str) {
@@ -320,7 +336,7 @@
     },
 
     classify: function(str){
-      return _s.titleize(String(str).replace(/_/g, ' ')).replace(/\s/g, '');
+      return _s.titleize(String(str).replace(/[\W_]/g, ' ')).replace(/\s/g, '');
     },
 
     humanize: function(str){
@@ -429,17 +445,17 @@
     },
 
     toNumber: function(str, decimals) {
-      if (str == null || str == '') return 0;
-      str = String(str);
-      var num = parseNumber(parseNumber(str).toFixed(~~decimals));
-      return num === 0 && !str.match(/^0+$/) ? Number.NaN : num;
+      if (!str) return 0;
+      str = _s.trim(str);
+      if (!str.match(/^-?\d+(?:\.\d+)?$/)) return NaN;
+      return parseNumber(parseNumber(str).toFixed(~~decimals));
     },
 
     numberFormat : function(number, dec, dsep, tsep) {
       if (isNaN(number) || number == null) return '';
 
       number = number.toFixed(~~dec);
-      tsep = tsep || ',';
+      tsep = typeof tsep == 'string' ? tsep : ',';
 
       var parts = number.split('.'), fnums = parts[0],
         decimals = parts[1] ? (dsep || '.') + parts[1] : '';
@@ -494,8 +510,8 @@
     slugify: function(str) {
       if (str == null) return '';
 
-      var from  = "ąàáäâãåæćęèéëêìíïîłńòóöôõøùúüûñçżź",
-          to    = "aaaaaaaaceeeeeiiiilnoooooouuuunczz",
+      var from  = "ąàáäâãåæćęèéëêìíïîłńòóöôõøśùúüûñçżź",
+          to    = "aaaaaaaaceeeeeiiiilnoooooosuuuunczz",
           regex = new RegExp(defaultToWhiteSpace(from), 'g');
 
       str = String(str).toLowerCase().replace(regex, function(c){
@@ -538,6 +554,36 @@
       return repeat.join(separator);
     },
 
+    naturalCmp: function(str1, str2){
+      if (str1 == str2) return 0;
+      if (!str1) return -1;
+      if (!str2) return 1;
+
+      var cmpRegex = /(\.\d+)|(\d+)|(\D+)/g,
+        tokens1 = String(str1).toLowerCase().match(cmpRegex),
+        tokens2 = String(str2).toLowerCase().match(cmpRegex),
+        count = Math.min(tokens1.length, tokens2.length);
+
+      for(var i = 0; i < count; i++) {
+        var a = tokens1[i], b = tokens2[i];
+
+        if (a !== b){
+          var num1 = parseInt(a, 10);
+          if (!isNaN(num1)){
+            var num2 = parseInt(b, 10);
+            if (!isNaN(num2) && num1 - num2)
+              return num1 - num2;
+          }
+          return a < b ? -1 : 1;
+        }
+      }
+
+      if (tokens1.length === tokens2.length)
+        return tokens1.length - tokens2.length;
+
+      return str1 < str2 ? -1 : 1;
+    },
+
     levenshtein: function(str1, str2) {
       if (str1 == null && str2 == null) return 0;
       if (str1 == null) return String(str2).length;
@@ -576,25 +622,23 @@
   _s.contains = _s.include;
   _s.q        = _s.quote;
 
+  // Exporting
+
   // CommonJS module is defined
   if (typeof exports !== 'undefined') {
-    if (typeof module !== 'undefined' && module.exports) {
-      // Export module
+    if (typeof module !== 'undefined' && module.exports)
       module.exports = _s;
-    }
+
     exports._s = _s;
-
-  } else if (typeof define === 'function' && define.amd) {
-    // Register as a named module with AMD.
-    define('underscore.string', [], function() {
-      return _s;
-    });
-
-  } else {
-    // Integrate with Underscore.js if defined
-    // or create our own underscore object.
-    root._ = root._ || {};
-    root._.string = root._.str = _s;
   }
 
+  // Register as a named module with AMD.
+  if (typeof define === 'function' && define.amd)
+    define('underscore.string', [], function(){ return _s; });
+
+
+  // Integrate with Underscore.js if defined
+  // or create our own underscore object.
+  root._ = root._ || {};
+  root._.string = root._.str = _s;
 }(this, String);

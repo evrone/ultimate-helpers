@@ -40,7 +40,7 @@ test "options_for_select", ->
   equal options_for_select({ "$": "Dollar", "<DKR>": "<Kroner>" }, [ "Dollar", "<Kroner>" ]),
         "<option selected=\"selected\" value=\"Dollar\">$</option>\n<option selected=\"selected\" value=\"&lt;Kroner&gt;\">&lt;DKR&gt;</option>"
   equal options_for_select([ [ "<Denmark>", { class: 'bold' } ], [ "USA", { onclick: "alert('Hello World');" } ], [ "Sweden" ], "Germany" ]),
-        "<option class=\"bold\" value=\"&lt;Denmark&gt;\">&lt;Denmark&gt;</option>\n<option onclick=\"alert(&apos;Hello World&apos;);\" value=\"USA\">USA</option>\n<option value=\"Sweden\">Sweden</option>\n<option value=\"Germany\">Germany</option>"
+        "<option class=\"bold\" value=\"&lt;Denmark&gt;\">&lt;Denmark&gt;</option>\n<option onclick=\"alert(&#39;Hello World&#39;);\" value=\"USA\">USA</option>\n<option value=\"Sweden\">Sweden</option>\n<option value=\"Germany\">Germany</option>"
   equal options_for_select([ [ "<Denmark>", { data: { test: 'bold' } } ] ]),
         "<option data-test=\"bold\" value=\"&lt;Denmark&gt;\">&lt;Denmark&gt;</option>"
   equal options_for_select([ [ "<Denmark>", { data: { test: '<bold>' } } ] ]),
