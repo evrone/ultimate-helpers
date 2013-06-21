@@ -2,9 +2,9 @@
  *  global front-end js helpers
 ###
 
-@DEBUG_MODE ?= false
-@TEST_MODE ?= false
-@LOG_TODO ?= true
+window.DEBUG_MODE ?= <%= Rails.env.development? %>
+window.TEST_MODE ?= <%= Rails.env.test? %>
+window.LOG_TODO ?= DEBUG_MODE
 
 @cout = =>
   args = _.toArray(arguments)

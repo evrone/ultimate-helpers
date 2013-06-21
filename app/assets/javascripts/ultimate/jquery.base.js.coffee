@@ -1,5 +1,3 @@
-# TODO: register components
-
 do ($ = jQuery) =>
 
   $.regexp ||= {}
