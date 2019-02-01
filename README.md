@@ -1,25 +1,35 @@
+# PLEASE NOTE, THIS PROJECT IS NO LONGER BEING MAINTAINED
+# Ultimate Helpers
+
 Ultimate Helpers, Rails ActionView helpers ported to CoffeeScript
 
-## Licence ##
+<a href="https://evrone.com/?utm_source=github.com">
+  <img src="https://evrone.com/logo/evrone-sponsored-logo.png"
+       alt="Sponsored by Evrone" width="231">
+</a>
 
-The MIT License
+## Getting Started
+### Installation
 
-Copyright (c) 2010-2013 Dmitry Karpunin (aka KODer) koderfunk@gmail.com
+Copy template to your own project
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## Contributing
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+Please read [Code of Conduct](CODE-OF-CONDUCT.md) and [Contributing Guidelines](CONTRIBUTING.md) 
+for submitting pull requests to us.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, 
+see the [tags on this repository](https://github.com/evrone/ultimate-helpers/tags). 
+
+## Authors
+
+* [Dmitry KODer Karpunin](https://github.com/KODerFunk) - *Initial work*
+
+See also the list of [contributors](https://github.com/evrone/ultimate-helpers/contributors) 
+who participated in this project.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
